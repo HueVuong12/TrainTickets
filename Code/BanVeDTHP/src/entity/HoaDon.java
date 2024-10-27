@@ -12,8 +12,8 @@ public class HoaDon {
 	private NhanVien nhanVien;
 	private KhachHang khachHang;
 	private ChiTietHoaDon chiTiet;
-	private Boolean daHoanVe = false;
-	private Boolean daHoanTien = false;
+	private Boolean daHoanVe ;
+	private Boolean daHoanTien;
 
 	public HoaDon(String maHoaDon, LocalDateTime ngayLapHoaDon, NhanVien nhanVien, KhachHang khachHang,
 			ChiTietHoaDon chiTiet, Boolean daHoanVe, Boolean daHoanTien) {

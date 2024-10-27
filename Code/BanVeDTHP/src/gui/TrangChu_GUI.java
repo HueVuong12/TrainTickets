@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,11 +8,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
+import components.ConTent_JPanel;
+import dao.NhanVien_DAO;
+import dao.TaiKhoan_DAO;
+import entity.KhachHang;
 
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -66,12 +67,12 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	private JLabel lbl_ThongTinNV;
 	private JLabel lbl_ThoiGian;
 	private JLabel exitIconLabel;
-	private JPanel content;
-	private JLabel backGroundLabel;
-	private boolean isSearching = false; // Trạng thái nhấp chuột
+	public JPanel content;
 	private Color hoverLabelColor = new Color(0, 153, 255);
-	private JMenuItem doiVe;
 	private DangNhap_GUI dangNhap;
+	
+	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+	private TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();
 	
 	/**
 	 * Launch the application.
@@ -152,6 +153,18 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		menuBar.add(ve);
 		
 		qlve = new JMenuItem("Quản lý vé");
+		qlve.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				QuanLyVe_Gui quanLyVe_gui = new QuanLyVe_Gui(TrangChu_GUI.this);
+				content.removeAll();
+				System.out.println("thành công xóa");
+				content.add(quanLyVe_gui); // Sử dụng layout thích hợp
+				System.out.println("thành công thêm");
+				content.revalidate();
+				content.repaint();
+				System.out.println("thành công");
+			}
+		});
 		ve.add(qlve);
 		
 		datVe = new JMenuItem("Đặt vé");
@@ -164,9 +177,33 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		menuBar.add(hoaDon);
 		
 		qlhd = new JMenuItem("Quản lý hóa đơn");
+		qlhd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				QuanLyHoaDon_GUI QLHoaDon= new QuanLyHoaDon_GUI();
+				content.removeAll();
+				System.out.println("thành công xóa");
+				content.add(QLHoaDon); // Sử dụng layout thích hợp
+				System.out.println("thành công thêm");
+				content.revalidate();
+				content.repaint();
+				System.out.println("thành công");
+			}
+		});
 		hoaDon.add(qlhd);
 		
 		xemcthd = new JMenuItem("Xem chi tiết hóa đơn");
+		xemcthd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ChiTietHoaDon_GUI ChiTietHD= new ChiTietHoaDon_GUI();
+				content.removeAll();
+				System.out.println("thành công xóa");
+				content.add(ChiTietHD); // Sử dụng layout thích hợp
+				System.out.println("thành công thêm");
+				content.revalidate();
+				content.repaint();
+				System.out.println("thành công");
+			}
+		});
 		hoaDon.add(xemcthd);
 		
 		traCuuKH = new JMenu("Tra cứu");
@@ -221,7 +258,8 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    jp_nhanVien.add(userIconLabel);
 	    
 	    lbl_ThongTinNV = new JLabel();
-	    lbl_ThongTinNV.setText(dangNhap.getTaiKhoanLogined().getNhanVien().getTenNV());
+	    lbl_ThongTinNV.setText(nhanVien_DAO.getNhanVienTheoMaNV((taiKhoan_DAO.getTaiKhoanTheoMaTK(dangNhap.getTaiKhoanLogined().getMaTaiKhoan()))
+	    															.getNhanVien().getMaNV()).getTenNV());
 	    lbl_ThongTinNV.setFont(new Font("Tahoma", Font.PLAIN, 16));
 	    lbl_ThongTinNV.setHorizontalAlignment(SwingConstants.CENTER);
 	    lbl_ThongTinNV.setBounds(96, 74, 247, 21);
@@ -270,6 +308,51 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		ConTent_JPanel jpct= new ConTent_JPanel();
 		content.add(jpct);
 	    
+		traCuuKhachHang.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				TraCuuKhachHang_GUI tckh= new TraCuuKhachHang_GUI(TrangChu_GUI.this);
+				content.removeAll();
+				System.out.println("thành công xóa");
+				content.add(tckh); // Sử dụng layout thích hợp
+				System.out.println("thành công thêm");
+				content.revalidate();
+				content.repaint();
+				System.out.println("thành công");
+			}
+		});
+		traCuuNV.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				TraCuuNhanVien_GUI tcnv = new TraCuuNhanVien_GUI(TrangChu_GUI.this);
+				content.removeAll();
+				System.out.println("thành công xóa");
+				content.add(tcnv); // Sử dụng layout thích hợp
+				System.out.println("thành công thêm");
+				content.revalidate();
+				content.repaint();
+				System.out.println("thành công");
+			}
+		});
+		traCuuVCT.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				TraCuuChuyenTauGiaVe_Gui tcvct = new TraCuuChuyenTauGiaVe_Gui(TrangChu_GUI.this);
+				content.removeAll();
+				System.out.println("thành công xóa");
+				content.add(tcvct); // Sử dụng layout thích hợp
+				System.out.println("thành công thêm");
+				content.revalidate();
+				content.repaint();
+				System.out.println("thành công");
+			}
+		});
 		datVe.addActionListener(new ActionListener() {
 
 			@Override
@@ -285,12 +368,13 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 				System.out.println("thành công");
 			}
 		});
-	    thongKeCT.addActionListener(new ActionListener() {
-			
+		thongKeCT.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				ThongKe_GUI jptkct= new ThongKe_GUI(TrangChu_GUI.this);
+				jptkct.hienThiThongKeChuyenTau();
 				content.removeAll();
 				System.out.println("thành công xóa");
 				content.add(jptkct); // Sử dụng layout thích hợp
@@ -298,6 +382,65 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 				content.revalidate();
 				content.repaint();
 				System.out.println("thành công");
+			}
+		});
+	    thongKeDT.addActionListener(new ActionListener() {
+
+	    	@Override
+	    	public void actionPerformed(ActionEvent e) {
+	    		// TODO Auto-generated method stub
+	    		ThongKe_GUI jptkct= new ThongKe_GUI(TrangChu_GUI.this);
+	    		jptkct.hienThiThongKeDoanhThu();;
+	    		content.removeAll();
+	    		System.out.println("thành công xóa");
+	    		content.add(jptkct); // Sử dụng layout thích hợp
+	    		System.out.println("thành công thêm");
+	    		content.revalidate();
+	    		content.repaint();
+	    		System.out.println("thành công");
+	    	}
+	    });
+	    thongKeTheoCa.addActionListener(new ActionListener() {
+
+	    	@Override
+	    	public void actionPerformed(ActionEvent e) {
+	    		// TODO Auto-generated method stub
+	    		ThongKe_GUI jptkct= new ThongKe_GUI(TrangChu_GUI.this);
+	    		jptkct.hienThiThongKeDoanhThuTheoCa();
+	    		content.removeAll();
+	    		System.out.println("thành công xóa");
+	    		content.add(jptkct); // Sử dụng layout thích hợp
+	    		System.out.println("thành công thêm");
+	    		content.revalidate();
+	    		content.repaint();
+	    		System.out.println("thành công");
+	    	}
+	    });
+	    khachHang.addMenuListener(new MenuListener() {
+
+			@Override
+			public void menuSelected(MenuEvent e) {
+				// TODO Auto-generated method stub
+				QuanLyKhachHang_GUI jpkh= new QuanLyKhachHang_GUI(TrangChu_GUI.this);
+				content.removeAll();
+				System.out.println("thành công xóa");
+				content.add(jpkh); // Sử dụng layout thích hợp
+				System.out.println("thành công thêm");
+				content.revalidate();
+				content.repaint();
+				System.out.println("thành công");
+			}
+
+			@Override
+			public void menuDeselected(MenuEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void menuCanceled(MenuEvent e) {
+				// TODO Auto-generated method stub
+
 			}
 		});
 	    nhanVien.addMenuListener(new MenuListener() {

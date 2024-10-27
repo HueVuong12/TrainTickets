@@ -21,6 +21,9 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
+
+import components.ConTent_JPanel;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -674,5 +677,13 @@ public class ThongKe_GUI extends JPanel {
 			lbl_ThoiGian.setText(formattedTime);
 		}
 		
-		/// ham thong ke 
+		public void hienThiThongKeChuyenTau() {
+			tabbedPane.setSelectedIndex(2);
+		}
+		public void hienThiThongKeDoanhThu() {
+			tabbedPane.setSelectedIndex(1);
+		}
+		public void hienThiThongKeDoanhThuTheoCa() {
+			tabbedPane.setSelectedIndex(0);
+		}
 }

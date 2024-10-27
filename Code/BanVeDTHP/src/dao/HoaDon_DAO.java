@@ -30,9 +30,9 @@ public class HoaDon_DAO {
 			while (rs.next()) {
 				String maHoaDon = rs.getString("maHoaDon");
 				LocalDateTime ngayLapHoaDon = rs.getTimestamp("ngayLapHoaDon").toLocalDateTime();
-				String maNV = rs.getString("maNV");
-				String maKH = rs.getString("maKH");
-				String maChiTiet = rs.getString("chiTiet");
+				String maNV = rs.getString("nhanVien");
+				String maKH = rs.getString("khachHang");
+				String maChiTiet = "CT" + maHoaDon;
 				boolean daHoanVe = rs.getBoolean("daHoanVe");
 				boolean daHoanTien = rs.getBoolean("daHoanTien");
 
@@ -54,14 +54,13 @@ public class HoaDon_DAO {
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
-			stmt = con.prepareStatement("insert into HoaDon values(?, ?, ?, ?, ?, ?, ?)");
+			stmt = con.prepareStatement("insert into HoaDon values(?, ?, ?, ?, ?, ?)");
 			stmt.setString(1, HoaDon.getMaHoaDon());
 			stmt.setObject(2, HoaDon.getNgayLapHoaDon());
 			stmt.setString(3, HoaDon.getNhanVien().getMaNV());
 			stmt.setString(4, HoaDon.getKhachHang().getMaKH());
-			stmt.setString(5, HoaDon.getChiTiet().getMaChiTiet());
-			stmt.setBoolean(6, HoaDon.getDaHoanVe());
-			stmt.setBoolean(7, HoaDon.getDaHoanTien());
+			stmt.setBoolean(5, HoaDon.getDaHoanVe());
+			stmt.setBoolean(6, HoaDon.getDaHoanTien());
 			n = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -76,14 +75,13 @@ public class HoaDon_DAO {
 		int n = 0;
 		try {
 			stmt = con.prepareStatement(
-					"update HoaDon set ngayLapHoaDon = ?, nhanVien = ?, khachHang = ?, chiTiet = ?, daHoanVe = ?, daHoanTien = ?, where maHoaDon = ?");
-			stmt.setString(7, HoaDon.getMaHoaDon());
+					"update HoaDon set ngayLapHoaDon = ?, nhanVien = ?, khachHang = ?, daHoanVe = ?, daHoanTien = ?, where maHoaDon = ?");
+			stmt.setString(6, HoaDon.getMaHoaDon());
 			stmt.setObject(1, HoaDon.getNgayLapHoaDon());
 			stmt.setString(2, HoaDon.getNhanVien().getMaNV());
 			stmt.setString(3, HoaDon.getKhachHang().getMaKH());
-			stmt.setString(4, HoaDon.getChiTiet().getMaChiTiet());
-			stmt.setBoolean(5, HoaDon.getDaHoanVe());
-			stmt.setBoolean(6, HoaDon.getDaHoanTien());
+			stmt.setBoolean(4, HoaDon.getDaHoanVe());
+			stmt.setBoolean(5, HoaDon.getDaHoanTien());
 			n = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -120,7 +118,7 @@ public class HoaDon_DAO {
 				LocalDateTime ngayLapHoaDon = rs.getTimestamp("ngayLapHoaDon").toLocalDateTime();
 				String maNV = rs.getString("maNV");
 				String maKH = rs.getString("maKH");
-				String maChiTiet = rs.getString("chiTiet");
+				String maChiTiet = "CT" + maHoaDon;
 				boolean daHoanVe = rs.getBoolean("daHoanVe");
 				boolean daHoanTien = rs.getBoolean("daHoanTien");
 

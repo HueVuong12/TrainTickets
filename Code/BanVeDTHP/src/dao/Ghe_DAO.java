@@ -144,7 +144,7 @@ public class Ghe_DAO {
         Ghe ghe = null;
         try {
             Connection con = ConnectDB.getInstance().getConnection();
-            String sql = "SELECT * FROM Ghe WHERE (maToa = ? AND soGhe = ?)\r\n";
+            String sql = "SELECT * FROM Ghe WHERE (maToa = ? AND soGhe = ?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, maToaStr);
             stmt.setInt(2, soGhe);

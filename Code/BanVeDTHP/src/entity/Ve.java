@@ -15,8 +15,8 @@ public class Ve {
 	private LocalTime gioDi;
 	private Ga gaDi;
 	private Ga gaDen;
-	private String khuyenMai;
 	private String hang;
+	private String khuyenMai;
 	private boolean trangThai;
 	private ChiTietHoaDon chiTiet;
 	
@@ -32,6 +32,8 @@ public class Ve {
 		this.gioDi = chuyenTau.getGioDi();
 		this.setGaDen(gaDen);
 		this.setGaDi(gaDi);
+		this.setHang(hang);
+		this.setKhuyenMai(khuyenMai);
 		this.setTrangThai(trangThai);
 		this.setChiTiet(chiTiet);
 	}
@@ -189,14 +191,18 @@ public class Ve {
 		return tiGia;
 	}
 	
-	public float tinhGiaVe() {
-		int quangDuong = Math.abs(gaDen.getChiSoKm()-836);
-		
+	public float tinhGiaVeGoc() {
+		int quangDuong = Math.abs(gaDen.getChiSoKm() - 836);
+
 		if (quangDuong <= 50)
-			return quangDuong*2000*tinhTiGia();
+			return quangDuong * 2000;
 		else if (quangDuong <= 400)
-			return quangDuong*800*tinhTiGia();
-		return quangDuong*600*tinhTiGia();
+			return quangDuong * 800;
+		return quangDuong * 600;
+	}
+	
+	public float tinhGiaVe() {
+		return tinhGiaVeGoc() * tinhGiaVe();
 	}
 	
 	public boolean xuatVe() {

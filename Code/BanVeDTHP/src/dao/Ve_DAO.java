@@ -229,6 +229,38 @@ public class Ve_DAO {
 		}
 		return ds;
 	}
+	
+	public String generateMaVe() {
+	    LocalDate currentDate = LocalDate.now();
+	    String datePart = String.format("%02d%02d%02d", currentDate.getDayOfMonth(), 
+	                                       currentDate.getMonthValue(), 
+	                                       currentDate.getYear() % 100); // Hai số cuối của năm
+
+	    // Lấy số thứ tự lập vé
+	    int lastVeNumber = getLastVeNumber();
+	    String sequencePart = String.format("%04d", lastVeNumber + 1); // Tăng số thứ tự lên 1 và định dạng với 4 chữ số
+
+	    return "VE" + datePart + sequencePart;
+	}
+
+	// Phương thức này để lấy số thứ tự lập vé cuối cùng trong bảng Ve
+	private int getLastVeNumber() {
+	    int lastNumber = 0;
+	    try {
+	        Connection con = ConnectDB.getInstance().getConnection();
+	        String sql = "SELECT TOP 1 maVe FROM Ve WHERE maVe LIKE 'VE%' ORDER BY maVe DESC"; // Lấy mã vé mới nhất
+	        PreparedStatement stmt = con.prepareStatement(sql);
+	        ResultSet rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            String lastMaVe = rs.getString("maVe");
+	            lastNumber = Integer.parseInt(lastMaVe.substring(8)); // Lấy phần số từ mã vé
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return lastNumber;
+	}
 
 	public void reset() {
 		dsVe.removeAll(dsVe);
