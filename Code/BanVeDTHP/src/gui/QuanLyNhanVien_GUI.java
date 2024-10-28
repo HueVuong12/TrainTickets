@@ -46,6 +46,8 @@ import javax.swing.table.TableColumn;
 
 import components.ComboBoxRenderer;
 import components.ConTent_JPanel;
+import components.RoundedButton;
+import components.RoundedTextField;
 
 import javax.swing.JRadioButton;
 
@@ -75,12 +77,12 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	private JLabel lbl_TrangThai;
 	private JLabel lbl_tieuDeTT;
 	private JLabel downIconLabel1;
-	private JTextField textField_MaNV;
-	private JTextField textField_HoTen;
-	private JTextField textField_CCCD;
-	private JTextField textField_SDT;
-	private JTextField textField_Email;
-	private JTextField textField_ChucVu;
+	private RoundedTextField  textField_MaNV;
+	private RoundedTextField  textField_HoTen;
+	private RoundedTextField  textField_CCCD;
+	private RoundedTextField  textField_SDT;
+	private RoundedTextField  textField_Email;
+	private RoundedTextField  textField_ChucVu;
 	private JButton btnThem;
 	private JButton btnTim;
 	private JButton btnSua;
@@ -171,47 +173,63 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		jp_thongTinNV.add(jp_contentThongTin);
 		jp_contentThongTin.setLayout(null);
 
-		textField_MaNV = new JTextField();
+		textField_MaNV = new RoundedTextField(10);
+		textField_MaNV.setText("Mã nhân viên");
 		textField_MaNV.setBounds(129, 18, 188, 25);
 		textField_MaNV.setEditable(false);
 		jp_contentThongTin.add(textField_MaNV);
 		textField_MaNV.setColumns(10);
+		focusTxtField(textField_MaNV, "Mã nhân viên");
 
-		textField_HoTen = new JTextField();
+		textField_HoTen = new RoundedTextField(10);
+		textField_HoTen.setText("Họ tên");
 		textField_HoTen.setColumns(10);
 		textField_HoTen.setBounds(129, 66, 188, 25);
 		jp_contentThongTin.add(textField_HoTen);
+		focusTxtField(textField_HoTen, "Họ tên");
 
-		textField_CCCD = new JTextField();
+		textField_CCCD = new RoundedTextField(10);
+		textField_CCCD.setText("CCCD");
 		textField_CCCD.setColumns(10);
 		textField_CCCD.setBounds(129, 194, 188, 25);
 		jp_contentThongTin.add(textField_CCCD);
+		focusTxtField(textField_CCCD, "CCCD");
 
-		textField_SDT = new JTextField();
+		textField_SDT = new RoundedTextField(10);
+		textField_SDT.setText("SĐT");
 		textField_SDT.setColumns(10);
 		textField_SDT.setBounds(129, 244, 188, 25);
 		jp_contentThongTin.add(textField_SDT);
+		focusTxtField(textField_SDT, "SĐT");
 
-		textField_Email = new JTextField();
+		textField_Email = new RoundedTextField(10);
+		textField_Email.setText("Email");
 		textField_Email.setColumns(10);
 		textField_Email.setBounds(129, 290, 188, 25);
 		jp_contentThongTin.add(textField_Email);
+		focusTxtField(textField_Email, "Email");
 		
 //		comboBox = new JComboBox();
 //		comboBox.setBounds(347, 39, 185, 29);
 //		jp_contentThongTin.add(comboBox);
 
-		textField_ChucVu = new JTextField();
+		textField_ChucVu = new RoundedTextField(10);
+		textField_ChucVu.setText("Chức vụ");
 		textField_ChucVu.setColumns(10);
 		textField_ChucVu.setBounds(129, 336, 188, 25);
 		jp_contentThongTin.add(textField_ChucVu);
+		focusTxtField(textField_ChucVu, "Chức vụ");
 
-		btnThem = new JButton("Thêm");
+		RoundedButton btnThem = new RoundedButton("Thêm", 10);
+		btnThem.setForeground(new Color(255, 255, 255));
+		btnThem.setBackground(new Color(51, 102, 153));
 		btnThem.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnThem.setBounds(26, 458, 85, 27);
 		jp_contentThongTin.add(btnThem);
 
-		btnSua = new JButton("Sửa");
+		RoundedButton btnSua = new RoundedButton("Sửa", 15);
+		btnSua.setForeground(new Color(255, 255, 255));
+		btnSua.setBackground(new Color(51, 102, 153));
 		btnSua.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnSua.setBounds(126, 458, 85, 27);
 		jp_contentThongTin.add(btnSua);
@@ -300,7 +318,9 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		group1.add(cb_dangLam);
 		group1.add(cb_nghiLam);
 		
-		btnTim = new JButton("Tìm");
+		RoundedButton btnTim = new RoundedButton("Tìm", 10);
+		btnTim.setForeground(new Color(255, 255, 255));
+		btnTim.setBackground(new Color(51, 102, 153));
 		btnTim.setBounds(232, 458, 85, 27);
 		jp_contentThongTin.add(btnTim);
 		btnTim.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -739,5 +759,23 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		comboBox_Ca.setSelectedIndex(0);
 		cb_dangLam.setSelected(false);
 		cb_nghiLam.setSelected(false);
+	}
+	private void focusTxtField(JTextField txtField, String str) {
+		txtField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (txtField.getText().equals(str)) {
+					txtField.setText("");
+					txtField.setForeground(Color.BLACK);
+				}
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (txtField.getText().isEmpty()) {
+					txtField.setForeground(SystemColor.textInactiveText);
+					txtField.setText(str);
+				}
+			}
+		});
 	}
 }
