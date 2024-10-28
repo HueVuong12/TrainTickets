@@ -46,8 +46,6 @@ import javax.swing.table.TableColumn;
 
 import components.ComboBoxRenderer;
 import components.ConTent_JPanel;
-import components.RoundedButton;
-import components.RoundedTextField;
 
 import javax.swing.JRadioButton;
 
@@ -77,12 +75,12 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	private JLabel lbl_TrangThai;
 	private JLabel lbl_tieuDeTT;
 	private JLabel downIconLabel1;
-	private RoundedTextField txtMNhnVin;
-	private RoundedTextField txtHTn;
-	private RoundedTextField txtCccd;
-	private RoundedTextField txtSt;
-	private RoundedTextField txtEmail;
-	private RoundedTextField txtChcV;
+	private JTextField textField_MaNV;
+	private JTextField textField_HoTen;
+	private JTextField textField_CCCD;
+	private JTextField textField_SDT;
+	private JTextField textField_Email;
+	private JTextField textField_ChucVu;
 	private JButton btnThem;
 	private JButton btnTim;
 	private JButton btnSua;
@@ -173,73 +171,49 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		jp_thongTinNV.add(jp_contentThongTin);
 		jp_contentThongTin.setLayout(null);
 
-		txtMNhnVin = new RoundedTextField(10);
-//		txtMNhnVin = new JTextField();
-		txtMNhnVin.setText("Mã nhân viên");
-		txtMNhnVin.setBounds(129, 18, 188, 25);
-		txtMNhnVin.setEditable(false);
-		jp_contentThongTin.add(txtMNhnVin);
-		txtMNhnVin.setColumns(10);
-		focusTxtField(txtMNhnVin, "Mã nhân viên");
+		textField_MaNV = new JTextField();
+		textField_MaNV.setBounds(129, 18, 188, 25);
+		textField_MaNV.setEditable(false);
+		jp_contentThongTin.add(textField_MaNV);
+		textField_MaNV.setColumns(10);
 
-		txtHTn = new RoundedTextField(10);
-//		txtHTn = new JTextField();
-		txtHTn.setText("Họ tên");
-		txtHTn.setColumns(10);
-		txtHTn.setBounds(129, 66, 188, 25);
-		jp_contentThongTin.add(txtHTn);
-		focusTxtField(txtHTn, "Họ tên");
+		textField_HoTen = new JTextField();
+		textField_HoTen.setColumns(10);
+		textField_HoTen.setBounds(129, 66, 188, 25);
+		jp_contentThongTin.add(textField_HoTen);
 
-		txtCccd = new RoundedTextField(10);
-//		txtCccd = new JTextField();
-		txtCccd.setText("CCCD");
-		txtCccd.setColumns(10);
-		txtCccd.setBounds(129, 194, 188, 25);
-		jp_contentThongTin.add(txtCccd);
-		focusTxtField(txtCccd, "CCCD");
+		textField_CCCD = new JTextField();
+		textField_CCCD.setColumns(10);
+		textField_CCCD.setBounds(129, 194, 188, 25);
+		jp_contentThongTin.add(textField_CCCD);
 
-		txtSt = new RoundedTextField(10);
-//		txtSt = new JTextField();
-		txtSt.setText("SĐT");
-		txtSt.setColumns(10);
-		txtSt.setBounds(129, 244, 188, 25);
-		jp_contentThongTin.add(txtSt);
-		focusTxtField(txtSt, "SĐT");
+		textField_SDT = new JTextField();
+		textField_SDT.setColumns(10);
+		textField_SDT.setBounds(129, 244, 188, 25);
+		jp_contentThongTin.add(textField_SDT);
 
-		txtEmail = new RoundedTextField(10);
-//		txtEmail = new JTextField();
-		txtEmail.setText("Email");
-		txtEmail.setColumns(10);
-		txtEmail.setBounds(129, 290, 188, 25);
-		jp_contentThongTin.add(txtEmail);
-		focusTxtField(txtEmail, "Email");
+		textField_Email = new JTextField();
+		textField_Email.setColumns(10);
+		textField_Email.setBounds(129, 290, 188, 25);
+		jp_contentThongTin.add(textField_Email);
 		
 //		comboBox = new JComboBox();
 //		comboBox.setBounds(347, 39, 185, 29);
 //		jp_contentThongTin.add(comboBox);
 
-		txtChcV = new RoundedTextField(10);
-//		txtChcV = new JTextField();
-		txtChcV.setText("Chức vụ");
-		txtChcV.setColumns(10);
-		txtChcV.setBounds(129, 336, 188, 25);
-		jp_contentThongTin.add(txtChcV);
-		focusTxtField(txtChcV, "Chức vụ");
+		textField_ChucVu = new JTextField();
+		textField_ChucVu.setColumns(10);
+		textField_ChucVu.setBounds(129, 336, 188, 25);
+		jp_contentThongTin.add(textField_ChucVu);
 
-		RoundedButton btnThem = new RoundedButton("Thêm", 10);
-		btnThem.setForeground(new Color(255, 255, 255));
-//		btnThem = new JButton("Thêm");
+		btnThem = new JButton("Thêm");
 		btnThem.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnThem.setBounds(26, 458, 85, 27);
-		btnThem.setBackground(new Color(51, 102, 153));
 		jp_contentThongTin.add(btnThem);
 
-		RoundedButton btnSua = new RoundedButton("Sửa", 15);
-		btnSua.setForeground(new Color(255, 255, 255));
-//		btnSua = new JButton("Sửa");
+		btnSua = new JButton("Sửa");
 		btnSua.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnSua.setBounds(126, 458, 85, 27);
-		btnSua.setBackground(new Color(51, 102, 153));
 		jp_contentThongTin.add(btnSua);
 
 		lbl_MaNV = new JLabel("Mã nhân viên");
@@ -326,13 +300,10 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		group1.add(cb_dangLam);
 		group1.add(cb_nghiLam);
 		
-		RoundedButton btnTim = new RoundedButton("Tìm", 10);
-		btnTim.setForeground(new Color(255, 255, 255));
-//		btnTim = new JButton("Tìm");
+		btnTim = new JButton("Tìm");
 		btnTim.setBounds(232, 458, 85, 27);
 		jp_contentThongTin.add(btnTim);
 		btnTim.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnTim.setBackground(new Color(51, 102, 153));
 		btnTim.addActionListener(this);
 		
 		//JPane header tiêu đề của thông tin nhân viên
@@ -528,8 +499,8 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		int row = table_NV.getSelectedRow();
 		if (row != -1) {
 			NhanVien nv = dsnv.getNhanVienTheoMaNV(table_NV.getModel().getValueAt(row, 1).toString());
-			txtMNhnVin.setText(nv.getMaNV());
-			txtHTn.setText(nv.getTenNV());
+			textField_MaNV.setText(nv.getMaNV());
+			textField_HoTen.setText(nv.getTenNV());
 			if (nv.isGioiTinh()) {
 				cb_nam.setSelected(false);
 				cb_nu.setSelected(true);
@@ -540,9 +511,9 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 			// Định dạng chuỗi ngày tháng từ giao diện (dd/MM/yyyy)
 			DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			dateChooser_NgaySinh.setToolTipText(inputFormatter.format(nv.getNgaySinh()));
-			txtCccd.setText(nv.getCccd());
-			txtSt.setText(nv.getSdt());
-			txtEmail.setText(nv.getEmail());
+			textField_CCCD.setText(nv.getCccd());
+			textField_SDT.setText(nv.getSdt());
+			textField_Email.setText(nv.getEmail());
 			comboBox_Ca.setSelectedItem(nv.getCa().getMaCa());
 			if (nv.isTrangThai()) {
 				cb_dangLam.setSelected(true);
@@ -551,7 +522,7 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 				cb_dangLam.setSelected(false);
 				cb_nghiLam.setSelected(true);
 			}
-			txtChcV.setText(String.valueOf(nv.getChucVu())); // Chuyển int thành String
+			textField_ChucVu.setText(String.valueOf(nv.getChucVu())); // Chuyển int thành String
 		}
 	}
 
@@ -586,7 +557,7 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 //			JOptionPane.showMessageDialog(this, "Mã nhân viên chưa nhập");
 //			return false;
 //		}
-		if (txtHTn.getText().equals("")) {
+		if (textField_HoTen.getText().equals("")) {
 			JOptionPane.showMessageDialog(this, "Họ tên không được để trống");
 			return false;
 		}
@@ -602,23 +573,23 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 //			JOptionPane.showMessageDialog(this, "Ca không được bỏ trống");
 //			return false;
 //		}
-		if (txtCccd.getText().equals("")) {
+		if (textField_CCCD.getText().equals("")) {
 			JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
 			return false;
 		}
-		if (txtEmail.getText().equals("")) {
+		if (textField_Email.getText().equals("")) {
 			JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
 			return false;
 		}
-		if (txtChcV.getText().equals("")) {
+		if (textField_ChucVu.getText().equals("")) {
 			JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
 			return false;
 		}
-		if (txtSt.getText().equals("")) {
+		if (textField_SDT.getText().equals("")) {
 			JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
 			return false;
 		}
-		if (txtSt.getText().equals("")) {
+		if (textField_SDT.getText().equals("")) {
 			JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
 			return false;
 		}
@@ -633,10 +604,10 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	//Hàm lấy dữ liệu từ JPane thông tin nhân viên
 	public NhanVien revertNV() {
 		String maNV = generateMaNV();
-		String hoTen = txtHTn.getText();
+		String hoTen = textField_HoTen.getText();
 		boolean gioiTinh = cb_nam.isSelected() ? false : (cb_nu.isSelected() ? true : null); // Sử dụng trực tiếp giá trị của checkbox
 		String ca = comboBox_Ca.getSelectedItem().toString();
-		String cccd = txtCccd.getText();
+		String cccd = textField_CCCD.getText();
 
 		// Định dạng chuỗi ngày tháng từ giao diện (dd/MM/yyyy)
 		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -665,10 +636,10 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	        return null;
 	    }
 	    
-		String email = txtEmail.getText();
-		String sdt = txtSt.getText();
+		String email = textField_Email.getText();
+		String sdt = textField_SDT.getText();
 		boolean trangThai = cb_dangLam.isSelected() ? true : (cb_nghiLam.isSelected() ? false : false);
-		int chucVu =  Integer.parseInt(txtChcV.getText());
+		int chucVu =  Integer.parseInt(textField_ChucVu.getText());
 
 		NhanVien nv = new NhanVien(maNV, hoTen, ngaySinh, gioiTinh, new Ca(ca), cccd, email, sdt, trangThai, chucVu);
 		return nv;
@@ -678,21 +649,21 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	public void update() {
 		int index = table_NV.getSelectedRow();
 		if (index != -1) {
-			String maNV= txtMNhnVin.getText();
-			String hoTen = txtHTn.getText();
+			String maNV= textField_MaNV.getText();
+			String hoTen = textField_HoTen.getText();
 			boolean gioiTinh = cb_nam.isSelected() ? false : (cb_nu.isSelected() ? true : null); // Sử dụng trực tiếp giá trị của checkbox
 			String ca = comboBox_Ca.getSelectedItem().toString();
-			String cccd = txtCccd.getText();
+			String cccd = textField_CCCD.getText();
 
 			// Định dạng chuỗi ngày tháng từ giao diện (dd/MM/yyyy)
 			DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			LocalDate ngaySinh=null;
 			// Chuyển đổi chuỗi ngày sinh từ giao diện sang LocalDate
 			ngaySinh = LocalDate.parse(dateChooser_NgaySinh.getToolTipText(), inputFormatter);	        
-			String email = txtEmail.getText();
-			String sdt = txtSt.getText();
+			String email = textField_Email.getText();
+			String sdt = textField_SDT.getText();
 			boolean trangThai = cb_dangLam.isSelected() ? true : (cb_nghiLam.isSelected() ? false : false);
-			int chucVu =  Integer.parseInt(txtChcV.getText());
+			int chucVu =  Integer.parseInt(textField_ChucVu.getText());
 			NhanVien nv = new NhanVien(maNV, hoTen, ngaySinh, gioiTinh, new Ca(ca), cccd, email, sdt, trangThai, chucVu);
 			try {
 				dsnv.update(nv);
@@ -756,36 +727,17 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 
 	//Hàm xóa thông tin 
 	public void deleteField() {
-		txtMNhnVin.setText("");
-		txtHTn.setText("");
+		textField_MaNV.setText("");
+		textField_HoTen.setText("");
 		dateChooser_NgaySinh.setToolTipText("");
 		cb_nam.setSelected(false);
 		cb_nu.setSelected(false);
-		txtCccd.setText("");
-		txtEmail.setText("");
-		txtSt.setText("");
-		txtChcV.setText("");
+		textField_CCCD.setText("");
+		textField_Email.setText("");
+		textField_SDT.setText("");
+		textField_ChucVu.setText("");
 		comboBox_Ca.setSelectedIndex(0);
 		cb_dangLam.setSelected(false);
 		cb_nghiLam.setSelected(false);
-	}
-	private void focusTxtField(JTextField txtField, String str) {
-		txtField.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (txtField.getText().equals(str)) {
-					txtField.setText("");
-					txtField.setForeground(Color.BLACK);
-				}
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (txtField.getText().isEmpty()) {
-					txtField.setForeground(SystemColor.textInactiveText);
-					txtField.setText(str);
-				}
-			}
-		});
 	}
 }
