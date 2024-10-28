@@ -297,4 +297,5 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 		// TODO Auto-generated method stub
 		
 	}
+	
 }
