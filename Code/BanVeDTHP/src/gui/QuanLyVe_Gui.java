@@ -19,6 +19,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import components.ConTent_JPanel;
+import components.RoundedButton;
+import components.RoundedTextField;
 
 public class QuanLyVe_Gui extends JPanel {
 	private JTextField textField;
@@ -133,52 +135,62 @@ public class QuanLyVe_Gui extends JPanel {
 		lblGi.setBounds(10, 376, 97, 22);
 		jp_TTV.add(lblGi);
 		
-		textField = new JTextField();
+		RoundedTextField textField = new RoundedTextField(10);
+//		textField = new JTextField();
 		textField.setBounds(130, 43, 216, 22);
 		jp_TTV.add(textField);
 		textField.setColumns(10);
 		
-		textField_1 = new JTextField();
+		RoundedTextField textField_1 = new RoundedTextField(10);
+//		textField_1 = new JTextField();
 		textField_1.setColumns(10);
 		textField_1.setBounds(130, 83, 216, 22);
 		jp_TTV.add(textField_1);
 		
-		textField_2 = new JTextField();
+		RoundedTextField textField_2 = new RoundedTextField(10);
+//		textField_2 = new JTextField();
 		textField_2.setColumns(10);
 		textField_2.setBounds(130, 120, 216, 22);
 		jp_TTV.add(textField_2);
 		
-		textField_3 = new JTextField();
+		RoundedTextField textField_3 = new RoundedTextField(10);
+//		textField_3 = new JTextField();
 		textField_3.setColumns(10);
 		textField_3.setBounds(130, 157, 216, 22);
 		jp_TTV.add(textField_3);
 		
-		textField_4 = new JTextField();
+		RoundedTextField textField_4 = new RoundedTextField(10);
+//		textField_4 = new JTextField();
 		textField_4.setColumns(10);
-		textField_4.setBounds(130, 194, 216, 22);
+		textField_4.setBounds(130, 195, 216, 22);
 		jp_TTV.add(textField_4);
 		
-		textField_5 = new JTextField();
+		RoundedTextField textField_5 = new RoundedTextField(10);
+//		textField_5 = new JTextField();
 		textField_5.setColumns(10);
 		textField_5.setBounds(130, 231, 216, 22);
 		jp_TTV.add(textField_5);
 		
-		textField_6 = new JTextField();
+		RoundedTextField textField_6 = new RoundedTextField(10);
+//		textField_6 = new JTextField();
 		textField_6.setColumns(10);
 		textField_6.setBounds(130, 268, 216, 22);
 		jp_TTV.add(textField_6);
 		
-		textField_7 = new JTextField();
+		RoundedTextField textField_7 = new RoundedTextField(10);
+//		textField_7 = new JTextField();
 		textField_7.setColumns(10);
-		textField_7.setBounds(130, 302, 216, 22);
+		textField_7.setBounds(130, 303, 216, 22);
 		jp_TTV.add(textField_7);
 		
-		textField_8 = new JTextField();
+		RoundedTextField textField_8 = new RoundedTextField(10);
+//		textField_8 = new JTextField();
 		textField_8.setColumns(10);
 		textField_8.setBounds(130, 339, 216, 22);
 		jp_TTV.add(textField_8);
 		
-		textField_9 = new JTextField();
+		RoundedTextField textField_9 = new RoundedTextField(10);
+//		textField_9 = new JTextField();
 		textField_9.setColumns(10);
 		textField_9.setBounds(130, 376, 216, 22);
 		jp_TTV.add(textField_9);
@@ -203,8 +215,11 @@ public class QuanLyVe_Gui extends JPanel {
 		));
 		
 		
-		JButton btnNewButton = new JButton("Đổi vé");
+		RoundedButton btnNewButton = new RoundedButton("Đổi vé", 15);
+		btnNewButton.setForeground(new Color(255, 255, 255));
+//		JButton btnNewButton = new JButton("Đổi vé");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnNewButton.setBackground(new Color(51, 102, 153));
 		btnNewButton.setBounds(145, 504, 85, 25);
 		panel.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {

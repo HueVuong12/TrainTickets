@@ -42,6 +42,9 @@ import components.RoundedButton;
 import entity.ChuyenTau;
 import entity.Ga;
 import entity.Ve;
+import java.awt.Component;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.LineBorder;
 
 public class DoiVe_GUI extends JPanel {
 
@@ -131,6 +134,7 @@ public class DoiVe_GUI extends JPanel {
 
 //		JButton btnTim = new JButton("Tìm");
 		RoundedButton btnTim = new RoundedButton("Tìm", 15);
+		btnTim.setText("Tìm kiếm");
 		btnTim.setForeground(Color.WHITE);
 		btnTim.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnTim.setBackground(new Color(51, 102, 153));
@@ -194,7 +198,7 @@ public class DoiVe_GUI extends JPanel {
 		
 
 		txt_GaDi = new JTextField();
-		txt_GaDi.setText("Nhập ga đi");
+		txt_GaDi.setText("Ga đi");
 		txt_GaDi.setHorizontalAlignment(SwingConstants.LEFT);
 		txt_GaDi.setForeground(SystemColor.textInactiveText);
 		txt_GaDi.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -202,10 +206,10 @@ public class DoiVe_GUI extends JPanel {
 		txt_GaDi.setBounds(21, 26, 202, 27);
 		jp_Content_ThongTin.add(txt_GaDi);
 		chonGa(txt_GaDi);
-		focusTxtField(txt_GaDi, "Nhập ga đi");
+		focusTxtField(txt_GaDi, "Ga đi");
 
 		txt_GaDen = new JTextField();
-		txt_GaDen.setText("Nhập ga đến");
+		txt_GaDen.setText("Ga đến");
 		txt_GaDen.setHorizontalAlignment(SwingConstants.LEFT);
 		txt_GaDen.setForeground(SystemColor.textInactiveText);
 		txt_GaDen.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -213,7 +217,7 @@ public class DoiVe_GUI extends JPanel {
 		txt_GaDen.setBounds(21, 78, 202, 27);
 		jp_Content_ThongTin.add(txt_GaDen);
 		chonGa(txt_GaDen);
-		focusTxtField(txt_GaDen, "Nhập ga đến");
+		focusTxtField(txt_GaDen, "Ga đến");
 
 		chooserNgayDi = new JDateChooser();
 		chooserNgayDi.setBounds(21, 138, 202, 27);
@@ -270,59 +274,102 @@ public class DoiVe_GUI extends JPanel {
 		lbl_tieuDeTK.setBounds(0, 0, 244, 32);
 		jp_Header_ThongTin.add(lbl_tieuDeTK);
 
-		JPanel jp_GioVe = new JPanel();
-		jp_GioVe.setLayout(null);
-		jp_GioVe.setBackground(Color.WHITE);
-		jp_GioVe.setBounds(10, 262, 244, 118);
-		add(jp_GioVe);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 244, 35);
-		jp_GioVe.add(panel);
-		panel.setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("Vé cũ");
-		lblNewLabel.setForeground(SystemColor.textHighlight);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblNewLabel.setBounds(51, 0, 193, 35);
-		panel.add(lblNewLabel);
-
 		lblMaToa = new JLabel();
 		lblMaToa.setBounds(721, 267, 272, 23);
 		add(lblMaToa);
 		lblMaToa.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblMaToa.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		JPanel jp_GioVe_1 = new JPanel();
-		jp_GioVe_1.setBackground(Color.WHITE);
-		jp_GioVe_1.setBounds(10, 403, 244, 157);
-		add(jp_GioVe_1);
-		jp_GioVe_1.setLayout(null);
+		JPanel jp_VeCu = new JPanel();
+		jp_VeCu.setLayout(null);
+		jp_VeCu.setBackground(Color.WHITE);
+		jp_VeCu.setBounds(10, 262, 244, 123);
+		add(jp_VeCu);
 		
-		JPanel jp_GioVe_2 = new JPanel();
-		jp_GioVe_2.setLayout(null);
-		jp_GioVe_2.setBackground(Color.WHITE);
-		jp_GioVe_2.setBounds(0, 0, 244, 118);
-		jp_GioVe_1.add(jp_GioVe_2);
+		JPanel jp_Content_VeCu = new JPanel();
+		jp_Content_VeCu.setLayout(null);
+		jp_Content_VeCu.setBackground(new Color(255, 255, 255));
+		jp_Content_VeCu.setBounds(0, 31, 244, 92);
+		jp_VeCu.add(jp_Content_VeCu);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBounds(0, 0, 244, 35);
-		jp_GioVe_2.add(panel_1);
+		JPanel jp_DanhSachVeCu = new JPanel();
+		jp_DanhSachVeCu.setBackground(new Color(255, 255, 255));
+		jp_DanhSachVeCu.setLayout(null);
+		jp_DanhSachVeCu.setBounds(0, 0, 244, 93);
+		jp_Content_VeCu.add(jp_DanhSachVeCu);
 		
-		JLabel lblNewLabel_1 = new JLabel("Vé mới");
-		lblNewLabel_1.setForeground(SystemColor.textHighlight);
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblNewLabel_1.setBounds(51, 0, 193, 35);
-		panel_1.add(lblNewLabel_1);
+		JScrollPane scrollPane_VeCu = new JScrollPane((Component) null);
+		scrollPane_VeCu.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPane_VeCu.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane_VeCu.setBounds(0, 0, 244, 92);
+		jp_DanhSachVeCu.add(scrollPane_VeCu);
 		
-		RoundedButton btnXacNhan = new RoundedButton("Xác nhận", 15);
-		btnXacNhan.setForeground(Color.WHITE);
-		btnXacNhan.setFont(new Font("Tahoma", Font.BOLD, 16));
-		btnXacNhan.setBackground(new Color(51, 102, 153));
-		btnXacNhan.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnXacNhan.setBounds(71, 128, 95, 25);
-		jp_GioVe_1.add(btnXacNhan);
+		JPanel jp_Header_VeCu = new JPanel();
+		jp_Header_VeCu.setLayout(null);
+		jp_Header_VeCu.setBackground(SystemColor.scrollbar);
+		jp_Header_VeCu.setBounds(0, 0, 244, 32);
+		jp_VeCu.add(jp_Header_VeCu);
+		
+		JLabel downIconLabel_VeCu = new JLabel((Icon) null);
+		downIconLabel_VeCu.setBounds(0, 0, 30, 35);
+		jp_Header_VeCu.add(downIconLabel_VeCu);
+		
+		JLabel lbl_tieuDeTK_VeCu = new JLabel("Vé cũ");
+		lbl_tieuDeTK_VeCu.setHorizontalAlignment(SwingConstants.LEFT);
+		lbl_tieuDeTK_VeCu.setForeground(SystemColor.textHighlight);
+		lbl_tieuDeTK_VeCu.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lbl_tieuDeTK_VeCu.setBounds(40, 0, 204, 32);
+		jp_Header_VeCu.add(lbl_tieuDeTK_VeCu);
+		
+		JPanel jp_VeMoi = new JPanel();
+		jp_VeMoi.setBorder(new LineBorder(new Color(0, 0, 0)));
+		jp_VeMoi.setLayout(null);
+		jp_VeMoi.setBackground(Color.WHITE);
+		jp_VeMoi.setBounds(10, 395, 244, 165);
+		add(jp_VeMoi);
+		
+		JPanel jp_Content_VeMoi = new JPanel();
+		jp_Content_VeMoi.setLayout(null);
+		jp_Content_VeMoi.setBackground(Color.WHITE);
+		jp_Content_VeMoi.setBounds(0, 31, 244, 92);
+		jp_VeMoi.add(jp_Content_VeMoi);
+		
+		JPanel jp_DanhSachVeMoi = new JPanel();
+		jp_DanhSachVeMoi.setLayout(null);
+		jp_DanhSachVeMoi.setBackground(Color.WHITE);
+		jp_DanhSachVeMoi.setBounds(0, 0, 244, 93);
+		jp_Content_VeMoi.add(jp_DanhSachVeMoi);
+		
+		JScrollPane scrollPane_VeMoi = new JScrollPane((Component) null);
+		scrollPane_VeMoi.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPane_VeMoi.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane_VeMoi.setBounds(0, 0, 244, 92);
+		jp_DanhSachVeMoi.add(scrollPane_VeMoi);
+		
+		JPanel jp_Header_VeMoi = new JPanel();
+		jp_Header_VeMoi.setLayout(null);
+		jp_Header_VeMoi.setBackground(SystemColor.scrollbar);
+		jp_Header_VeMoi.setBounds(0, 0, 244, 32);
+		jp_VeMoi.add(jp_Header_VeMoi);
+		
+		JLabel downIconLabel_VeMoi = new JLabel((Icon) null);
+		downIconLabel_VeMoi.setBounds(0, 0, 30, 35);
+		jp_Header_VeMoi.add(downIconLabel_VeMoi);
+		
+		JLabel lbl_tieuDeTK_VeMoi = new JLabel("Vé mới");
+		lbl_tieuDeTK_VeMoi.setHorizontalAlignment(SwingConstants.LEFT);
+		lbl_tieuDeTK_VeMoi.setForeground(SystemColor.textHighlight);
+		lbl_tieuDeTK_VeMoi.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lbl_tieuDeTK_VeMoi.setBounds(40, 0, 204, 32);
+		jp_Header_VeMoi.add(lbl_tieuDeTK_VeMoi);
+		
+		RoundedButton rndbtnXcNhn = new RoundedButton("Tìm", 15);
+		rndbtnXcNhn.setText("Xác nhận");
+		rndbtnXcNhn.setForeground(Color.WHITE);
+		rndbtnXcNhn.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		rndbtnXcNhn.setBackground(new Color(51, 102, 153));
+		rndbtnXcNhn.setBounds(70, 128, 85, 27);
+		jp_VeMoi.add(rndbtnXcNhn);
 
 		// Thêm MouseListener vào contentPane
 		this.addMouseListener(new MouseAdapter() {
