@@ -217,14 +217,12 @@ public class DangNhap_GUI extends JFrame {
 								return;
 							} else {
 								// Trạng thái đã nghỉ việc
-								JOptionPane.showMessageDialog(null, "Nhân viên đã nghỉ!", "Thông báo",
-										JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Nhân viên đã nghỉ!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 								return;
 							}
 						} else {
 							// Mật khẩu không đúng
-							JOptionPane.showMessageDialog(null, "Mật khẩu không đúng!", "Thông báo",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Mật khẩu không đúng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
 							return; // Kết thúc vòng lặp
 						}
 					}

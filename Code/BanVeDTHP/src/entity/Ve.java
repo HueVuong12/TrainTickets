@@ -173,19 +173,19 @@ public class Ve {
 
 	public float tinhTiGia() {
 		float tiGia = 0;
-		if (hang.equalsIgnoreCase("Ghe mem"))
+		if (hang.equalsIgnoreCase("Ghế mềm"))
 			tiGia += 1;
-		else if (hang.equalsIgnoreCase("Giuong nam"))
+		else if (hang.equalsIgnoreCase("Giường nằm"))
 			tiGia += 1.2;
 		else
 			tiGia += 1.8;
-		if (khuyenMai.equalsIgnoreCase("Sinh vien"))
+		if (khuyenMai.equalsIgnoreCase("Sinh viên"))
 			tiGia += -0.1;
-		else if (khuyenMai.equalsIgnoreCase("Nguoi lon"))
+		else if (khuyenMai.equalsIgnoreCase("Người lớn"))
 			tiGia += 0;
-		else if (khuyenMai.equalsIgnoreCase("Nguoi lon tuoi"))
+		else if (khuyenMai.equalsIgnoreCase("Người lớn tuổi"))
 			tiGia += -0.15;
-		else if (khuyenMai.equalsIgnoreCase("Tre em 6 den 10 tuoi"))
+		else if (khuyenMai.equalsIgnoreCase("Trẻ em từ 6 đến 10 tuổi"))
 			tiGia += -0.25;
 		else tiGia = 0;
 		return tiGia;

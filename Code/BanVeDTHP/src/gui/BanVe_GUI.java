@@ -76,7 +76,7 @@ public class BanVe_GUI extends JPanel {
 	private JPanel jp_TinhTrangGhe;
 	ArrayList<Ve> dsVeDatTam = new ArrayList<Ve>();
 	private JPanel jp_VeMua;
-	
+
 	// Khai bao DAO
 	Ga_DAO ga_dao = new Ga_DAO();
 	ArrayList<Ga> dsGa = ga_dao.docTuBang();
@@ -85,6 +85,9 @@ public class BanVe_GUI extends JPanel {
 	Toa_DAO toa_DAO = new Toa_DAO();
 	Ve_DAO ve_DAO = new Ve_DAO();
 	Ghe_DAO ghe_DAO = new Ghe_DAO();
+	private JButton btnTiep;
+	private JButton btnQuayLai;
+	private JLabel lbl_Chieu;
 
 	/**
 	 * Create the panel.
@@ -110,7 +113,7 @@ public class BanVe_GUI extends JPanel {
 		downIconLabel_2.setBounds(0, 0, 30, 35);
 		jp_title.add(downIconLabel_2);
 
-		lbl_Chieu_1 = new JLabel("Chiều đi:");
+		lbl_Chieu_1 = new JLabel();
 		lbl_Chieu_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lbl_Chieu_1.setForeground(Color.WHITE);
 		lbl_Chieu_1.setBounds(40, 0, 152, 35);
@@ -158,52 +161,13 @@ public class BanVe_GUI extends JPanel {
 		JButton btnTim = new JButton("Tìm");
 		btnTim.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jp_TinhTrangToa.removeAll();
-				jp_TinhTrangToa.revalidate();
-				jp_TinhTrangToa.repaint();
-				
-				jp_TinhTrangGhe.removeAll();
-				jp_TinhTrangGhe.revalidate();
-				jp_TinhTrangGhe.repaint();
-
-				lblMaToa.setText("");
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
-				lbl_Ga_1.setText(txt_GaDi.getText() + " - " + txt_GaDen.getText());
-				jp_ThongTinChuyenTau.removeAll();
-				String gaDi = txt_GaDi.getText();
-				String gaDen = txt_GaDen.getText();
-				boolean isKhuHoi = rdbtn_KhuHoi.isSelected();
-				LocalDate ngayDi = chooserNgayDi.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-				if (isKhuHoi) {
-					chooserNgayVe.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				if (isValidatedTxtField()) {
+					lbl_Chieu_1.setText("Chiều đi: ");
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+					lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
+					lbl_Ga_1.setText(txt_GaDi.getText() + " - " + txt_GaDen.getText());
+					suKienBatDauChon(txt_GaDi.getText(), txt_GaDen.getText());
 				}
-
-				ArrayList<ChuyenTau> dsTauHienThi = new ArrayList<ChuyenTau>();
-				for (ChuyenTau chuyenTau : dsChuyenTau) {
-					if ((ga_dao.getGaTheoMaGa(chuyenTau.getGaDi().getMaGa()).getDiaChi().equals(gaDi))
-							&& (chuyenTau.getNgayDi().equals(ngayDi))) {
-						for (Ga gaDung : chuyenTau.getTramDung()) {
-							if (gaDen.equals(gaDung.getDiaChi()))
-								dsTauHienThi.add(chuyenTau);
-						}
-						if (gaDen.equals(ga_dao.getGaTheoMaGa(chuyenTau.getGaDen().getMaGa()).getDiaChi()))
-							dsTauHienThi.add(chuyenTau);
-					}
-				}
-				int x = 0, y = 0;
-				for (ChuyenTau chuyenTau : dsTauHienThi) {
-					// Tạo ChuyenTau_JPanel ban đầu với tham số false
-					ChuyenTau_JPanel pChuyenTau = new ChuyenTau_JPanel(chuyenTau);
-					pChuyenTau.setBounds(x, y, 123, 122);
-					// su kien
-					suKienTrenChuyen(pChuyenTau, chuyenTau);
-					jp_ThongTinChuyenTau.add(pChuyenTau);
-					x += 127; // Điều chỉnh vị trí cho panel tiếp theo
-				}
-
-				jp_ThongTinChuyenTau.revalidate();
-				jp_ThongTinChuyenTau.repaint();
 			}
 		});
 		btnTim.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -243,6 +207,27 @@ public class BanVe_GUI extends JPanel {
 		jp_Content_ThongTin.add(rdbtn_KhuHoi);
 
 		rdbtn_MotChieu.setSelected(true);
+		
+		// Thêm listener để thay đổi trạng thái của chooser ngày về
+				rdbtn_KhuHoi.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						chooserNgayVe.setEnabled(true); // Kích hoạt chooser ngày về khi chọn Khứ Hồi
+						btnTiep.setVisible(true);
+						btnQuayLai.setVisible(true);
+						
+					}
+				});
+
+				rdbtn_MotChieu.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						chooserNgayVe.setEnabled(false); // Vô hiệu hóa chooser ngày về khi chọn Một Chiều
+						chooserNgayVe.setDate(null); // Xóa ngày đã chọn
+						btnTiep.setVisible(false);
+						btnQuayLai.setVisible(false);
+					}
+				});
 
 		chooserNgayDi = new JDateChooser();
 		chooserNgayDi.setBounds(21, 180, 202, 27);
@@ -276,22 +261,6 @@ public class BanVe_GUI extends JPanel {
 		chooserNgayVe.setEnabled(false);
 		jp_Content_ThongTin.add(chooserNgayVe);
 		((JTextField) chooserNgayVe.getDateEditor().getUiComponent()).setEditable(false);
-
-		// Thêm listener để thay đổi trạng thái của chooser ngày về
-		rdbtn_KhuHoi.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				chooserNgayVe.setEnabled(true); // Kích hoạt chooser ngày về khi chọn Khứ Hồi
-			}
-		});
-
-		rdbtn_MotChieu.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				chooserNgayVe.setEnabled(false); // Vô hiệu hóa chooser ngày về khi chọn Một Chiều
-				chooserNgayVe.setDate(null); // Xóa ngày đã chọn
-			}
-		});
 
 		// Thêm listener để kiểm tra ngày chọn về
 		chooserNgayVe.getDateEditor().addPropertyChangeListener("date", new PropertyChangeListener() {
@@ -368,28 +337,28 @@ public class BanVe_GUI extends JPanel {
 		jp_GioVe.add(jp_Content_GioVe);
 
 		JButton btnMua = new JButton("Mua");
-		//Chuyển trang banVeNhapThongTIn_Gui bằng button Mua
+		// Chuyển trang banVeNhapThongTIn_Gui bằng button Mua
 		btnMua.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				BanVeNhapThongTin_Gui banVeNhapThongTin_Gui = new BanVeNhapThongTin_Gui(BanVe_GUI.this,trangChu);
+				BanVeNhapThongTin_Gui banVeNhapThongTin_Gui = new BanVeNhapThongTin_Gui(BanVe_GUI.this, trangChu);
 				trangChu.content.removeAll();
 				trangChu.content.add(banVeNhapThongTin_Gui);
 				trangChu.content.revalidate();
 				trangChu.content.repaint();
 			}
 		});
-		
+
 		btnMua.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnMua.setBounds(149, 123, 85, 27);
 		jp_Content_GioVe.add(btnMua);
-		
-		//Copy vào DoiVe_GUI . Lưu ý bỏ nút 
+
+		// Copy vào DoiVe_GUI . Lưu ý bỏ nút
 		JPanel jp_DanhSachVe = new JPanel();
 		jp_DanhSachVe.setLayout(null);
 		jp_DanhSachVe.setBounds(0, 0, 244, 122);
 		jp_Content_GioVe.add(jp_DanhSachVe);
 
-		JLabel lbl_Chieu = new JLabel("Chiều đi");
+		lbl_Chieu = new JLabel();
 		lbl_Chieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lbl_Chieu.setBounds(93, 2, 51, 23);
 		jp_DanhSachVe.add(lbl_Chieu);
@@ -405,7 +374,7 @@ public class BanVe_GUI extends JPanel {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 		jp_DanhSachVe.add(scrollPane);
-		
+
 		JPanel jp_Header_GioVe = new JPanel();
 		jp_Header_GioVe.setLayout(null);
 		jp_Header_GioVe.setBackground(new Color(51, 102, 153));
@@ -429,6 +398,36 @@ public class BanVe_GUI extends JPanel {
 		lblMaToa.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblMaToa.setHorizontalAlignment(SwingConstants.CENTER);
 
+		btnTiep = new JButton("Tiếp");
+		btnTiep.setBounds(1365, 25, 85, 21);
+		add(btnTiep);
+		btnTiep.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lbl_Chieu_1.setText("Chiều đi: ");
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
+				lbl_Ga_1.setText(txt_GaDen.getText() + " - " + txt_GaDi.getText());
+				suKienBatDauChon(txt_GaDen.getText(), txt_GaDi.getText());
+			}
+		});
+		
+		btnQuayLai = new JButton("Quay lại");
+		btnQuayLai.setBounds(1270, 25, 85, 21);
+		add(btnQuayLai);
+		btnQuayLai.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lbl_Chieu_1.setText("Chiều đi: ");
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
+				lbl_Ga_1.setText(txt_GaDi.getText() + " - " + txt_GaDen.getText());
+				suKienBatDauChon(txt_GaDi.getText(), txt_GaDen.getText());
+			}
+		});
+		
+		btnTiep.setVisible(false);
+		btnQuayLai.setVisible(false);
+		
+
 		// Thêm MouseListener vào contentPane
 		this.addMouseListener(new MouseAdapter() {
 			@Override
@@ -438,6 +437,50 @@ public class BanVe_GUI extends JPanel {
 				txt_GaDen.transferFocus();
 			}
 		});
+	}
+	
+	private void suKienBatDauChon(String gaDi, String gaDen) {
+		jp_TinhTrangToa.removeAll();
+		jp_TinhTrangToa.revalidate();
+		jp_TinhTrangToa.repaint();
+		
+		jp_TinhTrangGhe.removeAll();
+		jp_TinhTrangGhe.revalidate();
+		jp_TinhTrangGhe.repaint();
+
+		lblMaToa.setText("");
+		jp_ThongTinChuyenTau.removeAll();
+		boolean isKhuHoi = rdbtn_KhuHoi.isSelected();
+		LocalDate ngayDi = chooserNgayDi.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		if (isKhuHoi) {
+			chooserNgayVe.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		}
+
+		ArrayList<ChuyenTau> dsTauHienThi = new ArrayList<ChuyenTau>();
+		for (ChuyenTau chuyenTau : dsChuyenTau) {
+			if ((ga_dao.getGaTheoMaGa(chuyenTau.getGaDi().getMaGa()).getDiaChi().equals(gaDi))
+					&& (chuyenTau.getNgayDi().equals(ngayDi))) {
+				for (Ga gaDung : chuyenTau.getTramDung()) {
+					if (gaDen.equals(gaDung.getDiaChi()))
+						dsTauHienThi.add(chuyenTau);
+				}
+				if (gaDen.equals(ga_dao.getGaTheoMaGa(chuyenTau.getGaDen().getMaGa()).getDiaChi()))
+					dsTauHienThi.add(chuyenTau);
+			}
+		}
+		int x = 0, y = 0;
+		for (ChuyenTau chuyenTau : dsTauHienThi) {
+			// Tạo ChuyenTau_JPanel ban đầu với tham số false
+			ChuyenTau_JPanel pChuyenTau = new ChuyenTau_JPanel(chuyenTau);
+			pChuyenTau.setBounds(x, y, 123, 122);
+			// su kien
+			suKienTrenChuyen(pChuyenTau, chuyenTau);
+			jp_ThongTinChuyenTau.add(pChuyenTau);
+			x += 127; // Điều chỉnh vị trí cho panel tiếp theo
+		}
+
+		jp_ThongTinChuyenTau.revalidate();
+		jp_ThongTinChuyenTau.repaint();
 	}
 
 	private void suKienTrenChuyen(ChuyenTau_JPanel pChuyenTau, ChuyenTau chuyenTau) {
@@ -532,9 +575,9 @@ public class BanVe_GUI extends JPanel {
 				int x = 35, y = 35, count = 1;
 				for (Ghe ghe : toa.getDsGhe()) {
 					ImageIcon containerIcon;
-					if (!ghe.isTrangThai() || ktDaDatTam(ghe)){
+					if (!ghe.isTrangThai() || ktDaDatTam(ghe)) {
 						containerIcon = new ImageIcon(getClass().getResource("/img/Ghe_0.png"));
-					}  else {
+					} else {
 						containerIcon = new ImageIcon(getClass().getResource("/img/Ghe_1.png"));
 					}
 					Image scaledContainerIcon = containerIcon.getImage().getScaledInstance(26, 42, Image.SCALE_SMOOTH);
@@ -560,7 +603,7 @@ public class BanVe_GUI extends JPanel {
 					pGhe.add(containerIconLabel);
 
 					suKienTrenGhe(containerIconLabel, ghe);
-					
+
 					// Thêm panel vào jp_TinhTrangGhe
 					jp_TinhTrangGhe.add(pGhe);
 					count++;
@@ -629,7 +672,7 @@ public class BanVe_GUI extends JPanel {
 						dsVeDatTam.removeIf(v -> (v.getSoGhe().getSoGhe() == ghe.getSoGhe())
 								&& v.getToa().getMaToa().equals(ghe.getToa().getMaToa()));
 					} else {
-						newIcon = new ImageIcon(getClass().getResource("/img/Ghe_0.png"));
+						newIcon = new ImageIcon(getClass().getResource("/img/Ghe_2.png"));
 						// Tạo vé mới
 						String maVe = ve_DAO.generateMaVe();
 						Toa toa = toa_DAO.getToaTheoMaToa(ghe.getToa().getMaToa());
@@ -638,7 +681,8 @@ public class BanVe_GUI extends JPanel {
 						LocalTime gioDi = chuyenTau.getGioDi();
 						Ga gaDi = chuyenTau.getGaDi();
 						Ga gaDen = chuyenTau.getTramDung().stream()
-								.filter(ga -> ga.getDiaChi().equals(txt_GaDen.getText())).findFirst().orElse(chuyenTau.getGaDen());
+								.filter(ga -> ga.getDiaChi().equals(txt_GaDen.getText())).findFirst()
+								.orElse(chuyenTau.getGaDen());
 						String hang = toa.getLoaiToa();
 						boolean trangThai = false;
 						Ve ve = new Ve(maVe, chuyenTau, toa, ghe, null, ngayDi, gioDi, gaDi, gaDen, hang, null,
@@ -655,26 +699,46 @@ public class BanVe_GUI extends JPanel {
 					// Cập nhật giao diện
 					jp_ThongTinChuyenTau.revalidate();
 					jp_ThongTinChuyenTau.repaint();
-					
-					//Tạo panel Vé
+
+					// Tạo panel Vé
 					jp_VeMua.removeAll();
-					for (Ve ve: dsVeDatTam) {
+					for (Ve ve : dsVeDatTam) {
 						Ve_JPanel pVe = new Ve_JPanel(ve, dsVeDatTam, jp_VeMua);
 						jp_VeMua.add(pVe);
 					}
 					// Điều chỉnh kích thước jp_VeMua dựa trên số lượng vé
-					jp_VeMua.setPreferredSize(new Dimension(jp_VeMua.getWidth(), dsVeDatTam.size()*70)); // Điều chỉnh chiều cao tùy vào kích thước vé
+					jp_VeMua.setPreferredSize(new Dimension(jp_VeMua.getWidth(), dsVeDatTam.size() * 70)); // Điều chỉnh chiều cao tùy vào kích thước vé
 
 					// Làm mới giao diện
 					jp_VeMua.revalidate();
 					jp_VeMua.repaint();
-					
+
 				} else {
 					// Nếu ghế không có trạng thái true ban đầu, không làm gì
 					gheLabel.setCursor(Cursor.getDefaultCursor());
 				}
 			}
 		});
+	}
+	
+	private boolean isValidatedTxtField() {
+		if ((txt_GaDi.getText() != null)  && (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDi.getText()))))) {
+			if ((txt_GaDen.getText() != null)  && (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDen.getText()))))) {
+				if (rdbtn_KhuHoi.isSelected()) {
+					if (chooserNgayVe.getDate() != null) {
+						return true;						
+					} else {
+						JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày về!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+						return false;
+					}
+				}
+				return true;
+			}
+			JOptionPane.showMessageDialog(null, "Ga đến không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		JOptionPane.showMessageDialog(null, "Ga đi không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+		return false;
 	}
 
 	private void focusTxtField(JTextField txtField, String str) {
@@ -740,10 +804,11 @@ public class BanVe_GUI extends JPanel {
 			}
 		});
 	}
-	
+
 	private boolean ktDaDatTam(Ghe ghe) {
-		for (Ve ve: dsVeDatTam) {
-			if (ve.getChuyenTau().getMaTau().equals(toa_DAO.getToaTheoMaToa(ghe.getToa().getMaToa()).getMaTau().getMaTau()))
+		for (Ve ve : dsVeDatTam) {
+			if (ve.getChuyenTau().getMaTau()
+					.equals(toa_DAO.getToaTheoMaToa(ghe.getToa().getMaToa()).getMaTau().getMaTau()))
 				if (ve.getToa().getMaToa().equals(ghe.getToa().getMaToa()))
 					if (ve.getSoGhe().getSoGhe() == ghe.getSoGhe())
 						return true;
