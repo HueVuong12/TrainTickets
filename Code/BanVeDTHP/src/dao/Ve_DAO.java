@@ -195,7 +195,7 @@ public class Ve_DAO {
 			stmt.setString(1, maChiTiet);
 			ResultSet rs = stmt.executeQuery();
 
-			if (rs.next()) {
+			while (rs.next()) {
 				String maVe1 = rs.getString("maVe");
 				String maTau = rs.getString("tau");
 				String maToa = rs.getString("toa");

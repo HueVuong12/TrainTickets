@@ -28,8 +28,8 @@ public class Ve {
 		this.setToa(toa);
 		this.setSoGhe(soGhe);
 		this.setKhachHang(khachHang);
-		this.ngayDi = chuyenTau.getNgayDi();
-		this.gioDi = chuyenTau.getGioDi();
+		this.ngayDi = ngayDi;
+		this.gioDi = gioDi;
 		this.setGaDen(gaDen);
 		this.setGaDi(gaDi);
 		this.setHang(hang);
@@ -202,7 +202,7 @@ public class Ve {
 	}
 	
 	public float tinhGiaVe() {
-		return tinhGiaVeGoc() * tinhGiaVe();
+		return tinhGiaVeGoc() * tinhTiGia();
 	}
 	
 	public boolean xuatVe() {

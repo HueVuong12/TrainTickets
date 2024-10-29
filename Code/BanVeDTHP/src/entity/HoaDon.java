@@ -2,13 +2,18 @@ package entity;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -17,8 +22,14 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
+
+import dao.ChiTietHoaDon_DAO;
+import dao.Ga_DAO;
+import dao.KhachHang_DAO;
+import dao.Ve_DAO;
 
 public class HoaDon {
 	private String maHoaDon;
@@ -26,8 +37,19 @@ public class HoaDon {
 	private NhanVien nhanVien;
 	private KhachHang khachHang;
 	private ChiTietHoaDon chiTiet;
-	private Boolean daHoanVe ;
+	private Boolean daHoanVe;
 	private Boolean daHoanTien;
+
+	private KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+	private ChiTietHoaDon_DAO chiTietHoaDon_DAO = new ChiTietHoaDon_DAO();
+	private Ve_DAO ve_DAO = new Ve_DAO();
+	private Ga_DAO ga_DAO = new Ga_DAO();
+
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	DateTimeFormatter timeFormater = DateTimeFormatter.ofPattern("HH:mm");
+	DecimalFormat df = new DecimalFormat("##,###");
+	private static final String[] CHU_SO = { "không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín" };
+	private static final String[] DON_VI = { "", "nghìn", "triệu", "tỷ" };
 
 	public HoaDon(String maHoaDon, LocalDateTime ngayLapHoaDon, NhanVien nhanVien, KhachHang khachHang,
 			ChiTietHoaDon chiTiet, Boolean daHoanVe, Boolean daHoanTien) {
@@ -75,7 +97,7 @@ public class HoaDon {
 
 	public void setNhanVien(NhanVien nhanVien) {
 		this.nhanVien = nhanVien;
-		//Kiểm tra tồn tại
+		// Kiểm tra tồn tại
 	}
 
 	public KhachHang getKhachHang() {
@@ -84,7 +106,7 @@ public class HoaDon {
 
 	public void setKhachHang(KhachHang khachHang) {
 		this.khachHang = khachHang;
-		//Kiểm tra tồn tại
+		// Kiểm tra tồn tại
 	}
 
 	public ChiTietHoaDon getChiTiet() {
@@ -93,7 +115,7 @@ public class HoaDon {
 
 	public void setChiTiet(ChiTietHoaDon chiTiet) {
 		this.chiTiet = chiTiet;
-		//Kiểm tra tồn tại
+		// Kiểm tra tồn tại
 	}
 
 	public Boolean getDaHoanVe() {
@@ -139,179 +161,352 @@ public class HoaDon {
 	public float tongTien() {
 		return this.chiTiet.tinhTien();
 	}
-	
+
 	public float tinhTienHoan() {
 		int size = this.chiTiet.getDsVe().size();
 		long thoiGian = Duration.between(chiTiet.getDsVe().get(0).getGioDi(), LocalTime.now()).toHours();
 		if (size == 1) {
 			if (thoiGian >= 24)
-				return chiTiet.tinhTien()*0.9f;
+				return chiTiet.tinhTien() * 0.9f;
 			else if (thoiGian >= 4)
-				return chiTiet.tinhTien()*0.8f;
+				return chiTiet.tinhTien() * 0.8f;
 		} else {
 			if (thoiGian >= 72)
-				return chiTiet.tinhTien()*0.9f;
+				return chiTiet.tinhTien() * 0.9f;
 			else if (thoiGian >= 24)
-				return chiTiet.tinhTien()*0.8f; 
+				return chiTiet.tinhTien() * 0.8f;
 		}
 		return 0;
 	}
-	
+
 	public void xuatHoaDon(String pdfPath) {
-    	try {
+		try {
+			// Tạo file PDF
+			PdfWriter writer = new PdfWriter(new FileOutputStream(pdfPath));
+			PdfDocument pdfDoc = new PdfDocument(writer);
+			Document document = new Document(pdfDoc);
 
-            // Tạo file PDF
-            PdfWriter writer = new PdfWriter(new FileOutputStream(pdfPath));
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            Document document = new Document(pdfDoc);
-            
-            // Thêm hình ảnh vào đầu tài liệu
-            String imagePath = getClass().getResource("/img/LogoDepHonDen.png").getPath(); // Đường dẫn đến hình ảnh
-            Image img = new Image(ImageDataFactory.create(imagePath));
-            img.setWidth(120); // Đặt chiều rộng cho hình ảnh
+			document.setMargins(10, 40, 30, 10);
 
-            // Tạo bảng tiêu đề chiếm toàn bộ chiều rộng của trang
-            Table headerTable = new Table(3);
-            headerTable.setWidth(500); // Chiều rộng cụ thể của bảng tiêu đề
+			// Tải font Unicode hỗ trợ tiếng Việt
+			String fontPathRegular = "font/TIMES.TTF"; // Đường dẫn đến font thường
+			String fontPathBold = "font/TIMESBD.TTF"; // Đường dẫn đến font in đậm
+			String fontPathItalic = "font/TIMESI.TTF"; // Đường dẫn đến font in nghiêng
 
-            // Thêm các ô vào bảng mà không có border
-            headerTable.addCell(new Cell(2,1).add(img)
-                    .setBorder(Border.NO_BORDER));  // Tắt border cho ô tiêu đề
-            headerTable.addCell(new Cell().add(new Paragraph("HÓA ĐƠN")
-                    .setBold().setFontSize(18).setTextAlignment(TextAlignment.CENTER))
-                    .setBorder(Border.NO_BORDER));  // Tắt border cho ô tiêu đề
-            headerTable.addCell(new Cell().add(new Paragraph("Ma Hoa Don: 000001")
-                    .setTextAlignment(TextAlignment.RIGHT))
-                    .setBorder(Border.NO_BORDER));  // Tắt border cho ô số hóa đơn
-            headerTable.addCell(new Cell(1,3).add(new Paragraph("Ngay xx, thang xx, nam 20xx")
-            		.setTextAlignment(TextAlignment.LEFT))
-            		.setBorder(Border.NO_BORDER));  // Tắt border cho ô số hóa đơn
+			PdfFont fontRegular = PdfFontFactory.createFont(fontPathRegular, PdfEncodings.IDENTITY_H, true);
+			PdfFont fontBold = PdfFontFactory.createFont(fontPathBold, PdfEncodings.IDENTITY_H, true);
+			PdfFont fontItalic = PdfFontFactory.createFont(fontPathItalic, PdfEncodings.IDENTITY_H, true);
 
-            // Thêm bảng vào tài liệu
-            document.add(headerTable);
-         
-            // Thêm thông tin khách hàng và địa chỉ
-            UnitValue[] columnWidths1 = {
-                    UnitValue.createPercentValue(20), // Cột 1 chiếm 20% chiều rộng
-                    UnitValue.createPercentValue(30), // Cột 2 chiếm 50% chiều rộng
-                    UnitValue.createPercentValue(20),  // Cột 3 chiếm 30% chiều rộng
-                    UnitValue.createPercentValue(30)  // Cột 4 chiếm 30% chiều rộng
-                };
-                
-            // Tạo bảng với mảng độ rộng cột
-            Table tableKH = new Table(columnWidths1);
-            tableKH.setWidth(500);
-            tableKH.addCell(new Cell().add(new Paragraph("Don vi ban ve: ")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell().add(new Paragraph("Nhà ga ĐTHP")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell().add(new Paragraph("Dien thoai: ")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell().add(new Paragraph("0123456789")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell().add(new Paragraph("Ma nhan vien: ")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell(1,3).add(new Paragraph("NV001")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell().add(new Paragraph("Ma khach hang: ")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell().add(new Paragraph("KH0001")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell().add(new Paragraph("Ten khach hang: ")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell().add(new Paragraph("Le Tan Phong")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell().add(new Paragraph("SDT khach hang: ")).setBorder(Border.NO_BORDER));
-            tableKH.addCell(new Cell(1,3).add(new Paragraph("0919128639")).setBorder(Border.NO_BORDER));
-            
-            document.add(tableKH);
+			// Thêm hình ảnh vào đầu tài liệu
+			String imagePath = getClass().getResource("/img/LogoDepHonDen.png").getPath(); // Đường dẫn đến hình ảnh
+			Image img = new Image(ImageDataFactory.create(imagePath));
+			img.setWidth(120); // Đặt chiều rộng cho hình ảnh
 
-            // Tạo bảng cho các mục trong hóa đơn
-            UnitValue[] columnWidths2 = {
-                    UnitValue.createPercentValue(5),
-                    UnitValue.createPercentValue(10),
-                    UnitValue.createPercentValue(30),
-                    UnitValue.createPercentValue(5),
-                    UnitValue.createPercentValue(10),
-                    UnitValue.createPercentValue(10),
-                    UnitValue.createPercentValue(10),
-                    UnitValue.createPercentValue(10),
-                    UnitValue.createPercentValue(10)
-                };
-            Table table = new Table(columnWidths2);
-            table.setWidth(500);
-            
-            // Tiêu đề
-            table.addCell(new Cell().add(new Paragraph("STT").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("Ma ve").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("Ten dich vu").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("So luong").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("Don gia").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("Thanh tien chua thue").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("Thue suat").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("Thue GTGT").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("Thanh tien co thue").setTextAlignment(TextAlignment.CENTER)));
+			// Thêm thông tin khách hàng và địa chỉ
+			UnitValue[] columnWidths = { UnitValue.createPercentValue(3), UnitValue.createPercentValue(5),
+					UnitValue.createPercentValue(3) };
 
-            // Cách tính
-            table.addCell(new Cell().add(new Paragraph("a").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("b").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("c").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("d").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("e").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("f=d*e").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("g").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("h=f*g").setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell().add(new Paragraph("i=f+h").setTextAlignment(TextAlignment.CENTER)));
-            
-            // Thêm các dòng trong bảng
-            int tongcothue = 0;
-            int tongkhongthue = 0;
-            int tongthue = 0;
-            for (int i = 1; i <= 4; i++) {
-                table.addCell(new Cell().add(new Paragraph(String.valueOf(i))));
-                table.addCell(new Cell().add(new Paragraph("VE00" + i)));
-                table.addCell(new Cell().add(new Paragraph("Ten san pham " + i)));
-                table.addCell(new Cell().add(new Paragraph(i+"")));
-                table.addCell(new Cell().add(new Paragraph(i+"000")));
-                table.addCell(new Cell().add(new Paragraph(i*i+"000")));
-                table.addCell(new Cell().add(new Paragraph("10%")));
-                table.addCell(new Cell().add(new Paragraph(i*i+"00")));
-                table.addCell(new Cell().add(new Paragraph((i*i*1100)+"")));
-                tongcothue += i*i*1100;
-                tongkhongthue += i*i*1000;
-                tongthue += i*i*100;
-            }
+			// Tạo bảng tiêu đề chiếm toàn bộ chiều rộng của trang
+			Table headerTable = new Table(columnWidths);
+			headerTable.setWidth(580); // Chiều rộng cụ thể của bảng tiêu đề
 
-            // Thêm tổng cộng
-            table.addCell(new Cell(1, 5).add(new Paragraph("Tong cong:")));
-            table.addCell(new Cell().add(new Paragraph(tongkhongthue+"")));
-            table.addCell(new Cell().add(new Paragraph("")));
-            table.addCell(new Cell().add(new Paragraph(tongthue+"")));
-            table.addCell(new Cell().add(new Paragraph(tongcothue+"")));
-            table.addCell(new Cell(1,9).add(new Paragraph("Cong thanh tien (Viet bang chu): ba muoi ba nghin dong")));
-            
-            document.add(table);
+			// Thêm các ô vào bảng mà không có border
+			headerTable.addCell(new Cell(2, 1).add(img).setBorder(Border.NO_BORDER));
+			headerTable.addCell(new Cell(1, 1).add(
+					new Paragraph("HÓA ĐƠN").setFont(fontBold).setFontSize(20).setTextAlignment(TextAlignment.CENTER))
+					.setBorder(Border.NO_BORDER));
+			Paragraph thongTinHoaDon = new Paragraph().add(new Text("Mã Hóa Đơn: ").setFont(fontBold).setFontSize(10))
+					.add(new Text(maHoaDon).setFont(fontRegular).setFontSize(10))
+					.add(new Text("\nNgày lập: ").setFont(fontBold).setFontSize(10))
+					.add(new Text(ngayLapHoaDon.format(formatter)).setFont(fontRegular).setFontSize(10))
+					.add(new Text("\nThời gian lập: ").setFont(fontBold).setFontSize(10))
+					.add(new Text(ngayLapHoaDon.format(timeFormater)).setFont(fontRegular).setFontSize(10));
+			headerTable.addCell(new Cell(2, 1).add(thongTinHoaDon).setBorder(Border.NO_BORDER));
+			headerTable
+					.addCell(new Cell(1, 1)
+							.add(new Paragraph("Ngày " + ngayLapHoaDon.getDayOfMonth() + ", tháng "
+									+ ngayLapHoaDon.getMonthValue() + ", năm " + ngayLapHoaDon.getYear())
+									.setFont(fontRegular).setTextAlignment(TextAlignment.CENTER))
+							.setBorder(Border.NO_BORDER));
 
-            document.add(new Paragraph("\nGhi chu:........................................................................................................................................."));
-            
-            // Thêm phần ký tên
-            Table tableKyTen = new Table(2);
-            tableKyTen.setWidth(500);
-            tableKyTen.addCell(new Cell().add(new Paragraph("Khach hang")
-                    .setBold().setTextAlignment(TextAlignment.CENTER))
-                    .setBorder(Border.NO_BORDER));
-            tableKyTen.addCell(new Cell().add(new Paragraph("Nguoi ban hang")
-            		.setBold().setTextAlignment(TextAlignment.CENTER))
-            		.setBorder(Border.NO_BORDER));
-            tableKyTen.addCell(new Cell().add(new Paragraph("(Ky, ghi ro ho ten)")
-            		.setItalic().setTextAlignment(TextAlignment.CENTER))
-            		.setBorder(Border.NO_BORDER));
-            tableKyTen.addCell(new Cell().add(new Paragraph("(Ky, ghi ro ho ten)")
-            		.setItalic().setTextAlignment(TextAlignment.CENTER))
-            		.setBorder(Border.NO_BORDER));
-            
-            document.add(tableKyTen);
-            
-            document.add(new Paragraph("\n\n\n\n\n"));
-            
-            document.add(new Paragraph("*Kiem tra doi chieu ky truoc khi nhan hoa don")
-            		.setItalic().setFontSize(10).setTextAlignment(TextAlignment.LEFT));
-            
-            // Đóng tài liệu PDF
-            document.close();
-            System.out.println("Đã tạo hóa đơn và lưu vào file PDF: " + pdfPath);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+			// Thêm bảng vào tài liệu
+			document.add(headerTable);
+
+			// Thêm thông tin khách hàng và địa chỉ
+			UnitValue[] columnWidths1 = { UnitValue.createPercentValue(20), UnitValue.createPercentValue(30),
+					UnitValue.createPercentValue(20), UnitValue.createPercentValue(30) };
+
+			Table tableKH = new Table(columnWidths1);
+			tableKH.setWidth(580);
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Đơn vị bán vé: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Nhà ga ĐTHP").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Điện thoại: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("0123456789").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Mã nhân viên: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell(1, 3).add(new Paragraph(nhanVien.getMaNV()).setFont(fontRegular))
+					.setBorder(Border.NO_BORDER));
+
+			KhachHang khachHangNew = khachHang_DAO.getKhachHangTheoMaKH(khachHang.getMaKH());
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Mã khách hàng: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell().add(new Paragraph(khachHangNew.getMaKH()).setFont(fontRegular))
+					.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Tên khách hàng: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell().add(new Paragraph(khachHangNew.getTenKH()).setFont(fontRegular))
+					.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("SĐT khách hàng: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell(1, 3).add(new Paragraph(khachHangNew.getSdt()).setFont(fontRegular))
+					.setBorder(Border.NO_BORDER));
+
+			document.add(tableKH);
+
+			// Tạo bảng cho các mục trong hóa đơn
+			UnitValue[] columnWidths2 = { 
+					UnitValue.createPercentValue(1), // Cột STT
+					UnitValue.createPercentValue(1), // Cột Mã vé
+					UnitValue.createPercentValue(1), // Cột Thông tin vé
+					UnitValue.createPercentValue(1), // Cột Giá gốc
+					UnitValue.createPercentValue(1), // Cột Đối tượng
+					UnitValue.createPercentValue(1), // Cột Khuyến mãi
+					UnitValue.createPercentValue(1), // Cột Thành tiền chưa thuế
+			};
+
+			Table table = new Table(7);
+			table.setWidth(580);
+
+			// Tiêu đề
+			table.addCell(new Cell().add(
+					new Paragraph("STT").setFont(fontBold).setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(
+					new Paragraph("Mã vé").setFont(fontBold).setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(new Paragraph("Thông tin vé").setFont(fontBold).setFontSize(10)
+					.setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(new Paragraph("Giá gốc\n(VND)").setFont(fontBold).setFontSize(10)
+					.setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(new Paragraph("Đối tượng").setFont(fontBold).setFontSize(10)
+					.setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(new Paragraph("Khuyến mãi\n(VND)").setFont(fontBold).setFontSize(10)
+					.setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(new Paragraph("Thành tiền chưa thuế\n(VND)").setFont(fontBold).setFontSize(10)
+					.setTextAlignment(TextAlignment.CENTER)));
+
+			// Cách tính
+			table.addCell(new Cell().add(
+					new Paragraph("a").setFont(fontRegular).setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(
+					new Paragraph("b").setFont(fontRegular).setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(
+					new Paragraph("c").setFont(fontRegular).setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(
+					new Paragraph("d").setFont(fontRegular).setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(
+					new Paragraph("e").setFont(fontRegular).setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(
+					new Paragraph("e → f").setFont(fontRegular).setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(new Paragraph("g = d - f").setFont(fontRegular).setFontSize(10)
+					.setTextAlignment(TextAlignment.CENTER)));
+
+			// Thêm các dòng trong bảng
+			ChiTietHoaDon chiTietNew = chiTietHoaDon_DAO.getCTHDTheoMaChiTiet(chiTiet.getMaChiTiet());
+			int tongGiaGoc = 0;
+			int tongKhuyenMai = 0;
+			int tongChuaThue = 0;
+			int tongThue = 0;
+			int tongCoThue = 0;
+			int count = 1;
+			for (Ve i : chiTietNew.getDsVe()) {
+				Ve ve = ve_DAO.getVeTheoMaVe(i.getMaVe());
+				// STT
+				table.addCell(new Cell().add(new Paragraph(String.valueOf(count++)).setFont(fontRegular).setFontSize(10)
+						.setTextAlignment(TextAlignment.CENTER)));
+
+				// Mã vé
+				table.addCell(new Cell().add(new Paragraph(ve.getMaVe()).setFont(fontRegular).setFontSize(10)
+						.setTextAlignment(TextAlignment.CENTER)));
+
+				// Thông tin vé + giá gốc
+				String thongTinVe = "Từ " + ga_DAO.getGaTheoMaGa(ve.getGaDi().getMaGa()).getTenGa() + " đến "
+						+ ga_DAO.getGaTheoMaGa(ve.getGaDen().getMaGa()).getTenGa() + "\nNgày: "
+						+ ve.getNgayDi().format(formatter) + "   Lúc: " + ve.getGioDi().toString();
+				float giaGoc;
+				if (ve.getHang().equalsIgnoreCase("VIP")) {
+					thongTinVe = thongTinVe + "\nHạng VIP Toa "
+							+ ve.getToa().getMaToa().substring(ve.getToa().getMaToa().length() - 2) + " Ghế số "
+							+ ve.getSoGhe().getSoGhe();
+					giaGoc = ve.tinhGiaVeGoc() * 1.8f;
+				} else if (ve.getHang().equalsIgnoreCase("Giường nằm")) {
+					thongTinVe = thongTinVe + "\nGiường nằm Toa "
+							+ ve.getToa().getMaToa().substring(ve.getToa().getMaToa().length() - 2) + " Ghế số "
+							+ ve.getSoGhe().getSoGhe();
+					giaGoc = ve.tinhGiaVeGoc() * 1.2f;
+				} else {
+					thongTinVe = thongTinVe + "\nGhế mềm Toa "
+							+ ve.getToa().getMaToa().substring(ve.getToa().getMaToa().length() - 2) + " Ghế số "
+							+ ve.getSoGhe().getSoGhe();
+					giaGoc = ve.tinhGiaVeGoc();
+				}
+				table.addCell(new Cell().add(new Paragraph(thongTinVe).setFont(fontRegular).setFontSize(10)));
+				table.addCell(new Cell().add(new Paragraph(df.format(giaGoc)).setFont(fontRegular).setFontSize(10)
+						.setTextAlignment(TextAlignment.CENTER)));
+
+				// Đối tượng
+				table.addCell(new Cell().add(new Paragraph(ve.getKhuyenMai()).setFont(fontRegular).setFontSize(10)));
+
+				// Khuyến mãi
+				float khuyenMai;
+				if (ve.getKhuyenMai().equalsIgnoreCase("Sinh viên"))
+					khuyenMai = giaGoc * 0.1f;
+				else if (ve.getKhuyenMai().equalsIgnoreCase("Người lớn"))
+					khuyenMai = giaGoc * 0;
+				else if (ve.getKhuyenMai().equalsIgnoreCase("Người lớn tuổi"))
+					khuyenMai = giaGoc * 0.15f;
+				else if (ve.getKhuyenMai().equalsIgnoreCase("Trẻ em từ 6 đến 10 tuổi"))
+					khuyenMai = giaGoc * 0.25f;
+				else
+					khuyenMai = giaGoc * 1;
+				table.addCell(new Cell().add(new Paragraph(df.format(khuyenMai)).setFont(fontRegular).setFontSize(10)
+						.setTextAlignment(TextAlignment.CENTER)));
+
+				// Thành tiền chưa thuế
+				float tienChuaThue = giaGoc - khuyenMai;
+				table.addCell(new Cell().add(new Paragraph(df.format(tienChuaThue)).setFont(fontRegular).setFontSize(10)
+						.setTextAlignment(TextAlignment.CENTER)));
+
+				tongGiaGoc += giaGoc;
+				tongKhuyenMai += khuyenMai;
+				tongChuaThue += tienChuaThue;
+				tongThue += (giaGoc - khuyenMai) * 0.1f;
+				tongCoThue += (giaGoc - khuyenMai) * 1.1f;
+			}
+
+			// Thêm tổng cộng
+			table.addCell(new Cell(1, 2).add(new Paragraph("Tổng cộng (VND):").setFont(fontBold).setFontSize(10)));
+			table.addCell(new Cell().add(new Paragraph("").setFont(fontRegular)));
+			table.addCell(new Cell().add(new Paragraph(df.format(tongGiaGoc)).setFont(fontRegular).setFontSize(10)
+					.setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(new Paragraph("").setFont(fontRegular)));
+			table.addCell(new Cell().add(new Paragraph(df.format(tongKhuyenMai)).setFont(fontRegular).setFontSize(10)
+					.setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(new Paragraph(df.format(tongChuaThue)).setFont(fontRegular).setFontSize(10)
+					.setTextAlignment(TextAlignment.CENTER)));
+
+			table.addCell(new Cell(1, 2)
+					.add(new Paragraph("Thuế giá trị gia tăng (10%): ").setFont(fontBold).setFontSize(10)));
+			table.addCell(new Cell(1, 5).add(new Paragraph(df.format(tongThue) + " VND").setFont(fontRegular)
+					.setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell(1, 2).add(new Paragraph("Tổng tiền bằng số: ").setFont(fontBold).setFontSize(10)));
+			table.addCell(new Cell(1, 5).add(new Paragraph(df.format(tongThue) + " VND").setFont(fontRegular)
+					.setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell(1, 2).add(new Paragraph("Tổng tiền bằng chữ: ").setFont(fontBold).setFontSize(10)));
+			table.addCell(new Cell(1, 5).add(new Paragraph(convertToWords((long) tongCoThue).toUpperCase())
+					.setFont(fontRegular).setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+
+			// Thêm ghi chú
+			table.addCell(new Cell(1, 7).add(new Paragraph(
+					"\nGhi chú:......................................................................................................................................................................................................................."))
+					.setFont(fontRegular).setFontSize(10).setTextAlignment(TextAlignment.CENTER)
+					.setBorder(Border.NO_BORDER));
+
+			document.add(table);
+
+			// Thêm phần ký tên
+			Table tableKyTen = new Table(2);
+			tableKyTen.setWidth(580);
+			tableKyTen.addCell(
+					new Cell().add(new Paragraph("Khách hàng").setFont(fontBold).setTextAlignment(TextAlignment.CENTER))
+							.setBorder(Border.NO_BORDER));
+			tableKyTen.addCell(new Cell()
+					.add(new Paragraph("Người bán hàng").setFont(fontBold).setTextAlignment(TextAlignment.CENTER))
+					.setBorder(Border.NO_BORDER));
+			tableKyTen.addCell(new Cell().add(
+					new Paragraph("(Ký, ghi rõ họ tên)").setFont(fontItalic).setTextAlignment(TextAlignment.CENTER))
+					.setBorder(Border.NO_BORDER));
+			tableKyTen.addCell(new Cell().add(
+					new Paragraph("(Ký, ghi rõ họ tên)").setFont(fontItalic).setTextAlignment(TextAlignment.CENTER))
+					.setBorder(Border.NO_BORDER));
+
+			document.add(tableKyTen);
+
+			document.add(new Paragraph("\n\n\n\n\n"));
+
+			document.add(new Paragraph("*Kiểm tra đối chiếu ký trước khi nhận hóa đơn").setFont(fontItalic)
+					.setFontSize(10).setTextAlignment(TextAlignment.LEFT));
+
+			// Đóng tài liệu
+			document.close();
+			System.out.println("Đã tạo hóa đơn và lưu vào file PDF: " + pdfPath);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	// Hàm chính để chuyển đổi số sang chữ
+	public static String convertToWords(long soTien) {
+		if (soTien == 0) {
+			return "không đồng";
+		}
+
+		StringBuilder result = new StringBuilder();
+		int donViIndex = 0;
+
+		while (soTien > 0) {
+			int group = (int) (soTien % 1000); // Nhóm ba chữ số
+			if (group > 0) {
+				String groupText = convertThreeDigitNumber(group);
+				result.insert(0, groupText + " " + DON_VI[donViIndex] + " ");
+			}
+			soTien /= 1000;
+			donViIndex++;
+		}
+
+		result.append("đồng");
+		return result.toString().trim().replaceAll("\\s+", " ");
+	}
+
+	// Hàm chuyển đổi một nhóm ba chữ số thành chữ
+	private static String convertThreeDigitNumber(int number) {
+		StringBuilder groupText = new StringBuilder();
+
+		int tram = number / 100;
+		int chuc = (number % 100) / 10;
+		int donVi = number % 10;
+
+		if (tram > 0) {
+			groupText.append(CHU_SO[tram]).append(" trăm ");
+			if (chuc == 0 && donVi > 0) {
+				groupText.append("lẻ ");
+			}
+		}
+
+		if (chuc > 1) {
+			groupText.append(CHU_SO[chuc]).append(" mươi ");
+			if (donVi == 1) {
+				groupText.append("mốt");
+			} else if (donVi == 5) {
+				groupText.append("lăm");
+			} else if (donVi > 0) {
+				groupText.append(CHU_SO[donVi]);
+			}
+		} else if (chuc == 1) {
+			groupText.append("mười ");
+			if (donVi == 1) {
+				groupText.append("một");
+			} else if (donVi == 5) {
+				groupText.append("lăm");
+			} else if (donVi > 0) {
+				groupText.append(CHU_SO[donVi]);
+			}
+		} else if (donVi > 0) {
+			groupText.append(CHU_SO[donVi]);
+		}
+
+		return groupText.toString().trim();
 	}
 }
