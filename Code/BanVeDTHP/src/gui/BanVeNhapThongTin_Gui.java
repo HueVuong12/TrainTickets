@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.SystemColor;
@@ -22,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import components.ButtonEditor;
@@ -33,11 +31,9 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.DefaultCellEditor;
-import javax.swing.Icon;
 
 public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
-	private JTable table;
 	private JLabel goBackIconLabel;
 	private JLabel lbl_quayLai;
 	private JPanel jp_KHMV;

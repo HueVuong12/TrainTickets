@@ -1,7 +1,8 @@
 package gui;
 
-import java.awt.Checkbox;
 import java.awt.Color;
+import java.awt.Desktop;
+
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -9,13 +10,12 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 import javax.swing.JTextField;
@@ -23,25 +23,17 @@ import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JDateChooserBeanInfo;
-
 import dao.HoaDon_DAO;
 import dao.KhachHang_DAO;
 import entity.HoaDon;
-import entity.KhachHang;
-
 import javax.swing.JCheckBox;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import java.awt.BorderLayout;
 
 public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 	private JTextField txtMaHD;
@@ -60,6 +52,7 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 	private TableRowSorter<TableModel> sorter;
 	private JTextField txtTu;
 	private JTextField txtDen;
+	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
 
 	@SuppressWarnings("serial")
 	public QuanLyHoaDon_GUI() {
@@ -293,6 +286,41 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 
 		}
 		if (o.equals(btnXuatHoaDon)) {
+			int row = table.getSelectedRow();
+			HoaDon hoaDon = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
+			String pdfPath = "HoaDon/" + hoaDon.getMaHoaDon() + ".pdf";
+			hoaDon.xuatHoaDon(pdfPath);
+
+			// Kiểm tra xem Desktop có được hỗ trợ không
+	        if (Desktop.isDesktopSupported()) {
+	            Desktop desktop = Desktop.getDesktop();
+	            try {
+	                File pdfFile = new File(pdfPath);  // Tạo đối tượng File từ đường dẫn
+	                desktop.open(pdfFile);  // Mở file bằng ứng dụng mặc định
+
+	                // Hiển thị hộp thoại xác nhận sau khi mở file
+	                int confirm = JOptionPane.showConfirmDialog(
+	                    null, 
+	                    "Bạn có muốn xóa file hóa đơn vừa tạo không?", 
+	                    "Xác nhận xóa file", 
+	                    JOptionPane.YES_NO_OPTION
+	                );
+
+	                // Xóa file nếu người dùng chọn "Yes"
+	                if (confirm == JOptionPane.YES_OPTION) {
+	                    if (pdfFile.delete()) {
+	                        System.out.println("File PDF đã được xóa: " + pdfPath);
+	                    } else {
+	                        System.out.println("Không thể xóa file PDF.");
+	                    }
+	                }
+
+	            } catch (IOException e1) {
+	                e1.printStackTrace();
+	            }
+	        } else {
+	            System.out.println("Mở file không được hỗ trợ trên hệ thống này.");
+	        }
 		}
 		if (o.equals(chckbxTatCa)) {
 			chckbxDaHoanTien.setSelected(false);

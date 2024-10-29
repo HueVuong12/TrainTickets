@@ -1,8 +1,6 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.SystemColor;
 
 import javax.swing.ImageIcon;
@@ -11,22 +9,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.AbstractBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Insets;
-
 import javax.swing.table.DefaultTableModel;
 
 import components.ConTent_JPanel;
 
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -37,19 +27,12 @@ import java.awt.event.ActionEvent;
 public class TraCuuKhachHang_GUI extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
-	private JTextField textField;
-	private JTextField textFieldTenKH;
-	private JTextField textFieldEmail;
-	private JTextField textFieldSDT;
 	private JTextField textFieldCCCD;
-	private JTable table;
 	private JTextField textField_MaKH;
 	private JTextField textField_TenKH;
 	private JTextField textField_Email;
 	private JTextField textField_SDT;
 	private JTable table_1;
-	private String placeholder;
-	
 	/**
 	 * Create the panel.
 	 */
@@ -210,7 +193,7 @@ public class TraCuuKhachHang_GUI extends JPanel {
 		scrollPane.setViewportView(table_1);
 		table_1.setBounds(347, 10, 1053, 517);
 		
-		// Thêm FocusListener
+//		 Thêm FocusListener
 //		textField_MaKH.addFocusListener(new FocusAdapter() {
 //            @Override
 //            public void focusGained(FocusEvent e) {

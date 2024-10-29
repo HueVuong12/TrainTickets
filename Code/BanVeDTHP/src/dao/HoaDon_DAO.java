@@ -116,8 +116,8 @@ public class HoaDon_DAO {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				LocalDateTime ngayLapHoaDon = rs.getTimestamp("ngayLapHoaDon").toLocalDateTime();
-				String maNV = rs.getString("maNV");
-				String maKH = rs.getString("maKH");
+				String maNV = rs.getString("nhanVien");
+				String maKH = rs.getString("khachHang");
 				String maChiTiet = "CT" + maHoaDon;
 				boolean daHoanVe = rs.getBoolean("daHoanVe");
 				boolean daHoanTien = rs.getBoolean("daHoanTien");

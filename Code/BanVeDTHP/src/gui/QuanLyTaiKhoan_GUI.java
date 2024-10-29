@@ -2,8 +2,6 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.SystemColor;
@@ -14,44 +12,30 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 
 import components.ConTent_JPanel;
 import components.RoundedButton;
 import components.RoundedTextField;
-import dao.NhanVien_DAO;
 import dao.TaiKhoan_DAO;
-import entity.Ca;
 import entity.NhanVien;
 import entity.TaiKhoan;
 
 public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseListener{
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	private JTextField textField_MaDN;
 	private JTextField textField_MatKhau;
 	private JTextField textField_PhanQuyen;
@@ -62,7 +46,6 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	private JLabel lbl_MaNV;
 	private JScrollPane scrollPane;
 	private JTable table_TK;
-	private JPanel content;
 	private JPanel jp_quayLai;
 	private JLabel goBackIconLabel;
 	private JLabel lbl_quayLai;
@@ -77,6 +60,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	private TaiKhoan_DAO dstk;
 	private DefaultTableModel model;
 	private boolean isSearching = false; // Trạng thái nhấp chuột
+	private RoundedButton btnTim;
 	/**
 	 * Launch the application.
 	 */
@@ -151,7 +135,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 
 		//Icon xổ xuống
 		ImageIcon downIcon = new ImageIcon(getClass().getResource("/img/Polygon_20.png"));
-		Image scaledDown = downIcon.getImage().getScaledInstance(20 ,20, Image.SCALE_SMOOTH);
+		downIcon.getImage().getScaledInstance(20 ,20, Image.SCALE_SMOOTH);
 		
 		//JPane thông tin tài khoản
 		jp_thongTinNV = new JPanel();
@@ -161,7 +145,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 
 		//Icon xổ xuống
 		ImageIcon downIcon1 = new ImageIcon(getClass().getResource("/img/Polygon_20.png"));
-		Image scaledDown1 = downIcon1.getImage().getScaledInstance(20 ,20, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
+		downIcon1.getImage().getScaledInstance(20 ,20, Image.SCALE_SMOOTH);
 
 		jp_contentThongTin = new JPanel();
 		jp_contentThongTin.setBounds(0, 31, 380, 494);
@@ -233,13 +217,13 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		lbl_MaNV.setBounds(10, 183, 101, 25);
 		jp_contentThongTin.add(lbl_MaNV);
 		
-		RoundedButton btnSua_1 = new RoundedButton("Sửa", 10);
-		btnSua_1.setText("Tìm");
-		btnSua_1.setForeground(Color.WHITE);
-		btnSua_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSua_1.setBackground(new Color(51, 102, 153));
-		btnSua_1.setBounds(265, 249, 85, 27);
-		jp_contentThongTin.add(btnSua_1);
+		btnTim = new RoundedButton("Sửa", 10);
+		btnTim.setText("Tìm");
+		btnTim.setForeground(Color.WHITE);
+		btnTim.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnTim.setBackground(new Color(51, 102, 153));
+		btnTim.setBounds(265, 249, 85, 27);
+		jp_contentThongTin.add(btnTim);
 		
 		//JPane header tiêu đề của thông tin tài khoản
 		jp_headerThongTin = new JPanel();
@@ -369,7 +353,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	
 	//Hàm kiểm tra regex
 		public boolean validData() {
-			if (textField_TimMaTK.getText().equals("")) {
+			if (textField_MaDN.getText().equals("")) {
 				JOptionPane.showMessageDialog(this, "Mã tài khoản không được để trống");
 				return false;
 			}
@@ -444,7 +428,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	//Hàm tìm kiếm tài khoản
 		public void search() {
 			if (validData()) {
-				String maDN= textField_TimMaTK.getText();
+				String maDN= textField_MaDN.getText();
 				TaiKhoan tk = dstk.getTaiKhoanTheoMaTK(maDN);
 				if (tk != null) { // Kiểm tra xem đối tượng SanPham có null không trước khi thêm vào bảng
 					model.setRowCount(0);
@@ -472,7 +456,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		//Hàm xóa thông tin 
 		public void deleteField() {
 			textField_MaNV.setText("");
-			textField_TimMaTK.setText("");
+			textField_MaDN.setText("");
 			textField_MatKhau.setText("");
 			textField_MaDN.setText("");
 			textField_PhanQuyen.setText("");
