@@ -14,6 +14,7 @@ import dao.TaiKhoan_DAO;
 import entity.KhachHang;
 
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Color;
@@ -32,6 +33,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -73,6 +77,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
 	private TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();
+	private JMenu mnTrGip;
 	
 	/**
 	 * Launch the application.
@@ -92,11 +97,13 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
+	 * @throws FontFormatException 
 	 */
-	public TrangChu_GUI(DangNhap_GUI dangNhap) {
+	public TrangChu_GUI(DangNhap_GUI dangNhap) throws FontFormatException, IOException {
 		this.dangNhap = dangNhap;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1481, 791);
+		setBounds(100, 100, 1480, 810);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -105,12 +112,12 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		contentPane.setLayout(null);
 		
 		header = new JPanel();
-		header.setBounds(0, 0, 1470, 182);
+		header.setBounds(0, 0, 1470, 200);
 		contentPane.add(header);
 		header.setLayout(null);
 		
 		title = new JPanel();
-		title.setBounds(0, 0, 1069, 177);
+		title.setBounds(0, 0, 1204, 200);
 		title.setForeground(new Color(255, 0, 0));
 		title.setBackground(new Color(51, 102, 153));
 		header.add(title);
@@ -120,25 +127,40 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		ImageIcon originalLogo = new ImageIcon(getClass().getResource("/img/LogoDepHonTrang.png"));
 	    Image scaledLogo = originalLogo.getImage().getScaledInstance(300, 120, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    logoLabel = new JLabel(new ImageIcon(scaledLogo));
-	    logoLabel.setBounds(84, 10, 300, 108); // Cập nhật kích thước trên JLabel
+	    logoLabel.setBounds(18, 18, 300, 108); // Cập nhật kích thước trên JLabel
 	    title.add(logoLabel);
 	    
 	    //Tên Chương trình
 	    titleLabel = new JLabel("Nhà ga ĐTHP");
 	    titleLabel.setForeground(SystemColor.text);
-	    titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 40));
-	    titleLabel.setBounds(499, 0, 264,125);
+	    try {
+            // Nạp font từ JAR thông qua ClassLoader
+            InputStream fontStream = getClass().getClassLoader()
+                .getResourceAsStream("/libs/Italianno-Regular.ttf");
+            
+            if (fontStream == null) {
+                throw new FileNotFoundException("Font không tìm thấy trong Referenced Libraries");
+            }
+
+            Font italiannoFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(24f);
+            titleLabel.setFont(italiannoFont);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+            // Nếu không nạp được font, dùng font mặc định
+            titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 40));
+        }
+	    titleLabel.setBounds(328, 0, 876,145);
 	    title.add(titleLabel);
 	    
 		//Menu Chính
 		jp_menu = new JPanel();
-		jp_menu.setBounds(0, 124, 1070, 53);
+		jp_menu.setBounds(0, 145, 1204, 53);
 		title.add(jp_menu);
 		jp_menu.setLayout(null);
 		
 		menuBar = new JMenuBar();
 		menuBar.setBackground(SystemColor.menu);
-		menuBar.setBounds(0, 0, 1070, 53);
+		menuBar.setBounds(0, 0, 1204, 53);
 		jp_menu.add(menuBar);
 		
 		khachHang = new JMenu("Khách hàng");
@@ -245,16 +267,21 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		taiKhoan.setPreferredSize(new Dimension(150, 30));
 		menuBar.add(taiKhoan);
 		
+		mnTrGip = new JMenu("Trợ giúp");
+		mnTrGip.setPreferredSize(new Dimension(150, 30));
+		mnTrGip.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		menuBar.add(mnTrGip);
+		
 		jp_nhanVien = new JPanel();
 		jp_nhanVien.setBackground(SystemColor.text);
-		jp_nhanVien.setBounds(1067, 0, 403, 177);
+		jp_nhanVien.setBounds(1203, 0, 267, 200);
 		header.add(jp_nhanVien);
 		jp_nhanVien.setLayout(null);
 		ImageIcon userIcon = new ImageIcon(getClass().getResource("/img/user.png"));
 	    Image scaledUser = userIcon.getImage().getScaledInstance(73 ,56, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    jp_nhanVien.setLayout(null);
 	    userIconLabel = new JLabel(new ImageIcon(scaledUser));
-	    userIconLabel.setBounds(184 ,10 , 73 ,56); // Cập nhật kích thước trên JLabel
+	    userIconLabel.setBounds(100 ,10 , 73 ,56); // Cập nhật kích thước trên JLabel
 	    jp_nhanVien.add(userIconLabel);
 	    
 	    lbl_ThongTinNV = new JLabel();
@@ -262,19 +289,19 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    															.getNhanVien().getMaNV()).getTenNV());
 	    lbl_ThongTinNV.setFont(new Font("Tahoma", Font.PLAIN, 16));
 	    lbl_ThongTinNV.setHorizontalAlignment(SwingConstants.CENTER);
-	    lbl_ThongTinNV.setBounds(96, 74, 247, 21);
+	    lbl_ThongTinNV.setBounds(18, 91, 231, 21);
 	    jp_nhanVien.add(lbl_ThongTinNV);
 	    
 	    lbl_ThoiGian = new JLabel();
 	    lbl_ThoiGian.setFont(new Font("Tahoma", Font.PLAIN, 15));
 	    lbl_ThoiGian.setHorizontalAlignment(SwingConstants.CENTER);
-	    lbl_ThoiGian.setBounds(96, 95, 247, 21);
+	    lbl_ThoiGian.setBounds(18, 122, 231, 21);
 	    jp_nhanVien.add(lbl_ThoiGian);
 	    
 		ImageIcon exitIcon = new ImageIcon(getClass().getResource("/img/Exit.png"));
 	    Image scaledExit = exitIcon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    exitIconLabel = new JLabel(new ImageIcon(scaledExit));
-	    exitIconLabel.setBounds(203 ,130 , 40 ,37); // Cập nhật kích thước trên JLabel
+	    exitIconLabel.setBounds(111 ,153 , 40 ,37); // Cập nhật kích thước trên JLabel
 	    jp_nhanVien.add(exitIconLabel);
 	    exitIconLabel.addMouseListener(new MouseAdapter() {
 	    	public void mouseClicked(MouseEvent e) {
@@ -300,7 +327,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    	}}
 	    		);
 		content = new JPanel();
-		content.setBounds(0, 178, 1470, 575);
+		content.setBounds(0, 200, 1470, 575);
 		content.setLayout(new GridLayout());
 		content.setForeground(new Color(255, 255, 255));
 		contentPane.add(content);
