@@ -5,6 +5,8 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -169,22 +171,18 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel {
 		lblNgayDi.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblNgayDi.setBounds(271, 87, 94, 21);
 		panel_ThongTinTau.add(lblNgayDi);
-		RoundedTextField panel_ThoiGianHT = new RoundedTextField(15);
-//		JPanel panel_ThoiGianHT = new JPanel();
-		panel_ThoiGianHT.setBackground(new Color(1, 111, 162));
-		panel_ThoiGianHT.setBounds(571, 94, 247, 40);
-		panel_ThongTinTau.add(panel_ThoiGianHT);
 		
-		JLabel lblThoiGian = new JLabel("Thời gian hành trình: 30 phút");
-		panel_ThoiGianHT.add(lblThoiGian);
-		lblThoiGian.setBackground(new Color(0, 64, 0));
-		lblThoiGian.setForeground(new Color(255, 255, 255));
-		lblThoiGian.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
-		JLabel lblNewLabel_7 = new JLabel("");
-		lblNewLabel_7.setIcon(new ImageIcon(getClass().getResource("/img/9054423_bx_arrow_back_icon.png")));
-		lblNewLabel_7.setBounds(676, 33, 154, 71);
-		panel_ThongTinTau.add(lblNewLabel_7);
+		 // Load hình ảnh gốc
+        ImageIcon icon = new ImageIcon("/img/muiten.png");
+
+        // Scale ảnh về kích thước mong muốn (ví dụ: 108x20)
+        Image scaledImage = icon.getImage().getScaledInstance(108, 20, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+        // Gán ảnh đã scale vào JLabel
+        JLabel lblNewLabel_MuiTen = new JLabel(scaledIcon);
+		lblNewLabel_MuiTen.setBounds(605, 50, 144, 43);
+		panel_ThongTinTau.add(lblNewLabel_MuiTen);
 		
 		JLabel lblNewLabel_9 = new JLabel("");
 		lblNewLabel_9.setIcon(new ImageIcon(getClass().getResource("/img/container_Zoom-removebg-preview - Copy.png")));
@@ -195,6 +193,30 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel {
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblNewLabel_3.setBounds(695, 10, 86, 43);
 		panel_ThongTinTau.add(lblNewLabel_3);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBounds(551, 101, 267, 33);
+		panel_3.setBackground(new Color(51, 102, 153));
+		panel_ThongTinTau.add(panel_3);
+		panel_3.setLayout(null);
+		
+		JLabel lblNewLabel_4 = new JLabel("Thời gian hành trình:");
+		lblNewLabel_4.setForeground(new Color(255, 255, 255));
+		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_4.setBounds(5, 8, 150, 17);
+		panel_3.add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_5 = new JLabel("30");
+		lblNewLabel_5.setForeground(new Color(255, 255, 255));
+		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_5.setBounds(165, 8, 34, 17);
+		panel_3.add(lblNewLabel_5);
+		
+		JLabel lblNewLabel_6 = new JLabel("Phút");
+		lblNewLabel_6.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_6.setForeground(new Color(255, 255, 255));
+		lblNewLabel_6.setBounds(209, 8, 45, 17);
+		panel_3.add(lblNewLabel_6);
 		
 		JPanel panel_1_1 = new JPanel();
 		panel_1_1.setLayout(null);
