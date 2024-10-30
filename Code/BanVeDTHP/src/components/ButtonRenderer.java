@@ -24,11 +24,11 @@ public class ButtonRenderer extends JButton implements TableCellRenderer {
 
 	public ButtonRenderer() {
 		trashIcon = new ImageIcon(getClass().getResource("/img/trash-regular-48-removebg-preview.png"));
-		scaledTrashIcon = trashIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		scaledTrashIcon = trashIcon.getImage().getScaledInstance(150, 50, Image.SCALE_SMOOTH);
 		// JLabel cho hình ảnh
 		trashIconLabel = new JLabel(new ImageIcon(scaledTrashIcon));
 		add(trashIconLabel);
-		trashIconLabel.setBounds(120, 0, 40, 40);
+		trashIconLabel.setBounds(120, 0, 150, 50);
 		setOpaque(true);
 		setBackground(Color.WHITE);
 		setHorizontalAlignment(SwingConstants.CENTER); 

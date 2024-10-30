@@ -5,6 +5,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.SystemColor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -74,8 +75,16 @@ public class BanVe_GUI extends JPanel {
 	private JPanel jp_ThongTinChuyenTau;
 	private JPanel jp_TinhTrangToa;
 	private JPanel jp_TinhTrangGhe;
-	ArrayList<Ve> dsVeDatTam = new ArrayList<Ve>();
+	public ArrayList<Ve> dsVeDatTam = new ArrayList<Ve>();
 	private JPanel jp_VeMua;
+	private JButton btnTiep;
+	private JButton btnQuayLai;
+	private JLabel lbl_Chieu;
+	protected ChuyenTau chuyenTauCu;
+	protected Toa toaCu;
+	protected Rectangle boundsPanel;
+	protected Rectangle boundsPanelToa;
+	private ChuyenTau_JPanel chuyenTauTruocDo = null;
 
 	// Khai bao DAO
 	Ga_DAO ga_dao = new Ga_DAO();
@@ -85,9 +94,6 @@ public class BanVe_GUI extends JPanel {
 	Toa_DAO toa_DAO = new Toa_DAO();
 	Ve_DAO ve_DAO = new Ve_DAO();
 	Ghe_DAO ghe_DAO = new Ghe_DAO();
-	private JButton btnTiep;
-	private JButton btnQuayLai;
-	private JLabel lbl_Chieu;
 
 	/**
 	 * Create the panel.
@@ -166,6 +172,15 @@ public class BanVe_GUI extends JPanel {
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 					lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
 					lbl_Ga_1.setText(txt_GaDi.getText() + " - " + txt_GaDen.getText());
+					
+					jp_TinhTrangToa.removeAll();
+					jp_TinhTrangToa.revalidate();
+					jp_TinhTrangToa.repaint();
+					
+					jp_TinhTrangGhe.removeAll();
+					jp_TinhTrangGhe.revalidate();
+					jp_TinhTrangGhe.repaint();
+					
 					suKienBatDauChon(txt_GaDi.getText(), txt_GaDen.getText());
 				}
 			}
@@ -407,6 +422,15 @@ public class BanVe_GUI extends JPanel {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
 				lbl_Ga_1.setText(txt_GaDen.getText() + " - " + txt_GaDi.getText());
+				
+				jp_TinhTrangToa.removeAll();
+				jp_TinhTrangToa.revalidate();
+				jp_TinhTrangToa.repaint();
+				
+				jp_TinhTrangGhe.removeAll();
+				jp_TinhTrangGhe.revalidate();
+				jp_TinhTrangGhe.repaint();
+				
 				suKienBatDauChon(txt_GaDen.getText(), txt_GaDi.getText());
 			}
 		});
@@ -420,6 +444,30 @@ public class BanVe_GUI extends JPanel {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
 				lbl_Ga_1.setText(txt_GaDi.getText() + " - " + txt_GaDen.getText());
+				
+				if (chuyenTauCu != null) {
+					System.out.println("Co chay");
+					ChuyenTau_JPanel pChuyenTau = new ChuyenTau_JPanel(chuyenTauCu);
+					pChuyenTau.setBounds(boundsPanel);
+					// su kien
+					loadToa(pChuyenTau, chuyenTauCu);
+					if (toaCu != null) {
+						System.err.println("Co chay");
+						Toa_JPanel pToa;
+						if (toaCu.getLoaiToa().equals("VIP")) {
+							pToa = new Toa_JPanel("", 2);
+						} else if (toaCu.getLoaiToa().equals("Giường nằm")) {
+							pToa = new Toa_JPanel("", 3);
+						} else {
+							pToa = new Toa_JPanel("", 4);
+						}
+						pToa.setBounds(boundsPanelToa);
+						// su kien
+						loadGhe(pToa, toaCu);
+					}
+				}
+
+					
 				suKienBatDauChon(txt_GaDi.getText(), txt_GaDen.getText());
 			}
 		});
@@ -440,13 +488,6 @@ public class BanVe_GUI extends JPanel {
 	}
 	
 	private void suKienBatDauChon(String gaDi, String gaDen) {
-		jp_TinhTrangToa.removeAll();
-		jp_TinhTrangToa.revalidate();
-		jp_TinhTrangToa.repaint();
-		
-		jp_TinhTrangGhe.removeAll();
-		jp_TinhTrangGhe.revalidate();
-		jp_TinhTrangGhe.repaint();
 
 		lblMaToa.setText("");
 		jp_ThongTinChuyenTau.removeAll();
@@ -498,59 +539,79 @@ public class BanVe_GUI extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (pChuyenTau == chuyenTauTruocDo)
+					return;
+				// Đổi icon của chuyến tàu trước đó về trạng thái không được chọn
+	            if (chuyenTauTruocDo != null) {
+	                ImageIcon iconCu = new ImageIcon(getClass().getResource("/img/Chuyen_0.png"));
+	                Image scaledIconCu = iconCu.getImage().getScaledInstance(122, 140, Image.SCALE_SMOOTH);
+	                chuyenTauTruocDo.trainIconLabel.setIcon(new ImageIcon(scaledIconCu));
+	            }
 
-				Toa_JPanel toaDau = new Toa_JPanel(chuyenTau.getMaTau(), 1);
-				toaDau.setBounds(0, 0, 100, 72);
+	            // Đổi icon của chuyến tàu được chọn
+	            ImageIcon iconMoi = new ImageIcon(getClass().getResource("/img/Chuyen_1.png"));
+	            Image scaledIconMoi = iconMoi.getImage().getScaledInstance(122, 140, Image.SCALE_SMOOTH);
+	            pChuyenTau.trainIconLabel.setIcon(new ImageIcon(scaledIconMoi));
 
-				// Loại bỏ panel cũ và thêm panel mới vào container
-				jp_TinhTrangToa.removeAll();
-				jp_TinhTrangToa.add(toaDau);
-
-				// Cập nhật giao diện
-				jp_TinhTrangToa.revalidate();
-				jp_TinhTrangToa.repaint();
-
-				ChuyenTau chuyenTau1 = chuyenTau_dao.getChuyenTauTheoMaTau(chuyenTau.getMaTau());
-				int x = 102, y = 0, count = 1;
-				for (Toa toa : chuyenTau1.getDsToa()) {
-					Toa_JPanel pToa;
-					boolean isHetSlot = toa.getDsGhe().stream().anyMatch(ghe -> !ghe.isTrangThai());
-					// Tạo Toa_JPanel
-					if (isHetSlot) {
-						pToa = new Toa_JPanel(count++ + "", 5);
-					} else if (toa.getLoaiToa().equals("VIP")) {
-						pToa = new Toa_JPanel(count++ + "", 2);
-					} else if (toa.getLoaiToa().equals("Giường nằm")) {
-						pToa = new Toa_JPanel(count++ + "", 3);
-					} else {
-						pToa = new Toa_JPanel(count++ + "", 4);
-					}
-					pToa.setBounds(x, y, 100, 72);
-					// su kien
-					suKienTrenToa(pToa, toa);
-					jp_TinhTrangToa.add(pToa);
-					x += 102; // Điều chỉnh vị trí cho panel tiếp theo
-				}
-
-				jp_ThongTinChuyenTau.revalidate();
-				jp_ThongTinChuyenTau.repaint();
-
-				// Xử lý sự kiện khi click vào panel: thay thế bằng panel mới
-				ChuyenTau_JPanel pChuyenTauMoi = new ChuyenTau_JPanel(chuyenTau);
-				pChuyenTauMoi.setBounds(pChuyenTau.getBounds()); // Giữ nguyên vị trí và kích thước của panel cũ
-
-				// Gán lại sự kiện cho panel mới
-				suKienTrenChuyen(pChuyenTauMoi, chuyenTau);
-
-				// Loại bỏ panel cũ và thêm panel mới vào container
-				jp_ThongTinChuyenTau.remove(pChuyenTau);
-				jp_ThongTinChuyenTau.add(pChuyenTauMoi);
-
-				// Cập nhật giao diện
-				jp_ThongTinChuyenTau.revalidate();
-				jp_ThongTinChuyenTau.repaint();
+	            // Lưu lại panel hiện tại làm panel trước đó
+	            chuyenTauTruocDo = pChuyenTau;
+	            
+	            jp_TinhTrangGhe.removeAll();
+				jp_TinhTrangGhe.revalidate();
+				jp_TinhTrangGhe.repaint();
+				lblMaToa.setText("");
+	            
+	            // Gọi loadToa để cập nhật thông tin toa
+	            loadToa(pChuyenTau, chuyenTau);
 			}
 		});
+	}
+	
+	private void loadToa(ChuyenTau_JPanel pChuyenTau, ChuyenTau chuyenTau) {
+		chuyenTauCu = chuyenTau;
+		boundsPanel = pChuyenTau.getBounds();
+		
+		ImageIcon trainIcon;
+		//Logo chương trình
+		trainIcon = new ImageIcon(getClass().getResource("/img/Chuyen_1.png"));			
+		Image scaledTrainIcon = trainIcon.getImage().getScaledInstance(122,140, Image.SCALE_SMOOTH);
+		pChuyenTau.trainIconLabel.setIcon(new ImageIcon(scaledTrainIcon));
+
+		Toa_JPanel toaDau = new Toa_JPanel(chuyenTau.getMaTau(), 1);
+		toaDau.setBounds(0, 0, 100, 72);
+
+		// Loại bỏ panel cũ và thêm panel mới vào container
+		jp_TinhTrangToa.removeAll();
+		jp_TinhTrangToa.add(toaDau);
+
+		// Cập nhật giao diện
+		jp_TinhTrangToa.revalidate();
+		jp_TinhTrangToa.repaint();
+
+		ChuyenTau chuyenTau1 = chuyenTau_dao.getChuyenTauTheoMaTau(chuyenTau.getMaTau());
+		int x = 102, y = 0, count = 1;
+		for (Toa toa : chuyenTau1.getDsToa()) {
+			Toa_JPanel pToa;
+			boolean isHetSlot = toa.getDsGhe().stream().anyMatch(ghe -> !ghe.isTrangThai());
+			// Tạo Toa_JPanel
+			if (isHetSlot) {
+				pToa = new Toa_JPanel(count++ + "", 5);
+			} else if (toa.getLoaiToa().equals("VIP")) {
+				pToa = new Toa_JPanel(count++ + "", 2);
+			} else if (toa.getLoaiToa().equals("Giường nằm")) {
+				pToa = new Toa_JPanel(count++ + "", 3);
+			} else {
+				pToa = new Toa_JPanel(count++ + "", 4);
+			}
+			pToa.setBounds(x, y, 100, 72);
+			// su kien
+			suKienTrenToa(pToa, toa);
+			jp_TinhTrangToa.add(pToa);
+			x += 102; // Điều chỉnh vị trí cho panel tiếp theo
+		}
+
+		jp_ThongTinChuyenTau.revalidate();
+		jp_ThongTinChuyenTau.repaint();
 	}
 
 	private void suKienTrenToa(Toa_JPanel pToa, Toa toa) {
@@ -567,111 +628,123 @@ public class BanVe_GUI extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
-				lblMaToa.setText("Toa số " + pToa.getStrLabel() + ": " + toa.getLoaiToa());
-
-				jp_TinhTrangGhe.removeAll();
-
-				int x = 35, y = 35, count = 1;
-				for (Ghe ghe : toa.getDsGhe()) {
-					ImageIcon containerIcon;
-					if (!ghe.isTrangThai() || ktDaDatTam(ghe)) {
-						containerIcon = new ImageIcon(getClass().getResource("/img/Ghe_0.png"));
-					} else {
-						containerIcon = new ImageIcon(getClass().getResource("/img/Ghe_1.png"));
-					}
-					Image scaledContainerIcon = containerIcon.getImage().getScaledInstance(26, 42, Image.SCALE_SMOOTH);
-
-					// Tạo một JPanel để chứa cả hình ảnh và số ghế
-					JPanel pGhe = new JPanel();
-					pGhe.setLayout(null);
-					pGhe.setBounds(x, y, 26, 42);
-
-					// JLabel cho hình ảnh
-					JLabel containerIconLabel = new JLabel(new ImageIcon(scaledContainerIcon));
-					containerIconLabel.setBounds(0, 0, 26, 42); // Đặt kích thước cho hình ảnh
-
-					// JLabel cho số ghế
-					JLabel countLabel = new JLabel(String.valueOf(count));
-					countLabel.setForeground(Color.BLACK);
-					countLabel.setFont(new Font("Arial", Font.BOLD, 12));
-					countLabel.setHorizontalAlignment(SwingConstants.CENTER);
-					countLabel.setVerticalAlignment(SwingConstants.CENTER);
-					countLabel.setBounds(2, 0, 26, 42);
-
-					pGhe.add(countLabel);
-					pGhe.add(containerIconLabel);
-
-					suKienTrenGhe(containerIconLabel, ghe);
-
-					// Thêm panel vào jp_TinhTrangGhe
-					jp_TinhTrangGhe.add(pGhe);
-					count++;
-
-					// Điều chỉnh vị trí cho panel tiếp theo
-					if (count % 4 == 1) {
-						x += 48;
-						y -= 171;
-					} else if (count % 4 == 3) {
-						x += 0;
-						y += 73;
-					} else {
-						x += 0;
-						y += 49;
-					}
-					jp_TinhTrangGhe.add(pGhe);
-				}
-
-				// Cập nhật giao diện
-				jp_TinhTrangGhe.revalidate();
-				jp_TinhTrangGhe.repaint();
-
-				// Xử lý sự kiện khi click vào panel: thay thế bằng panel mới
-				Toa_JPanel pToaMoi = new Toa_JPanel(pToa.getStrLabel(), pToa.getLoaiToa());
-				pToaMoi.setBounds(pToa.getBounds()); // Giữ nguyên vị trí và kích thước của panel cũ
-
-				// Gán lại sự kiện cho panel mới
-				suKienTrenToa(pToaMoi, toa);
-
-				// Loại bỏ panel cũ và thêm panel mới vào container
-				jp_TinhTrangToa.remove(pToa);
-				jp_TinhTrangToa.add(pToaMoi);
-
-				// Cập nhật giao diện
-				jp_TinhTrangToa.revalidate();
-				jp_TinhTrangToa.repaint();
+				loadGhe(pToa, toa);
 			}
 		});
 	}
+	
+	private void loadGhe(Toa_JPanel pToa, Toa toa) {
+		toaCu = toa;
+		boundsPanelToa = pToa.getBounds();
+		
+		toaCu = toa;
 
-	private void suKienTrenGhe(JLabel gheLabel, Ghe ghe) {
+		lblMaToa.setText("Toa số " + pToa.getStrLabel() + ": " + toa.getLoaiToa());
+
+		jp_TinhTrangGhe.removeAll();
+
+		int x = 35, y = 35, count = 1;
+		for (Ghe ghe : toa.getDsGhe()) {
+			ImageIcon containerIcon;
+			if (!ghe.isTrangThai()) {
+				containerIcon = new ImageIcon(getClass().getResource("/img/Ghe_0.png"));
+			} if (ktDaDatTam(ghe)) {
+				containerIcon = new ImageIcon(getClass().getResource("/img/Ghe_2.png"));
+			} else {
+				containerIcon = new ImageIcon(getClass().getResource("/img/Ghe_1.png"));
+			}
+			Image scaledContainerIcon = containerIcon.getImage().getScaledInstance(26, 42, Image.SCALE_SMOOTH);
+
+			// Tạo một JPanel để chứa cả hình ảnh và số ghế
+			JPanel pGhe = new JPanel();
+			pGhe.setLayout(null);
+			pGhe.setBounds(x, y, 26, 42);
+
+			// JLabel cho hình ảnh
+			JLabel containerIconLabel = new JLabel(new ImageIcon(scaledContainerIcon));
+			containerIconLabel.setBounds(0, 0, 26, 42); // Đặt kích thước cho hình ảnh
+
+			// JLabel cho số ghế
+			JLabel countLabel = new JLabel(String.valueOf(count));
+			countLabel.setForeground(Color.BLACK);
+			countLabel.setFont(new Font("Arial", Font.BOLD, 12));
+			countLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			countLabel.setVerticalAlignment(SwingConstants.CENTER);
+			countLabel.setBounds(2, 0, 26, 42);
+
+			pGhe.add(countLabel);
+			pGhe.add(containerIconLabel);
+			
+			suKienTrenGhe(countLabel, containerIconLabel, ghe);
+
+			// Thêm panel vào jp_TinhTrangGhe
+			jp_TinhTrangGhe.add(pGhe);
+			count++;
+
+			// Điều chỉnh vị trí cho panel tiếp theo
+			if (count % 4 == 1) {
+				x += 48;
+				y -= 171;
+			} else if (count % 4 == 3) {
+				x += 0;
+				y += 73;
+			} else {
+				x += 0;
+				y += 49;
+			}
+			jp_TinhTrangGhe.add(pGhe);
+		}
+
+		// Cập nhật giao diện
+		jp_TinhTrangGhe.revalidate();
+		jp_TinhTrangGhe.repaint();
+
+		// Xử lý sự kiện khi click vào panel: thay thế bằng panel mới
+		Toa_JPanel pToaMoi = new Toa_JPanel(pToa.getStrLabel(), pToa.getLoaiToa());
+		pToaMoi.setBounds(pToa.getBounds()); // Giữ nguyên vị trí và kích thước của panel cũ
+
+		// Gán lại sự kiện cho panel mới
+		suKienTrenToa(pToaMoi, toa);
+
+		// Loại bỏ panel cũ và thêm panel mới vào container
+		jp_TinhTrangToa.remove(pToa);
+		jp_TinhTrangToa.add(pToaMoi);
+
+		// Cập nhật giao diện
+		jp_TinhTrangToa.revalidate();
+		jp_TinhTrangToa.repaint();
+	}
+
+	private void suKienTrenGhe(JLabel countLabel, JLabel gheLabel, Ghe ghe) {
 		// Ban đầu gán hình ảnh cho ghế (có thể là Ghe_0 hoặc Ghe_1)
-		gheLabel.addMouseListener(new MouseAdapter() {
-			// Biến để lưu trữ trạng thái hình ảnh hiện tại
-			private boolean isGhe1 = ghe.isTrangThai(); // Trạng thái ban đầu của ghế
+		countLabel.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				gheLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				if (ghe.isTrangThai()) { countLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); }
 			}
-
+			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				gheLabel.setCursor(Cursor.getDefaultCursor());
+				countLabel.setCursor(Cursor.getDefaultCursor());
 			}
-
+			
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// Chỉ cho phép tương tác nếu trạng thái ban đầu của ghế là true
 				if (ghe.isTrangThai()) {
 					// Thay đổi trạng thái hình ảnh giữa Ghe_1 và Ghe_0
 					ImageIcon newIcon;
-					if (isGhe1 || ktDaDatTam(ghe)) {
+					if (ktDaDatTam(ghe)) {
 						newIcon = new ImageIcon(getClass().getResource("/img/Ghe_1.png"));
 						// Nếu đang chuyển về trạng thái chưa đặt ghế, hãy loại bỏ vé vừa thêm
 						dsVeDatTam.removeIf(v -> (v.getSoGhe().getSoGhe() == ghe.getSoGhe())
 								&& v.getToa().getMaToa().equals(ghe.getToa().getMaToa()));
 					} else {
+						if (dsVeDatTam.size() == 4) {
+							JOptionPane.showMessageDialog(null, "Đã đạt tối đa số lượng vé có thể đặt trong một hóa đơn!");
+							return;
+						}
 						newIcon = new ImageIcon(getClass().getResource("/img/Ghe_2.png"));
 						// Tạo vé mới
 						String maVe = ve_DAO.generateMaVe();
@@ -689,8 +762,6 @@ public class BanVe_GUI extends JPanel {
 								trangThai, null);
 						dsVeDatTam.add(ve);
 					}
-					// Cập nhật trạng thái (đảo chiều)
-					isGhe1 = !isGhe1;
 
 					// Cập nhật icon mới cho JLabel
 					Image scaledIcon = newIcon.getImage().getScaledInstance(26, 42, Image.SCALE_SMOOTH);

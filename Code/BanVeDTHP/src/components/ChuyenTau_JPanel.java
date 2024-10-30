@@ -20,7 +20,7 @@ import java.awt.Font;
 public class ChuyenTau_JPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JLabel trainIconLabel;
+	public JLabel trainIconLabel;
 	ChuyenTau_DAO chuyenTau_DAO = new ChuyenTau_DAO();
 	Toa_DAO toa_DAO = new Toa_DAO();
 	Ghe_DAO ghe_DAO = new Ghe_DAO();
@@ -32,7 +32,7 @@ public class ChuyenTau_JPanel extends JPanel {
 		setLayout(null);
 		ImageIcon trainIcon;
 		//Logo chương trình
-		trainIcon = new ImageIcon(getClass().getResource("/img/Chuyen_1.png"));
+		trainIcon = new ImageIcon(getClass().getResource("/img/Chuyen_0.png"));
 		
 		ChuyenTau chuyenTau = chuyenTau_DAO.getChuyenTauTheoMaTau(chuyenTau1.getMaTau());
 		

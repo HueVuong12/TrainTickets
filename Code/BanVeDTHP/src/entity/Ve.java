@@ -172,13 +172,7 @@ public class Ve {
 	}
 
 	public float tinhTiGia() {
-		float tiGia = 0;
-		if (hang.equalsIgnoreCase("Ghế mềm"))
-			tiGia += 1;
-		else if (hang.equalsIgnoreCase("Giường nằm"))
-			tiGia += 1.2;
-		else
-			tiGia += 1.8;
+		float tiGia = 1;
 		if (khuyenMai.equalsIgnoreCase("Sinh viên"))
 			tiGia += -0.1;
 		else if (khuyenMai.equalsIgnoreCase("Người lớn"))
@@ -193,12 +187,19 @@ public class Ve {
 	
 	public float tinhGiaVeGoc() {
 		int quangDuong = Math.abs(gaDen.getChiSoKm() - 836);
-
+		
+		float tiGia = 0;
+		if (hang.equalsIgnoreCase("Ghế mềm"))
+			tiGia += 1;
+		else if (hang.equalsIgnoreCase("Giường nằm"))
+			tiGia += 1.2;
+		else
+			tiGia += 1.8;
 		if (quangDuong <= 50)
-			return quangDuong * 2000;
+			return quangDuong * 2000 * tiGia;
 		else if (quangDuong <= 400)
-			return quangDuong * 800;
-		return quangDuong * 600;
+			return quangDuong * 800 * tiGia;
+		return quangDuong * 600 * tiGia;
 	}
 	
 	public float tinhGiaVe() {

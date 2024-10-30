@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -13,6 +14,8 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import entity.Ve;
+
 public class ButtonEditor extends DefaultCellEditor {
     /**
 	 * 
@@ -20,7 +23,7 @@ public class ButtonEditor extends DefaultCellEditor {
 	private static final long serialVersionUID = 1L;
 	private JButton button;
     private JTable table;
-    public ButtonEditor(JCheckBox checkBox) {
+    public ButtonEditor(JCheckBox checkBox, ArrayList<Ve> dsVeDatTam) {
     	super(checkBox);
     	button = new JButton();
     	button.setOpaque(true);

@@ -267,17 +267,6 @@ public class HoaDon {
 
 			document.add(tableKH);
 
-			// Tạo bảng cho các mục trong hóa đơn
-			UnitValue[] columnWidths2 = { 
-					UnitValue.createPercentValue(1), // Cột STT
-					UnitValue.createPercentValue(1), // Cột Mã vé
-					UnitValue.createPercentValue(1), // Cột Thông tin vé
-					UnitValue.createPercentValue(1), // Cột Giá gốc
-					UnitValue.createPercentValue(1), // Cột Đối tượng
-					UnitValue.createPercentValue(1), // Cột Khuyến mãi
-					UnitValue.createPercentValue(1), // Cột Thành tiền chưa thuế
-			};
-
 			Table table = new Table(7);
 			table.setWidth(580);
 
@@ -331,28 +320,27 @@ public class HoaDon {
 				table.addCell(new Cell().add(new Paragraph(ve.getMaVe()).setFont(fontRegular).setFontSize(10)
 						.setTextAlignment(TextAlignment.CENTER)));
 
-				// Thông tin vé + giá gốc
+				// Thông tin vé
 				String thongTinVe = "Từ " + ga_DAO.getGaTheoMaGa(ve.getGaDi().getMaGa()).getTenGa() + " đến "
 						+ ga_DAO.getGaTheoMaGa(ve.getGaDen().getMaGa()).getTenGa() + "\nNgày: "
 						+ ve.getNgayDi().format(formatter) + "   Lúc: " + ve.getGioDi().toString();
-				float giaGoc;
 				if (ve.getHang().equalsIgnoreCase("VIP")) {
 					thongTinVe = thongTinVe + "\nHạng VIP Toa "
 							+ ve.getToa().getMaToa().substring(ve.getToa().getMaToa().length() - 2) + " Ghế số "
 							+ ve.getSoGhe().getSoGhe();
-					giaGoc = ve.tinhGiaVeGoc() * 1.8f;
 				} else if (ve.getHang().equalsIgnoreCase("Giường nằm")) {
 					thongTinVe = thongTinVe + "\nGiường nằm Toa "
 							+ ve.getToa().getMaToa().substring(ve.getToa().getMaToa().length() - 2) + " Ghế số "
 							+ ve.getSoGhe().getSoGhe();
-					giaGoc = ve.tinhGiaVeGoc() * 1.2f;
 				} else {
 					thongTinVe = thongTinVe + "\nGhế mềm Toa "
 							+ ve.getToa().getMaToa().substring(ve.getToa().getMaToa().length() - 2) + " Ghế số "
 							+ ve.getSoGhe().getSoGhe();
-					giaGoc = ve.tinhGiaVeGoc();
 				}
 				table.addCell(new Cell().add(new Paragraph(thongTinVe).setFont(fontRegular).setFontSize(10)));
+
+				// Giá gốc
+				float giaGoc = ve.tinhGiaVeGoc();
 				table.addCell(new Cell().add(new Paragraph(df.format(giaGoc)).setFont(fontRegular).setFontSize(10)
 						.setTextAlignment(TextAlignment.CENTER)));
 
