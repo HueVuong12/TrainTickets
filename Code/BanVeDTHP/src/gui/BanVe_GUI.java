@@ -76,14 +76,14 @@ public class BanVe_GUI extends JPanel {
 	private JPanel jp_TinhTrangToa;
 	private JPanel jp_TinhTrangGhe;
 	public ArrayList<Ve> dsVeDatTam = new ArrayList<Ve>();
-	private JPanel jp_VeMua;
+	public JPanel jp_VeMua;
 	private JButton btnTiep;
 	private JButton btnQuayLai;
 	private JLabel lbl_Chieu;
 	protected ChuyenTau chuyenTauCu;
-	protected Toa toaCu;
+	public Toa toaCu;
 	protected Rectangle boundsPanel;
-	protected Rectangle boundsPanelToa;
+	public Rectangle boundsPanelToa;
 	private ChuyenTau_JPanel chuyenTauTruocDo = null;
 
 	// Khai bao DAO
@@ -446,13 +446,11 @@ public class BanVe_GUI extends JPanel {
 				lbl_Ga_1.setText(txt_GaDi.getText() + " - " + txt_GaDen.getText());
 				
 				if (chuyenTauCu != null) {
-					System.out.println("Co chay");
 					ChuyenTau_JPanel pChuyenTau = new ChuyenTau_JPanel(chuyenTauCu);
 					pChuyenTau.setBounds(boundsPanel);
 					// su kien
 					loadToa(pChuyenTau, chuyenTauCu);
 					if (toaCu != null) {
-						System.err.println("Co chay");
 						Toa_JPanel pToa;
 						if (toaCu.getLoaiToa().equals("VIP")) {
 							pToa = new Toa_JPanel("", 2);
@@ -633,7 +631,7 @@ public class BanVe_GUI extends JPanel {
 		});
 	}
 	
-	private void loadGhe(Toa_JPanel pToa, Toa toa) {
+	public void loadGhe(Toa_JPanel pToa, Toa toa) {
 		toaCu = toa;
 		boundsPanelToa = pToa.getBounds();
 		

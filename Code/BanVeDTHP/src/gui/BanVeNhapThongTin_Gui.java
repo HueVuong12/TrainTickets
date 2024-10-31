@@ -9,8 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +32,6 @@ import components.ComboBoxRenderer;
 import components.TextAreaRenderer;
 import dao.Ga_DAO;
 import entity.KhachHang;
-import entity.TaiKhoan;
 import entity.Ve;
 
 import javax.swing.JButton;
@@ -58,11 +55,9 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 	private JTextField textField_Email_KHSDV;
 	private JTextField textField_SDT_KHSDV;
 	private JTextField textField_CCCD_KHSDV;
-	private JTable table;
+	public JTable table;
 	private JPanel jp_Table;
-	private ArrayList<KhachHang> dsKhachHangTam = new ArrayList<KhachHang>();
-	private ArrayList<String> keys = new ArrayList<String>();
-	private Map<Integer, KhachHang> map = new HashMap<>();
+	public Map<Integer, KhachHang> map = new HashMap<>();
 	
 	private Ga_DAO ga_DAO = new Ga_DAO();
 	private JButton bt_Chuyen;
@@ -318,7 +313,7 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 	    
 		// Đặt renderer và editor cho nút xóa
         table.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
-        table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), banVe_GUI.dsVeDatTam));
+        table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), banVe_GUI, BanVeNhapThongTin_Gui.this));
 //        table.getColumnModel().getColumn(7).addPropertyChangeListener(new PropertyChangeListener() {
 //        	@Override
 //        	public void propertyChange(PropertyChangeEvent evt) {
@@ -391,7 +386,11 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
         loadThongTin(banVe_GUI.dsVeDatTam);
 	}
 	
-	private void loadThongTin(ArrayList<Ve> dsVeDatTam) {
+	public void loadThongTin(ArrayList<Ve> dsVeDatTam) {
+		
+		DefaultTableModel defaultModel = ((DefaultTableModel) table.getModel());
+		defaultModel.setRowCount(0);
+		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		int count = 1;
 		for (Ve ve: dsVeDatTam) {
