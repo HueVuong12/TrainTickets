@@ -198,7 +198,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		qlhd = new JMenuItem("Quản lý hóa đơn");
 		qlhd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				QuanLyHoaDon_GUI QLHoaDon= new QuanLyHoaDon_GUI();
+				QuanLyHoaDon_GUI QLHoaDon= new QuanLyHoaDon_GUI(TrangChu_GUI.this);
 				content.removeAll();
 				System.out.println("thành công xóa");
 				content.add(QLHoaDon); // Sử dụng layout thích hợp

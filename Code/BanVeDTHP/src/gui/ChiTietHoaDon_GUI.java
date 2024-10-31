@@ -292,6 +292,7 @@ public class ChiTietHoaDon_GUI extends JPanel {
 	        System.out.println(danhSachVe);
 	    }
 	}
+	
 	public String dinhDangTienTe(double soTien) {
 	    NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 	    return formatter.format(soTien);
