@@ -2,6 +2,9 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -12,6 +15,12 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import dao.ChiTietHoaDon_DAO;
+import dao.Ve_DAO;
+import entity.ChiTietHoaDon;
+import entity.Ve;
+
 import javax.swing.JButton;
 
 public class ChiTietHoaDon_GUI extends JPanel {
@@ -21,6 +30,12 @@ public class ChiTietHoaDon_GUI extends JPanel {
 	private JTextField txtDen;
 	private JTable table;
 	private JTable table_1;
+	private JTable table_CTHD;
+	private JTable table_DSV;
+	private ChiTietHoaDon_DAO dsCTHD;
+	private DefaultTableModel model_CTHD;
+	private Ve_DAO dsVe;
+	private DefaultTableModel model_DSV;
 	public ChiTietHoaDon_GUI() {
 		setBackground(new Color(255, 255, 255));
 		setLayout(null);
@@ -178,16 +193,16 @@ public class ChiTietHoaDon_GUI extends JPanel {
 		scrollPane.setBounds(0, 0, 1146, 365);
 		panel_4.add(scrollPane);
 		
-		table = new JTable();
-		table.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		table.setModel(new DefaultTableModel(
+		table_CTHD = new JTable();
+		table_CTHD.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		table_CTHD.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"STT", "M\u00E3 chi ti\u1EBFt", "M\u00E3 h\u00F3a \u0111\u01A1n", "S\u1ED1 l\u01B0\u1EE3ng", "Th\u00E0nh ti\u1EC1n (ch\u01B0a thu\u1EBF)", "Thu\u1EBF GTGT", "T\u1ED5ng ti\u1EC1n"
+				"STT", "Mã chi tiết", "Mã hóa đơn", "Số lượng", "Thành tiền chưa thuế", "Thuế GTGT", "Tổng tiền"
 			}
 		));
-		scrollPane.setViewportView(table);
+		scrollPane.setViewportView(table_CTHD);
 		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBackground(new Color(51, 102, 153));
@@ -208,21 +223,79 @@ public class ChiTietHoaDon_GUI extends JPanel {
 		scrollPane_1.setBounds(0, 0, 1147, 132);
 		panel_6.add(scrollPane_1);
 		
-		table_1 = new JTable();
-		table_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		table_1.setModel(new DefaultTableModel(
+		table_DSV = new JTable();
+		table_DSV.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		table_DSV.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"STT", "M\u00E3 v\u00E9", "M\u00E3 chi ti\u1EBFt", "H\u1EA1ng", "Lo\u1EA1i", "Gi\u00E1"
+				"STT", "Mã vé", "Mã Chi Tiết", "Hạng", "Khuyến mãi", "giá"
 			}
 		));
-		scrollPane_1.setViewportView(table_1);
+		scrollPane_1.setViewportView(table_DSV);
 		
 		JButton btnNewButton = new JButton("Xuất hóa đơn");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton.setBounds(100, 516, 151, 35);
 		add(btnNewButton);
 		
+		datatoTable_CTHD();
+		datatoTable_Ve();
+		
 	}
+//	// Hàm tải dữ liệu vào bảng table_CTHD
+		public void datatoTable_Ve() {
+			dsVe = new Ve_DAO();
+			ArrayList<Ve> list = dsVe.docTuBang();
+		    dsCTHD = new ChiTietHoaDon_DAO();
+		    model_DSV = (DefaultTableModel) table_DSV.getModel();
+		    int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
+		    for (Ve ve : list) {
+		        model_DSV.addRow(new Object[] { 
+		            stt++, 
+		            ve.getMaVe(),
+		            ve.getChiTiet().getMaChiTiet(),
+		            ve.getHang(), 
+		            ve.getKhuyenMai(),
+		            dinhDangTienTe(ve.tinhGiaVe())
+		        // Định dạng tổng tiền bao gồm thuế
+		        });}
+		    }
+//		}
+	// Hàm tải dữ liệu vào bảng table_CTHD
+	public void datatoTable_CTHD() {
+	    dsCTHD = new ChiTietHoaDon_DAO();
+	    ArrayList<ChiTietHoaDon> list = dsCTHD.docTuBang();
+	    ArrayList<Ve> danhSachVe = null;
+	    dsVe = new Ve_DAO();
+	    model_CTHD = (DefaultTableModel) table_CTHD.getModel();
+	    model_CTHD.setRowCount(0); // Xóa tất cả hàng trong bảng
+	    int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
+
+	    for (ChiTietHoaDon cthd : list) {
+	    	danhSachVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
+	    	 float tongTienVe = 0;
+	    	System.out.println(danhSachVe);
+	    	for(Ve ve: danhSachVe) {
+	    		tongTienVe+=ve.tinhGiaVe();
+	    		System.out.println(tongTienVe);
+	    	}
+	        model_CTHD.addRow(new Object[] { 
+	            stt++, 
+	            cthd.getMaChiTiet(),
+	            cthd.getHoaDon().getMaHoaDon(),
+	            cthd.getSoLuong(), 
+	            dinhDangTienTe(tongTienVe),
+	            cthd.getThue(), // Hiển thị thuế dưới dạng %
+	            dinhDangTienTe(cthd.tinhTien()) // Định dạng tổng tiền bao gồm thuế
+	        });
+	        System.out.println(danhSachVe);
+	    }
+	}
+	public String dinhDangTienTe(double soTien) {
+	    NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+	    return formatter.format(soTien);
+	}
+
+
 }

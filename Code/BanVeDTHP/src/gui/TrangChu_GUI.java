@@ -68,8 +68,8 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	private JMenu taiKhoan;
 	private JPanel jp_nhanVien;
 	private JLabel userIconLabel;
-	private JLabel lbl_ThongTinNV;
-	private JLabel lbl_ThoiGian;
+	public JLabel lbl_ThongTinNV;
+	public JLabel lbl_ThoiGian;
 	private JLabel exitIconLabel;
 	public JPanel content;
 	private Color hoverLabelColor = new Color(0, 153, 255);
