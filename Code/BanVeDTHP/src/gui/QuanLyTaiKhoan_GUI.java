@@ -15,8 +15,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -33,11 +35,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.RowFilter.Entry;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import components.ConTent_JPanel;
 import components.RoundedButton;
@@ -68,8 +74,8 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	private JLabel lbl_quayLai;
 	private JPanel jp_thongTinNV;
 	private JPanel jp_contentThongTin;
-	private JButton btnThem;
-	private JButton btnSua;
+//	private JButton btnThem;
+//	private JButton btnSua;
 	private JPanel jp_headerThongTin;
 	private JLabel lbl_tieuDeTT;
 	private JComboBox<String> comboBox_TimTheoMaTK;
@@ -77,6 +83,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	private TaiKhoan_DAO dstk;
 	private DefaultTableModel model;
 	private boolean isSearching = false; // Trạng thái nhấp chuột
+	private TableRowSorter<TableModel> sorter;
 	/**
 	 * Launch the application.
 	 */
@@ -92,6 +99,10 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 //			}
 //		});
 //	}
+	private JComboBox<String> comboBox_TimtheoMaTaiKhoan;
+	private JButton btnSua;
+	private JButton btnThem;
+	private JButton btn_Tim;
 
 	/**
 	 * Create the frame.
@@ -199,19 +210,18 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		jp_contentThongTin.add(textField_MaNV);
 		focusTxtField(textField_MaNV, "Mã nhân viên");
 
-		RoundedButton btnThem = new RoundedButton("Thêm", 10);
-		btnThem.setForeground(new Color(255, 255, 255));
-		btnThem.setBackground(new Color(51, 102, 153));
-		btnThem.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnThem.setBounds(31, 249, 85, 27);
-		jp_contentThongTin.add(btnThem);
-
-		RoundedButton btnSua = new RoundedButton("Sửa", 10);
-		btnSua.setForeground(new Color(255, 255, 255));
-		btnSua.setBackground(new Color(51, 102, 153));
-		btnSua.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSua.setBounds(148, 249, 85, 27);
-		jp_contentThongTin.add(btnSua);
+//		btnThem.setForeground(new Color(255, 255, 255));
+//		btnThem.setBackground(new Color(51, 102, 153));
+//		btnThem.setFont(new Font("Tahoma", Font.PLAIN, 15));
+//		btnThem.setBounds(31, 249, 85, 27);
+//		jp_contentThongTin.add(btnThem);
+//
+////		RoundedButton btnSua = new RoundedButton("Sửa", 10);
+//		btnSua.setForeground(new Color(255, 255, 255));
+//		btnSua.setBackground(new Color(51, 102, 153));
+//		btnSua.setFont(new Font("Tahoma", Font.PLAIN, 15));
+//		btnSua.setBounds(148, 249, 85, 27);
+//		jp_contentThongTin.add(btnSua);
 
 		lbl_MaDN = new JLabel("Mã tài khoản:");
 		lbl_MaDN.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -233,13 +243,17 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		lbl_MaNV.setBounds(10, 183, 101, 25);
 		jp_contentThongTin.add(lbl_MaNV);
 		
-		RoundedButton btnSua_1 = new RoundedButton("Sửa", 10);
-		btnSua_1.setText("Tìm");
-		btnSua_1.setForeground(Color.WHITE);
-		btnSua_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSua_1.setBackground(new Color(51, 102, 153));
-		btnSua_1.setBounds(265, 249, 85, 27);
-		jp_contentThongTin.add(btnSua_1);
+		btnThem = new JButton("Thêm");
+		btnThem.setBounds(22, 250, 85, 40);
+		jp_contentThongTin.add(btnThem);
+		
+		btnSua = new JButton("Sửa");
+		btnSua.setBounds(136, 250, 85, 40);
+		jp_contentThongTin.add(btnSua);
+		
+		btn_Tim = new JButton("Tìm");
+		btn_Tim.setBounds(254, 250, 85, 40);
+		jp_contentThongTin.add(btn_Tim);
 		
 		//JPane header tiêu đề của thông tin tài khoản
 		jp_headerThongTin = new JPanel();
@@ -260,13 +274,31 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		comboBox_TimTheoMaTK.setBounds(407, 40, 155, 29);
 		add(comboBox_TimTheoMaTK);
 		// Thêm tiêu đề (placeholder) vào JComboBox
-		comboBox_TimTheoMaTK.addItem("Lọc theo mã tài khoản"); // Tiêu đề mặc định
-		comboBox_TimTheoMaTK.setSelectedIndex(0); // Đặt chỉ số lựa chọn mặc định là 0
-				
-		// Thêm các mã nhân viên thực tế vào JComboBox
-		// Ví dụ:
-		comboBox_TimTheoMaTK.addItem("TK001");
-		comboBox_TimTheoMaTK.addItem("TK002");
+		comboBox_TimTheoMaTK.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox<String> cb = (JComboBox<String>) e.getSource();
+				String selectedObj = cb.getSelectedItem() != null ? cb.getSelectedItem().toString() : null;
+				TaiKhoan tk = dstk.getTaiKhoanTheoMaTK(selectedObj);
+				if (tk != null) {
+					int rowIndex = -1;
+					for (int i = 0; i < table_TK.getRowCount(); i++) {
+						// Kiểm tra cột Mã nhân viên tại chỉ mục 1
+						if (table_TK.getValueAt(i, 1).equals(tk.getMaTaiKhoan())) {
+							rowIndex = i;
+							break;
+						}
+					}
+					if (rowIndex != -1) {
+						table_TK.setRowSelectionInterval(rowIndex, rowIndex);
+						textField_MaDN.setText(tk.getMaTaiKhoan());
+						textField_MatKhau.setText(tk.getMatKhau());
+						textField_MaNV.setText(tk.getNhanVien().getMaNV());
+						textField_PhanQuyen.setText(String.valueOf(tk.getPhanQuyen()));
+					}
+				}
+			}
+		});
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(407, 78, 1053, 487);
@@ -274,16 +306,21 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 
 		table_TK = new JTable();
 		scrollPane.setViewportView(table_TK);
-		table_TK.setModel(new DefaultTableModel(
+		model = new DefaultTableModel(
 				new Object[][] {
 				},
 				new String[] {
 						"STT","Mã tài khoản", "Mật khẩu", "Phân quyền", "Mã nhân viên"
 				}
-				));
+				);
+		sorter = new TableRowSorter<>(model);
+		table_TK.setRowSorter(sorter);
+		table_TK.setModel(model);
+		
 		//Thêm sự kiện cho các nút và bảng
 		btnThem.addActionListener(this);
 		btnSua.addActionListener(this);
+		btn_Tim.addActionListener(this);
 		table_TK.addMouseListener(this);
 		datatoTable();
 	}
@@ -351,16 +388,26 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 				deleteField();
 			}
 		}
-		if(o.equals(btnTim)) {
-			if (!isSearching) {
-				// Lần nhấp chuột đầu tiên - thực hiện tìm kiếm
-				search();
-				isSearching = true; // Đặt trạng thái thành true
-			} else {
-				// Lần nhấp chuột thứ hai - tải lại dữ liệu
-				datatoTable();
-				isSearching = false; // Đặt lại trạng thái thành false
+		if(o.equals(btn_Tim)) {
+			if(textField_MaDN.getText() != null) {
+				filterRows();
+				
 			}
+			
+			if(textField_MatKhau.getText() != null) {
+				filterRows();
+				
+			}
+			if(textField_MaNV.getText() != null) {
+				filterRows();
+				
+			}
+			if(textField_PhanQuyen.getText() != null) {
+				filterRows();
+				
+			}
+	
+			
 		}
 		if(o.equals(btnSua)) {
 			update();
@@ -369,10 +416,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	
 	//Hàm kiểm tra regex
 		public boolean validData() {
-			if (textField_TimMaTK.getText().equals("")) {
-				JOptionPane.showMessageDialog(this, "Mã tài khoản không được để trống");
-				return false;
-			}
+			
 			if (textField_MatKhau.getText().equals("")) {
 				JOptionPane.showMessageDialog(this, "Mật khẩu không được bỏ trống");
 				return false;
@@ -441,21 +485,34 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 			}
 			deleteField();
 		}
-	//Hàm tìm kiếm tài khoản
-		public void search() {
-			if (validData()) {
-				String maDN= textField_TimMaTK.getText();
-				TaiKhoan tk = dstk.getTaiKhoanTheoMaTK(maDN);
-				if (tk != null) { // Kiểm tra xem đối tượng SanPham có null không trước khi thêm vào bảng
-					model.setRowCount(0);
-					model.addRow(new Object[] {tk.getMaTaiKhoan(),tk.getMatKhau(),tk.getPhanQuyen(),tk.getNhanVien().getMaNV() 
-					});
-				}
-			}else {
-				JOptionPane.showMessageDialog(this, "Nhập mã tài khoản cần tìm.");
+		private void filterRows() {
+			ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
+			String tk = textField_MaDN.getText().trim();
+			String mk = textField_MatKhau.getText().trim();
+			String nv = textField_MaNV.getText().trim();
+			String pq = textField_PhanQuyen.getText().trim();
+			// Lọc theo các điều kiện
+			if (!tk.isEmpty()) {
+				filters.add(RowFilter.regexFilter("(?i)" + tk, 1));
 			}
+			if (!mk.isEmpty()) {
+				filters.add(RowFilter.regexFilter("(?i)" + mk, 2));
+			}
+			if (!pq.isEmpty()) {
+				filters.add(RowFilter.regexFilter("(?i)" + pq, 3));
+			}
+			if (!nv.isEmpty()) {
+				filters.add(RowFilter.regexFilter("(?i)" +nv, 4));
+			}
+			// Cập nhật bộ lọc
+			if (filters.isEmpty()) {
+				sorter.setRowFilter(null); // Nếu không có bộ lọc nào, xóa bộ lọc
+			} else {
+				sorter.setRowFilter(RowFilter.andFilter(filters));
+			}
+			// Cập nhật lại comboBox_TimTheoMaNV
+		    updateComboBox();
 		}
-
 		//Hàm tải dữ liệu vào bảng
 		public void datatoTable() {
 			dstk = new TaiKhoan_DAO();
@@ -464,20 +521,28 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 			model.setRowCount(0); // Xóa tất cả hàng trong bảng
 			int stt = 1;
 			for (TaiKhoan tk : list) {
+				comboBox_TimTheoMaTK.addItem(tk.getMaTaiKhoan());
 				model.addRow(new Object[] { stt++, tk.getMaTaiKhoan(),tk.getMatKhau(),tk.getPhanQuyen(),tk.getNhanVien().getMaNV()
 				});
 			}
+			deleteField();
 		}
 		
 		//Hàm xóa thông tin 
 		public void deleteField() {
 			textField_MaNV.setText("");
-			textField_TimMaTK.setText("");
 			textField_MatKhau.setText("");
 			textField_MaDN.setText("");
 			textField_PhanQuyen.setText("");
 			
 			;
+		}
+		private void updateComboBox() {
+		    comboBox_TimtheoMaTaiKhoan.removeAllItems(); // Xóa tất cả các mục hiện có trong comboBox
+		    for (int i = 0; i <table_TK.getRowCount(); i++) {
+		        String maTaiKhoan = table_TK.getValueAt(i, 1).toString(); // Giả sử cột 1 là Mã tài khoản
+		        comboBox_TimtheoMaTaiKhoan.addItem(maTaiKhoan); // Thêm mã tài khoản vào comboBox
+		    }
 		}
 		private void focusTxtField(JTextField txtField, String str) {
 			txtField.addFocusListener(new FocusAdapter() {

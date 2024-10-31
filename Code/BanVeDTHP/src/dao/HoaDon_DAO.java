@@ -1,5 +1,6 @@
 package dao;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -134,7 +135,67 @@ public class HoaDon_DAO {
 
 		return hoaDon;
 	}
+	public ArrayList<HoaDon> getHoaDonTheoMaNV(String maNV){
+		Connection con = ConnectDB.getInstance().getConnection();
+		PreparedStatement stmt = null;
+		HoaDon hoaDon = null;
+		try {
+			String sql = "SELECT * FROM HoaDon WHERE nhanVien = ?";
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, maNV);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				String maHoaDon = rs.getString("maHoaDon");
+				LocalDateTime ngayLapHoaDon = rs.getTimestamp("ngayLapHoaDon").toLocalDateTime();
+				String maKH = rs.getString("khachHang");
+				String maChiTiet = "CT" + maHoaDon;
+				boolean daHoanVe = rs.getBoolean("daHoanVe");
+				boolean daHoanTien = rs.getBoolean("daHoanTien");
 
+				// Sử dụng constructor copy
+				NhanVien nhanVien = new NhanVien(maNV);
+				KhachHang khachHang = new KhachHang(maKH);
+				ChiTietHoaDon chiTiet = new ChiTietHoaDon(maChiTiet);
+				hoaDon = new HoaDon(maHoaDon, ngayLapHoaDon, nhanVien, khachHang, chiTiet, daHoanVe, daHoanTien);
+				dsHoaDon.add(hoaDon);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return dsHoaDon;
+	}
+	public ArrayList<HoaDon> getHoaDonTheoNgayLapHD(String ngayBatDau, String ngayKetThuc){
+		Connection con = ConnectDB.getInstance().getConnection();
+		PreparedStatement stmt = null;
+		HoaDon hoaDon = null;
+		try {
+			String sql = "SELECT * FROM HoaDon WHERE ngayLapHoaDon BETWEEN ? AND ?";
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, ngayBatDau);
+			stmt.setString(2, ngayKetThuc);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				String maHoaDon = rs.getString("maHoaDon");
+				LocalDateTime ngayLapHoaDon = rs.getTimestamp("ngayLapHoaDon").toLocalDateTime();
+				String maNV = rs.getString("nhanVien");
+				String maKH = rs.getString("khachHang");
+				String maChiTiet = "CT" + maHoaDon;
+				boolean daHoanVe = rs.getBoolean("daHoanVe");
+				boolean daHoanTien = rs.getBoolean("daHoanTien");
+
+				// Sử dụng constructor copy
+				NhanVien nhanVien = new NhanVien(maNV);
+				KhachHang khachHang = new KhachHang(maKH);
+				ChiTietHoaDon chiTiet = new ChiTietHoaDon(maChiTiet);
+				hoaDon = new HoaDon(maHoaDon, ngayLapHoaDon, nhanVien, khachHang, chiTiet, daHoanVe, daHoanTien);
+				dsHoaDon.add(hoaDon);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return dsHoaDon;
+	}
+	
 	public void reset() {
 		dsHoaDon.removeAll(dsHoaDon);
 	}

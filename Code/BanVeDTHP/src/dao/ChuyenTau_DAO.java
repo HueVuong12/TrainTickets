@@ -130,7 +130,36 @@ public class ChuyenTau_DAO {
         
         return chuyenTau; 
     } 
-
+    public ArrayList<ChuyenTau> getChuyenTauTheoThoiGian(String ngayBatDau, String ngayKetThuc) { 
+        Connection con = ConnectDB.getInstance().getConnection(); 
+        PreparedStatement stmt = null; 
+        ChuyenTau chuyenTau = null;
+        try {       
+            String sql = "SELECT * FROM ChuyenTau WHERE ngayDi BETWEEN ? AND ?"; 
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, ngayBatDau);
+            stmt.setString(2, ngayKetThuc); 
+            ResultSet rs = stmt.executeQuery(); 
+            while (rs.next()) {
+                String maTau1 = rs.getString("maTau");
+                String gaDi = rs.getString("gaDi");
+                String gaDen = rs.getString("gaDen");
+                LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
+                LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
+                
+                Ga gaDi1 = ga_Dao.getGaTheoMaGa(gaDi);
+                Ga gaDen1 = ga_Dao.getGaTheoMaGa(gaDen);
+                ArrayList<Toa> dsToa = toa_Dao.getDsToaTheoMaTau(maTau1);
+                ArrayList<Ga> tramDung = ga_Dao.getDsTramDung(maTau1);      
+                chuyenTau = new ChuyenTau(maTau1, gaDi1, gaDen1, tramDung, ngayDi, gioDi, dsToa);
+                dsChuyenTau.add(chuyenTau);
+            } 
+        } catch (SQLException e) { 
+            e.printStackTrace();     
+        } 
+        
+        return dsChuyenTau; 
+    }
     public void reset() {
         dsChuyenTau.removeAll(dsChuyenTau);
     }

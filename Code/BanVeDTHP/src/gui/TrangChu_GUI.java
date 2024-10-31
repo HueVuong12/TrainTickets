@@ -11,10 +11,9 @@ import javax.swing.event.MenuListener;
 import components.ConTent_JPanel;
 import dao.NhanVien_DAO;
 import dao.TaiKhoan_DAO;
-import entity.KhachHang;
-
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Color;
@@ -33,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,8 +68,8 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	private JMenu taiKhoan;
 	private JPanel jp_nhanVien;
 	private JLabel userIconLabel;
-	private JLabel lbl_ThongTinNV;
-	private JLabel lbl_ThoiGian;
+	public JLabel lbl_ThongTinNV;
+	public JLabel lbl_ThoiGian;
 	private JLabel exitIconLabel;
 	public JPanel content;
 	private Color hoverLabelColor = new Color(0, 153, 255);
@@ -100,7 +100,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	 * @throws IOException 
 	 * @throws FontFormatException 
 	 */
-	public TrangChu_GUI(DangNhap_GUI dangNhap) throws FontFormatException, IOException {
+	public TrangChu_GUI(DangNhap_GUI dangNhap) {
 		this.dangNhap = dangNhap;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1480, 810);
@@ -130,37 +130,34 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    logoLabel.setBounds(18, 18, 300, 108); // Cập nhật kích thước trên JLabel
 	    title.add(logoLabel);
 	    
-	    //Tên Chương trình
+	    // Tên Chương trình
 	    titleLabel = new JLabel("Nhà ga ĐTHP");
 	    titleLabel.setForeground(SystemColor.text);
-	    try {
-            // Nạp font từ JAR thông qua ClassLoader
-            InputStream fontStream = getClass().getClassLoader()
-                .getResourceAsStream("/libs/Italianno-Regular.ttf");
-            
-            if (fontStream == null) {
-                throw new FileNotFoundException("Font không tìm thấy trong Referenced Libraries");
-            }
-
-            Font italiannoFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(24f);
-            titleLabel.setFont(italiannoFont);
-        } catch (IOException | FontFormatException e) {
-            e.printStackTrace();
-            // Nếu không nạp được font, dùng font mặc định
-            titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 40));
-        }
-	    titleLabel.setBounds(328, 0, 876,145);
+	    titleLabel.setBounds(328, 0, 876, 145);
+	    titleLabel.setHorizontalAlignment(JLabel.CENTER);
 	    title.add(titleLabel);
+	    
+	    // Thiết lập font cho titleLabel
+        try {
+            // Tải font "Italianno"
+            Font italiannoFont = Font.createFont(Font.TRUETYPE_FONT, new File("font/Italianno-Regular.tff")).deriveFont(100f); // Kích thước font 48
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(italiannoFont); // Đăng ký font
+            
+            titleLabel.setFont(italiannoFont); // Áp dụng font
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
 	    
 		//Menu Chính
 		jp_menu = new JPanel();
-		jp_menu.setBounds(0, 145, 1204, 53);
+		jp_menu.setBounds(0, 145, 1204, 55);
 		title.add(jp_menu);
 		jp_menu.setLayout(null);
 		
 		menuBar = new JMenuBar();
 		menuBar.setBackground(SystemColor.menu);
-		menuBar.setBounds(0, 0, 1204, 53);
+		menuBar.setBounds(0, 0, 1204, 55);
 		jp_menu.add(menuBar);
 		
 		khachHang = new JMenu("Khách hàng");

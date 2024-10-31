@@ -93,7 +93,7 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	private JComboBox<String> comboBox_Ca;
 	private JDateChooser dateChooser_NgaySinh;
 	private JComboBox<String> comboBox_TimTheoMaNV;
-private JComboBox<String> comboBox_ChucVu;
+	private JComboBox<String> comboBox_ChucVu;
 	private TableRowSorter<TableModel> sorter;
 
 	public QuanLyNhanVien_GUI(TrangChu_GUI trangChu) {
@@ -412,7 +412,7 @@ comboBox_ChucVu.addItem("Nhân viên");
 					}
 				}
 				if(column == 5) {
-String newValue = (String) table_NV.getValueAt(row, column);
+					String newValue = (String) table_NV.getValueAt(row, column);
 					if(newValue.equalsIgnoreCase("CA01")) {
 						comboBox_Ca.setSelectedIndex(0);
 					}
@@ -458,9 +458,9 @@ String newValue = (String) table_NV.getValueAt(row, column);
 				NhanVien nv = dsnv.getNhanVienTheoMaNV(selectedObj);
 				if (nv != null) {
 					int rowIndex = -1;
-					for (int i = 0; i < model.getRowCount(); i++) {
+					for (int i = 0; i < table_NV.getRowCount(); i++) {
 						// Kiểm tra cột Mã nhân viên tại chỉ mục 1
-						if (model.getValueAt(i, 1).equals(nv.getMaNV())) {
+						if (table_NV.getValueAt(i, 1).equals(nv.getMaNV())) {
 							rowIndex = i;
 							break;
 						}
@@ -505,7 +505,7 @@ String newValue = (String) table_NV.getValueAt(row, column);
 		});
 
 		//Thêm sự kiện cho các nút và bảng
-btnThem.addActionListener(this);
+		btnThem.addActionListener(this);
 		btnSua.addActionListener(this);
 		table_NV.addMouseListener(this);
 		cb_nam.addActionListener(this);
@@ -543,27 +543,37 @@ btnThem.addActionListener(this);
 		if(o.equals(btnTim)) {
 			if(textField_HoTen.getText() != null) {
 				filterRows();
+				
 			}
 			
 			if(textField_Email.getText() != null) {
 				filterRows();
+				
 			}
 			if(textField_CCCD.getText() != null) {
 				filterRows();
+				
 			}
 			
 			if(cb_nam.isSelected() ) {
 				filterRows();
+				 
 			}else if(cb_nu.isSelected()) {
 				filterRows();
+				  
 			}
 			
 			if(cb_dangLam.isSelected() ) {
 				filterRows();
+				 
 			}else if(cb_nghiLam.isSelected()) {
 				System.out.println(cb_nghiLam);
 				filterRows();
+				
 			}
+		    // Cập nhật lại comboBox_TimTheoMaNV
+		    updateComboBoxTimTheoMaNV();
+		    deleteField();
 		}
 		if(o.equals(btnSua)) {
 			update();
@@ -698,7 +708,7 @@ public void mousePressed(MouseEvent e) {
 
 		String email = textField_Email.getText();
 		String sdt = textField_SDT.getText();
-boolean trangThai = cb_dangLam.isSelected() ? true : (cb_nghiLam.isSelected() ? false : false);
+		boolean trangThai = cb_dangLam.isSelected() ? true : (cb_nghiLam.isSelected() ? false : false);
 		int chucVu =  comboBox_ChucVu.getSelectedIndex() == 0 ? 1 : 2;
 
 		NhanVien nv = new NhanVien(maNV, hoTen, ngaySinh, gioiTinh, new Ca(ca), cccd, email, sdt, trangThai, chucVu);
@@ -767,7 +777,7 @@ boolean trangThai = cb_dangLam.isSelected() ? true : (cb_nghiLam.isSelected() ? 
 		ArrayList<NhanVien> list = dsnv.docTuBang();
 		int sl = 0;
 		for (int i = 0; i < list.size(); i++) {
-sl++;
+			sl++;
 		}sl++;
 		String maNV = String.format("NV%03d", sl);// Tạo mã với định dạng "NV" + 3 chữ số, ví dụ "NV001"
 		return maNV;
@@ -845,7 +855,7 @@ sl++;
 		        filters.add(new RowFilter<Object, Object>() {
 		            @Override
 		            public boolean include(Entry<? extends Object, ? extends Object> entry) {
-String entryDateStr = entry.getStringValue(3); // Giả sử cột 3 là cột ngày
+		            	String entryDateStr = entry.getStringValue(3); // Giả sử cột 3 là cột ngày
 		                Date entryDate = parseDate(entryDateStr); // Chỉ lấy phần ngày
 		                return entryDate != null && !entryDate.before(ngaySinh);	                
 		            }
@@ -859,7 +869,15 @@ String entryDateStr = entry.getStringValue(3); // Giả sử cột 3 là cột n
 			sorter.setRowFilter(RowFilter.andFilter(filters));
 		}
 	}
-
+	private void updateComboBoxTimTheoMaNV() {
+	    // Xóa tất cả các mục hiện tại trong comboBox_TimTheoMaNV
+	    comboBox_TimTheoMaNV.removeAllItems();
+	    // Lặp qua các hàng còn lại trong bảng và thêm vào comboBox
+	    for (int i = 0; i < table_NV.getRowCount(); i++) {
+	            String maNV = table_NV.getValueAt(i, 1).toString(); // Giả định cột mã NV là cột 1
+	            comboBox_TimTheoMaNV.addItem(maNV);
+	    }
+	}
 	private Date parseDate(String dateStr) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {

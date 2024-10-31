@@ -147,7 +147,37 @@ public class NhanVien_DAO {
         }
         return nhanVien; // Trả về đối tượng NhanVien, hoặc null nếu không tìm thấy
     }
+    public NhanVien getNhanVienTheoTenNV(String tenNV) { 
+        Connection con = ConnectDB.getInstance().getConnection(); 
+        PreparedStatement stmt = null; 
+        NhanVien nhanVien = null; // Khởi tạo biến để lưu đối tượng NhanVien
+        try {       
+            String sql = "SELECT * FROM NhanVien WHERE tenNV = ?"; 
+            stmt = con.prepareStatement(sql); 
+            stmt.setString(1, tenNV); 
+            ResultSet rs = stmt.executeQuery(); 
+            
+            // Kiểm tra kết quả truy vấn
+            if (rs.next()) { 
+                String maNV = rs.getString("maNV");
+                LocalDate ngaySinh = rs.getDate("ngaySinh").toLocalDate();
+                boolean gioiTinh = rs.getBoolean("gioiTinh");
+                String maCa = rs.getString("ca");
+                String cccd = rs.getString("cccd");
+                String email = rs.getString("email");
+                String sdt = rs.getString("sdt");
+                boolean trangThai = rs.getBoolean("trangThai");
+                int chucVu = rs.getInt("chucVu");
 
+                Ca ca = new Ca(maCa);
+                // Tạo đối tượng NhanVien
+                nhanVien = new NhanVien(maNV, tenNV, ngaySinh, gioiTinh, ca, cccd, email, sdt, trangThai, chucVu);
+            } 
+        } catch (SQLException e) { 
+            e.printStackTrace();     
+        }
+        return nhanVien; // Trả về đối tượng NhanVien, hoặc null nếu không tìm thấy
+    }
     public void reset() {
         dsNhanVien.removeAll(dsNhanVien);
     }
