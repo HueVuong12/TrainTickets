@@ -126,6 +126,34 @@ public class TaiKhoan_DAO {
 
 		return taiKhoan;
 	}
+	public TaiKhoan getTaiKhoanTheoMaNV(String maNV) {
+		TaiKhoan taiKhoan = null;
+
+		Connection con = ConnectDB.getInstance().getConnection();
+		PreparedStatement stmt = null;
+
+		try {
+			String sql = "SELECT * FROM TaiKhoan WHERE nhanVien = ?";
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, maNV);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				String maTaiKhoan = rs.getString("maTaiKhoan");
+				String matKhau = rs.getString("matKhau");
+				int phanQuyen = rs.getInt("phanQuyen");
+
+				// Sử dụng constructor copy
+				NhanVien nhanVien = new NhanVien(maNV);
+
+				taiKhoan = new TaiKhoan(maTaiKhoan, matKhau, phanQuyen, nhanVien);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return taiKhoan;
+	}
 
 	public void reset() {
 		dsTaiKhoan.removeAll(dsTaiKhoan);
@@ -142,7 +170,7 @@ public class TaiKhoan_DAO {
 			ResultSet rs = stmt.executeQuery(); // Thực thi truy vấn
 
 			while (rs.next()) {
-				String maDangNhap = rs.getString("maDangNhap");
+				String maDangNhap = rs.getString("maTaiKhoan");
 				String matKhau = rs.getString("matKhau");
 				int phanQuyen = rs.getInt("phanQuyen");
 				String maNV = rs.getString("nhanVien");
@@ -169,7 +197,7 @@ public class TaiKhoan_DAO {
 			ResultSet rs = stmt.executeQuery(); // Thực thi truy vấn
 
 			while (rs.next()) {
-				String maDangNhap = rs.getString("maDangNhap");
+				String maDangNhap = rs.getString("maTaiKhoan");
 				String matKhau = rs.getString("matKhau");
 				int phanQuyen = rs.getInt("phanQuyen");
 				String maNV = rs.getString("nhanVien");

@@ -11,6 +11,8 @@ import javax.swing.event.MenuListener;
 import components.ConTent_JPanel;
 import dao.NhanVien_DAO;
 import dao.TaiKhoan_DAO;
+import entity.TaiKhoan;
+
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -22,6 +24,7 @@ import java.awt.Dimension;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -78,6 +81,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
 	private TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();
 	private JMenu mnTrGip;
+	private TaiKhoan_DAO dsTK;
 	
 	/**
 	 * Launch the application.
@@ -394,9 +398,13 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		});
 		thongKeCT.addActionListener(new ActionListener() {
 
+			private TaiKhoan tk;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				tk= dangNhap.taiKhoanLogined;
+				if(tk.getPhanQuyen() ==1) {
 				ThongKe_GUI jptkct= new ThongKe_GUI(TrangChu_GUI.this);
 				jptkct.hienThiThongKeChuyenTau();
 				content.removeAll();
@@ -406,24 +414,34 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 				content.revalidate();
 				content.repaint();
 				System.out.println("thành công");
+				}else {
+					JOptionPane.showMessageDialog(TrangChu_GUI.this,"Tài khoản của bạn không có quyền truy cập");
+				}
 			}
 		});
-	    thongKeDT.addActionListener(new ActionListener() {
+		thongKeDT.addActionListener(new ActionListener() {
 
-	    	@Override
-	    	public void actionPerformed(ActionEvent e) {
-	    		// TODO Auto-generated method stub
-	    		ThongKe_GUI jptkct= new ThongKe_GUI(TrangChu_GUI.this);
-	    		jptkct.hienThiThongKeDoanhThu();;
-	    		content.removeAll();
-	    		System.out.println("thành công xóa");
-	    		content.add(jptkct); // Sử dụng layout thích hợp
-	    		System.out.println("thành công thêm");
-	    		content.revalidate();
-	    		content.repaint();
-	    		System.out.println("thành công");
-	    	}
-	    });
+			private TaiKhoan tk;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub 
+				tk= dangNhap.taiKhoanLogined;
+				if(tk.getPhanQuyen() ==1) {
+					ThongKe_GUI jptkct= new ThongKe_GUI(TrangChu_GUI.this);
+					jptkct.hienThiThongKeDoanhThu();;
+					content.removeAll();
+					System.out.println("thành công xóa");
+					content.add(jptkct); // Sử dụng layout thích hợp
+					System.out.println("thành công thêm");
+					content.revalidate();
+					content.repaint();
+					System.out.println("thành công");
+				}else {
+					JOptionPane.showMessageDialog(TrangChu_GUI.this,"Tài khoản của bạn không có quyền truy cập");
+				}
+			}
+		});
 	    thongKeTheoCa.addActionListener(new ActionListener() {
 
 	    	@Override
@@ -497,17 +515,25 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    
 	    taiKhoan.addMenuListener(new MenuListener() {
 
+			private TaiKhoan tk;
+
 			@Override
 			public void menuSelected(MenuEvent e) {
 				// TODO Auto-generated method stub
-				QuanLyTaiKhoan_GUI jptk = new QuanLyTaiKhoan_GUI(TrangChu_GUI.this);
-				content.removeAll();
-				System.out.println("thành công xóa");
-				content.add(jptk); // Sử dụng layout thích hợp
-				System.out.println("thành công thêm");
-				content.revalidate();
-				content.repaint();
-				System.out.println("thành công");
+				tk= dangNhap.taiKhoanLogined;
+				if(tk.getPhanQuyen() ==1) {
+					System.out.println(tk.getPhanQuyen());
+					QuanLyTaiKhoan_GUI jptk = new QuanLyTaiKhoan_GUI(TrangChu_GUI.this);
+					content.removeAll();
+					System.out.println("thành công xóa");
+					content.add(jptk); // Sử dụng layout thích hợp
+					System.out.println("thành công thêm");
+					content.revalidate();
+					content.repaint();
+					System.out.println("thành công");
+				}else {
+						JOptionPane.showMessageDialog(TrangChu_GUI.this,"Tài khoản của bạn không có quyền truy cập");
+				}
 			}
 
 			@Override
