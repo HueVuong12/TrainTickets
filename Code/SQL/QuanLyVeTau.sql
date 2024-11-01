@@ -22,6 +22,7 @@ CREATE TABLE ChuyenTau (
 	gaDi VARCHAR(50) NOT NULL,
     gaDen VARCHAR(50) NOT NULL,
     ngayDi DATE NOT NULL,
+	ngayDen DATE NOT NULL,
     gioDi TIME NOT NULL,
     FOREIGN KEY (gaDen) REFERENCES Ga(maGa)
 );
@@ -30,6 +31,8 @@ CREATE TABLE ChuyenTau (
 CREATE TABLE ChuyenTau_Ga (
     maTau VARCHAR(50),
     maGa VARCHAR(50),
+	ngayDi DATE NOT NULL,
+	ngayDen DATE NOT NULL,
     PRIMARY KEY (maTau, maGa),
     FOREIGN KEY (maTau) REFERENCES ChuyenTau(maTau),
     FOREIGN KEY (maGa) REFERENCES Ga(maGa)
