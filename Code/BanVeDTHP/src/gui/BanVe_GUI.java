@@ -750,13 +750,15 @@ public class BanVe_GUI extends JPanel {
 						ChuyenTau chuyenTau = chuyenTau_dao.getChuyenTauTheoMaTau(toa.getMaTau().getMaTau());
 						LocalDate ngayDi = chuyenTau.getNgayDi();
 						LocalTime gioDi = chuyenTau.getGioDi();
+						LocalDate ngayDen = chuyenTau.getNgayDen();
+						LocalTime gioDen = chuyenTau.getGioDen();
 						Ga gaDi = chuyenTau.getGaDi();
 						Ga gaDen = chuyenTau.getTramDung().stream()
 								.filter(ga -> ga.getDiaChi().equals(txt_GaDen.getText())).findFirst()
 								.orElse(chuyenTau.getGaDen());
 						String hang = toa.getLoaiToa();
 						boolean trangThai = false;
-						Ve ve = new Ve(maVe, chuyenTau, toa, ghe, null, ngayDi, gioDi, gaDi, gaDen, hang, null,
+						Ve ve = new Ve(maVe, chuyenTau, toa, ghe, null, ngayDi, gioDi,ngayDen, gioDen, gaDi, gaDen, hang, null,
 								trangThai, null);
 						dsVeDatTam.add(ve);
 					}

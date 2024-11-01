@@ -59,7 +59,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	private JLabel lbl_tieuDeTT;
 	private JComboBox<String> comboBox_TimTheoMaTK;
 	private Color hoverLabelColor = new Color(0, 153, 255);
-	private TaiKhoan_DAO dstk;
+	private TaiKhoan_DAO dstk = new TaiKhoan_DAO();;
 	private DefaultTableModel model;
 	private TableRowSorter<TableModel> sorter;
 	private JButton btnSua;
@@ -70,7 +70,6 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	 * Create the frame.
 	 */
 	public QuanLyTaiKhoan_GUI(TrangChu_GUI trangChu) {
-			dstk = new TaiKhoan_DAO();
 	  		setBackground(SystemColor.text);
 	  		setForeground(new Color(255, 255, 255));
 	  		setBounds(0, 170, 1460, 570);
@@ -339,7 +338,6 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	    Object o = e.getSource();
-	    dstk = new TaiKhoan_DAO();
 
 	    if (o.equals(btnThem)) {
 	        if (validData()) {
@@ -367,6 +365,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	        // Chỉ cần gọi filterRows() một lần, vì hàm này đã kiểm tra tất cả các điều kiện lọc
 	        filterRows();
 	        updateComboBox();
+	        deleteField();
 	    }
 
 	    if (o.equals(btnSua)) {
@@ -394,21 +393,15 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		}
 		//Hàm tạo mã tài khoản tự động
 		public String generateMaDN(int cv) {
+			dstk.reset();
 			ArrayList<TaiKhoan> listNV = dstk.getLisNV();
 			ArrayList<TaiKhoan> listQL = dstk.getListQL();
 			String maDN ="";
-			int sl = 0;
 			if(cv == 1) {
-				for (int i = 0; i < listQL.size(); i++) {
-					sl++;
-				}sl++;
-				maDN = String.format("TKQL%03d", sl);// Tạo mã với định dạng "TKQL" + 3 chữ số, ví dụ "TKQL001"
+				maDN = String.format("TKQL%03d", listQL.size() + 1);// Tạo mã với định dạng "TKQL" + 3 chữ số, ví dụ "TKQL001"
 			}
 			if(cv == 2) {
-				for (int i = 0; i < listNV.size(); i++) {
-					sl++;
-				}sl++;
-				maDN = String.format("TKNV%03d", sl);// Tạo mã với định dạng "TKNV" + 3 chữ số, ví dụ "TKNV001"
+				maDN = String.format("TKNV%03d",  listNV.size() + 1);// Tạo mã với định dạng "TKNV" + 3 chữ số, ví dụ "TKNV001"
 			}
 			return maDN;
 		}
@@ -474,7 +467,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		}
 		//Hàm tải dữ liệu vào bảng
 		public void datatoTable() {
-		    dstk = new TaiKhoan_DAO();
+			dstk.reset();
 		    ArrayList<TaiKhoan> list = dstk.docTuBang();
 		    model = (DefaultTableModel) table_TK.getModel();
 		    model.setRowCount(0); // Xóa tất cả hàng trong bảng

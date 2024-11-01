@@ -87,7 +87,7 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	private JRadioButton cb_nu;
 	private JRadioButton cb_dangLam;
 	private JRadioButton cb_nghiLam;
-	private NhanVien_DAO dsnv;
+	private NhanVien_DAO dsnv = new NhanVien_DAO();
 	private Color hoverLabelColor = new Color(0, 153, 255);
 	private DefaultTableModel model;
 	private JComboBox<String> comboBox_Ca;
@@ -95,6 +95,8 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	private JComboBox<String> comboBox_TimTheoMaNV;
 	private JComboBox<String> comboBox_ChucVu;
 	private TableRowSorter<TableModel> sorter;
+	private ButtonGroup group;
+	private ButtonGroup group1;
 
 	public QuanLyNhanVien_GUI(TrangChu_GUI trangChu) {
 		setBackground(SystemColor.text);
@@ -175,7 +177,7 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		textField_HoTen = new JTextField();
 		textField_HoTen.setColumns(10);
 		textField_HoTen.setBounds(129, 66, 188, 25);
-jp_contentThongTin.add(textField_HoTen);
+		jp_contentThongTin.add(textField_HoTen);
 
 		textField_CCCD = new JTextField();
 		textField_CCCD.setColumns(10);
@@ -260,12 +262,12 @@ jp_contentThongTin.add(textField_HoTen);
 
 		cb_nu = new JRadioButton("Nữ");
 		cb_nu.setToolTipText("");
-cb_nu.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		cb_nu.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		cb_nu.setBounds(217, 109, 52, 21);
 		jp_contentThongTin.add(cb_nu);
 
 		// Tạo ButtonGroup để nhóm hai JRadioButton
-		ButtonGroup group = new ButtonGroup();
+		group = new ButtonGroup();
 		group.add(cb_nam);
 		group.add(cb_nu);
 
@@ -282,7 +284,7 @@ cb_nu.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		jp_contentThongTin.add(cb_nghiLam);
 
 		// Tạo ButtonGroup để nhóm hai JRadioButton
-		ButtonGroup group1 = new ButtonGroup();
+		group1 = new ButtonGroup();
 		group1.add(cb_dangLam);
 		group1.add(cb_nghiLam);
 
@@ -342,7 +344,7 @@ cb_nu.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		comboBox_ChucVu = new JComboBox<String>();
 		comboBox_ChucVu.setBounds(129, 340, 187, 25);
 		comboBox_ChucVu.addItem("Quản lý");
-comboBox_ChucVu.addItem("Nhân viên");
+		comboBox_ChucVu.addItem("Nhân viên");
 		jp_contentThongTin.add(comboBox_ChucVu);
 
 		// Tạo JComboBox cho cột "Giới tính"
@@ -518,7 +520,6 @@ comboBox_ChucVu.addItem("Nhân viên");
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		Object o=e.getSource();
-		dsnv= new NhanVien_DAO();
 		if(o.equals(btnThem)) {
 			if (validData()) {
 				NhanVien nv = revertNV();
@@ -532,6 +533,7 @@ comboBox_ChucVu.addItem("Nhân viên");
 							dsnv.create(nv);	
 							model.setRowCount(0);
 							datatoTable();
+							updateComboBoxTimTheoMaNV();
 						} catch (Exception e1) {
 							JOptionPane.showMessageDialog(this, "Lỗi khi thêm nhân viên vào cơ sở dữ liệu: " + e1.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
 						}
@@ -543,37 +545,37 @@ comboBox_ChucVu.addItem("Nhân viên");
 		if(o.equals(btnTim)) {
 			if(textField_HoTen.getText() != null) {
 				filterRows();
-				
+
 			}
-			
+
 			if(textField_Email.getText() != null) {
 				filterRows();
-				
+
 			}
 			if(textField_CCCD.getText() != null) {
 				filterRows();
-				
+
 			}
-			
+
 			if(cb_nam.isSelected() ) {
 				filterRows();
-				 
+
 			}else if(cb_nu.isSelected()) {
 				filterRows();
-				  
+		
 			}
-			
+
 			if(cb_dangLam.isSelected() ) {
 				filterRows();
-				 
+
 			}else if(cb_nghiLam.isSelected()) {
 				System.out.println(cb_nghiLam);
 				filterRows();
-				
+
 			}
-		    // Cập nhật lại comboBox_TimTheoMaNV
-		    updateComboBoxTimTheoMaNV();
-		    deleteField();
+			// Cập nhật lại comboBox_TimTheoMaNV
+			updateComboBoxTimTheoMaNV();
+			deleteField();
 		}
 		if(o.equals(btnSua)) {
 			update();
@@ -618,7 +620,7 @@ comboBox_ChucVu.addItem("Nhân viên");
 	}
 
 	@Override
-public void mousePressed(MouseEvent e) {
+	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
@@ -726,14 +728,14 @@ public void mousePressed(MouseEvent e) {
 			String cccd = textField_CCCD.getText();
 
 			// Lấy ngày sinh từ dateChooser
-	        Date date = dateChooser_NgaySinh.getDate();
-	        LocalDate ngaySinh = null;
-	        if (date != null) {
-	            ngaySinh = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-	        } else {
-	            JOptionPane.showMessageDialog(this, "Ngày sinh không hợp lệ.");
-	            return; // Thoát khỏi phương thức nếu ngày sinh không hợp lệ
-	        }        
+			Date date = dateChooser_NgaySinh.getDate();
+			LocalDate ngaySinh = null;
+			if (date != null) {
+				ngaySinh = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			} else {
+				JOptionPane.showMessageDialog(this, "Ngày sinh không hợp lệ.");
+				return; // Thoát khỏi phương thức nếu ngày sinh không hợp lệ
+			}        
 			String email = textField_Email.getText();
 			String sdt = textField_SDT.getText();
 			boolean trangThai = cb_dangLam.isSelected() ? true : (cb_nghiLam.isSelected() ? false : false);
@@ -744,6 +746,7 @@ public void mousePressed(MouseEvent e) {
 				model.setRowCount(0);
 				// Load lại dữ liệu từ cơ sở dữ liệu vào bảng
 				datatoTable();
+				deleteField();
 			} catch (Exception e) {
 				// TODO: handle exception
 				JOptionPane.showMessageDialog(this, "Không tìm thấy.");
@@ -754,7 +757,7 @@ public void mousePressed(MouseEvent e) {
 	}
 	//Hàm tải dữ liệu vào bảng
 	public void datatoTable() {
-		dsnv = new NhanVien_DAO();
+		dsnv.reset();
 		ArrayList<NhanVien> list = dsnv.docTuBang();
 		model = (DefaultTableModel) table_NV.getModel();
 		model.setRowCount(0); // Xóa tất cả hàng trong bảng
@@ -769,13 +772,14 @@ public void mousePressed(MouseEvent e) {
 		}
 		//Mặc định các button và combobox trong thông tin nhân viên
 		deleteField();
-		
+
 	}	
 
 	//Hàm tạo mã nhân viên tự động
 	public String generateMaNV() {
+		dsnv.reset();
 		ArrayList<NhanVien> list = dsnv.docTuBang();
-		String maNV = String.format("NV%03d", list.size() + 1);// Tạo mã với định dạng "NV" + 3 chữ số, ví dụ "NV001"
+		String maNV = String.format("NV%03d", list.size()+1);// Tạo mã với định dạng "NV" + 3 chữ số, ví dụ "NV001"
 		return maNV;
 	}
 
@@ -784,18 +788,16 @@ public void mousePressed(MouseEvent e) {
 		textField_MaNV.setText("");
 		textField_HoTen.setText("");
 		dateChooser_NgaySinh.setDate(null);  // Đặt lại giá trị ngày thành null
-		cb_nam.setSelected(false);
-		cb_nu.setSelected(false);
 		textField_CCCD.setText("");
 		textField_Email.setText("");
 		textField_SDT.setText("");
 		comboBox_ChucVu.setSelectedItem(null);
 		comboBox_Ca.setSelectedItem(null);
-		cb_dangLam.setSelected(false);
-		cb_nghiLam.setSelected(false);
+		group.clearSelection();
+		group1.clearSelection();
 	}
- 
-//	// Lớp FilterListener để lắng nghe các thay đổi trong các ô tìm kiếm
+
+	//	// Lớp FilterListener để lắng nghe các thay đổi trong các ô tìm kiếm
 	private void filterRows() {
 		ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
 		String hoTen = textField_HoTen.getText().trim();
@@ -841,22 +843,22 @@ public void mousePressed(MouseEvent e) {
 		// Ngày Sinh
 		Date date = dateChooser_NgaySinh.getDate(); // Lấy giá trị ngày từ JDateChooser
 		if (date != null) { // Kiểm tra date không phải null
-		    // Định dạng lại ngày sinh thành chuỗi dd/MM/yyyy
-		    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		    String formattedDate = dateFormat.format(date); // Chuyển đổi đối tượng Date thành chuỗi
-		    System.out.println(date);
-		    
-		    if (!formattedDate.isEmpty()) {
-		        Date ngaySinh = parseDate(formattedDate);
-		        filters.add(new RowFilter<Object, Object>() {
-		            @Override
-		            public boolean include(Entry<? extends Object, ? extends Object> entry) {
-		            	String entryDateStr = entry.getStringValue(3); // Giả sử cột 3 là cột ngày
-		                Date entryDate = parseDate(entryDateStr); // Chỉ lấy phần ngày
-		                return entryDate != null && !entryDate.before(ngaySinh);	                
-		            }
-		        });
-		    }
+			// Định dạng lại ngày sinh thành chuỗi dd/MM/yyyy
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			String formattedDate = dateFormat.format(date); // Chuyển đổi đối tượng Date thành chuỗi
+			System.out.println(date);
+
+			if (!formattedDate.isEmpty()) {
+				Date ngaySinh = parseDate(formattedDate);
+				filters.add(new RowFilter<Object, Object>() {
+					@Override
+					public boolean include(Entry<? extends Object, ? extends Object> entry) {
+						String entryDateStr = entry.getStringValue(3); // Giả sử cột 3 là cột ngày
+						Date entryDate = parseDate(entryDateStr); // Chỉ lấy phần ngày
+						return entryDate != null && !entryDate.before(ngaySinh);	                
+					}
+				});
+			}
 		} 
 		// Cập nhật bộ lọc
 		if (filters.isEmpty()) {
@@ -866,23 +868,24 @@ public void mousePressed(MouseEvent e) {
 		}
 	}
 	private void updateComboBoxTimTheoMaNV() {
-	    // Xóa tất cả các mục hiện tại trong comboBox_TimTheoMaNV
-	    comboBox_TimTheoMaNV.removeAllItems();
-	    // Lặp qua các hàng còn lại trong bảng và thêm vào comboBox
-	    for (int i = 0; i < table_NV.getRowCount(); i++) {
-	            String maNV = table_NV.getValueAt(i, 1).toString(); // Giả định cột mã NV là cột 1
-	            comboBox_TimTheoMaNV.addItem(maNV);
-	    }
+		// Xóa tất cả các mục hiện tại trong comboBox_TimTheoMaNV
+		comboBox_TimTheoMaNV.removeAllItems();
+		// Lặp qua các hàng còn lại trong bảng và thêm vào comboBox
+		for (int i = 0; i < table_NV.getRowCount(); i++) {
+			String maNV = table_NV.getValueAt(i, 1).toString(); // Giả định cột mã NV là cột 1
+			comboBox_TimTheoMaNV.addItem(maNV);
+		}
+		deleteField();
 	}
 	private Date parseDate(String dateStr) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            // Chuyển đổi chuỗi thành đối tượng Date
-            Date date = dateFormat.parse(dateStr);
-            return date;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			// Chuyển đổi chuỗi thành đối tượng Date
+			Date date = dateFormat.parse(dateStr);
+			return date;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

@@ -43,6 +43,8 @@ public class Ve_DAO {
 				String maKH = rs.getString("khachHang");
 				LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
 				LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
+				LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
+				LocalTime gioDen = rs.getTime("gioDen").toLocalTime();
 				String maGaDi = rs.getString("gaDi");
 				String maGaDen = rs.getString("gaDen");
 				String hang = rs.getString("hang");
@@ -60,7 +62,7 @@ public class Ve_DAO {
 				ChiTietHoaDon chiTiet = new ChiTietHoaDon(maChiTiet);
 
 				// Tạo đối tượng Ve
-				Ve ve = new Ve(maVe, tau, toa, ghe, khachHang, ngayDi, gioDi, gaDi, gaDen, hang, khuyenMai, trangThai,
+				Ve ve = new Ve(maVe, tau, toa, ghe, khachHang, ngayDi, gioDi,ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai,
 						chiTiet);
 				dsVe.add(ve);
 			}
@@ -76,7 +78,7 @@ public class Ve_DAO {
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
-			stmt = con.prepareStatement("INSERT INTO Ve VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			stmt = con.prepareStatement("INSERT INTO Ve VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			stmt.setString(1, ve.getMaVe());
 			stmt.setString(2, ve.getChuyenTau().getMaTau());
 			stmt.setString(3, ve.getToa().getMaToa());
@@ -84,12 +86,14 @@ public class Ve_DAO {
 			stmt.setString(5, ve.getKhachHang().getMaKH());
 			stmt.setDate(6, java.sql.Date.valueOf(ve.getNgayDi()));
 			stmt.setTime(7, java.sql.Time.valueOf(ve.getGioDi()));
-			stmt.setString(8, ve.getGaDi().getMaGa());
-			stmt.setString(9, ve.getGaDen().getMaGa());
-			stmt.setString(10, ve.getHang());
-			stmt.setString(11, ve.getKhuyenMai());
-			stmt.setBoolean(12, ve.isTrangThai());
-			stmt.setString(13, ve.getChiTiet().getMaChiTiet());
+			stmt.setDate(8, java.sql.Date.valueOf(ve.getNgayDi()));
+			stmt.setTime(9, java.sql.Time.valueOf(ve.getGioDi()));
+			stmt.setString(10, ve.getGaDi().getMaGa());
+			stmt.setString(11, ve.getGaDen().getMaGa());
+			stmt.setString(12, ve.getHang());
+			stmt.setString(13, ve.getKhuyenMai());
+			stmt.setBoolean(14, ve.isTrangThai());
+			stmt.setString(15, ve.getChiTiet().getMaChiTiet());
 
 			n = stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -105,20 +109,22 @@ public class Ve_DAO {
 		int n = 0;
 		try {
 			stmt = con.prepareStatement(
-					"UPDATE Ve SET tau = ?, toa = ?, soGhe = ?, khachHang = ?, ngayDi = ?, gioDi = ?, gaDi = ?, gaDen = ?, hang = ?, khuyenMai = ?,trangThai = ?, chiTiet = ? WHERE maVe = ?");
-			stmt.setString(1, ve.getChuyenTau().getMaTau());
-			stmt.setString(2, ve.getToa().getMaToa());
-			stmt.setInt(3, ve.getSoGhe().getSoGhe());
-			stmt.setString(4, ve.getKhachHang().getMaKH());
-			stmt.setDate(5, java.sql.Date.valueOf(ve.getNgayDi()));
-			stmt.setTime(6, java.sql.Time.valueOf(ve.getGioDi()));
-			stmt.setString(7, ve.getGaDi().getMaGa());
-			stmt.setString(8, ve.getGaDen().getMaGa());
-			stmt.setString(9, ve.getHang());
-			stmt.setString(10, ve.getKhuyenMai());
-			stmt.setBoolean(11, ve.isTrangThai());
-			stmt.setString(12, ve.getChiTiet().getMaChiTiet());
-			stmt.setString(13, ve.getMaVe());
+					"UPDATE Ve SET tau = ?, toa = ?, soGhe = ?, khachHang = ?, ngayDi = ?, gioDi = ?,ngayDen = ?,gioDen = ?, gaDi = ?, gaDen = ?, hang = ?, khuyenMai = ?,trangThai = ?, chiTiet = ? WHERE maVe = ?");
+			stmt.setString(1, ve.getMaVe());
+			stmt.setString(2, ve.getChuyenTau().getMaTau());
+			stmt.setString(3, ve.getToa().getMaToa());
+			stmt.setInt(4, ve.getSoGhe().getSoGhe());
+			stmt.setString(5, ve.getKhachHang().getMaKH());
+			stmt.setDate(6, java.sql.Date.valueOf(ve.getNgayDi()));
+			stmt.setTime(7, java.sql.Time.valueOf(ve.getGioDi()));
+			stmt.setDate(8, java.sql.Date.valueOf(ve.getNgayDi()));
+			stmt.setTime(9, java.sql.Time.valueOf(ve.getGioDi()));
+			stmt.setString(10, ve.getGaDi().getMaGa());
+			stmt.setString(11, ve.getGaDen().getMaGa());
+			stmt.setString(12, ve.getHang());
+			stmt.setString(13, ve.getKhuyenMai());
+			stmt.setBoolean(14, ve.isTrangThai());
+			stmt.setString(15, ve.getChiTiet().getMaChiTiet());
 
 			n = stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -160,6 +166,8 @@ public class Ve_DAO {
 				String maKH = rs.getString("khachHang");
 				LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
 				LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
+				LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
+				LocalTime gioDen = rs.getTime("gioDen").toLocalTime();
 				String maGaDi = rs.getString("gaDi");
 				String maGaDen = rs.getString("gaDen");
 				String hang = rs.getString("hang");
@@ -176,7 +184,7 @@ public class Ve_DAO {
 				Ga gaDen = new Ga(maGaDen);
 				ChiTietHoaDon chiTiet = new ChiTietHoaDon(maChiTiet);
 				// Tạo đối tượng Ve
-				ve = new Ve(maVe1, tau, toa, ghe, khachHang, ngayDi, gioDi, gaDi, gaDen, hang, khuyenMai, trangThai,
+				ve = new Ve(maVe, tau, toa, ghe, khachHang, ngayDi, gioDi,ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai,
 						chiTiet);
 			}
 		} catch (SQLException e) {
@@ -203,6 +211,8 @@ public class Ve_DAO {
 				String maKH = rs.getString("khachHang");
 				LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
 				LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
+				LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
+				LocalTime gioDen = rs.getTime("gioDen").toLocalTime();
 				String maGaDi = rs.getString("gaDi");
 				String maGaDen = rs.getString("gaDen");
 				String hang = rs.getString("hang");
@@ -220,7 +230,7 @@ public class Ve_DAO {
 				ChiTietHoaDon chiTiet = new ChiTietHoaDon(maChiTiet);
 				
 				// Tạo đối tượng Ve
-				Ve ve = new Ve(maVe1, tau, toa, ghe, khachHang, ngayDi, gioDi, gaDi, gaDen, hang, khuyenMai, trangThai,
+				Ve ve = new Ve(maVe1, tau, toa, ghe, khachHang, ngayDi, gioDi,ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai,
 						chiTiet);
 				ds.add(ve);
 				System.out.println("Danh sách vé lấy được cho " + maChiTiet + ": " + ds.size());
@@ -281,6 +291,8 @@ public class Ve_DAO {
 				String maKH = rs.getString("khachHang");
 				LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
 				LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
+				LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
+				LocalTime gioDen = rs.getTime("gioDen").toLocalTime();
 				String maGaDi = rs.getString("gaDi");
 				String maGaDen = rs.getString("gaDen");
 				String hang = rs.getString("hang");
@@ -298,7 +310,7 @@ public class Ve_DAO {
 				ChiTietHoaDon chiTiet = new ChiTietHoaDon(maChiTiet);
 				
 				// Tạo đối tượng Ve
-				Ve ve = new Ve(maVe1, tau, toa, ghe, khachHang, ngayDi, gioDi, gaDi, gaDen, hang, khuyenMai, trangThai,
+				Ve ve = new Ve(maVe1, tau, toa, ghe, khachHang, ngayDi, gioDi,ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai,
 						chiTiet);
 				ds.add(ve);
 			}

@@ -13,6 +13,8 @@ public class Ve {
 	private KhachHang khachHang;
 	private LocalDate ngayDi;
 	private LocalTime gioDi;
+	private LocalDate ngayDen;
+	private LocalTime gioDen;
 	private Ga gaDi;
 	private Ga gaDen;
 	private String hang;
@@ -21,7 +23,7 @@ public class Ve {
 	private ChiTietHoaDon chiTiet;
 	
 	public Ve(String maVe, ChuyenTau chuyenTau, Toa toa, Ghe soGhe, KhachHang khachHang, LocalDate ngayDi, LocalTime gioDi,
-			Ga gaDi,Ga gaDen, String hang, String khuyenMai,boolean trangThai, ChiTietHoaDon chiTiet) {
+			LocalDate ngayDen, LocalTime gioDen,Ga gaDi,Ga gaDen, String hang, String khuyenMai,boolean trangThai, ChiTietHoaDon chiTiet) {
 		super();
 		this.setMaVe(maVe);
 		this.setChuyenTau(chuyenTau);
@@ -30,6 +32,8 @@ public class Ve {
 		this.setKhachHang(khachHang);
 		this.ngayDi = ngayDi;
 		this.gioDi = gioDi;
+		this.ngayDen = ngayDen;
+		this.gioDen = gioDen;
 		this.setGaDen(gaDen);
 		this.setGaDi(gaDi);
 		this.setHang(hang);
@@ -89,7 +93,7 @@ public class Ve {
 	public void setKhachHang(KhachHang khachHang) {
 		this.khachHang = khachHang;
 		//Kiểm tra tồn tại
-}
+	}
 
 	public LocalDate getNgayDi() {
 		return ngayDi;
@@ -97,6 +101,13 @@ public class Ve {
 
 	public LocalTime getGioDi() {
 		return gioDi;
+	}
+	public LocalDate getNgayDen() {
+		return ngayDen;
+	}
+
+	public LocalTime getGioDen() {
+		return gioDen;
 	}
 	public Ga getGaDi() {
 		return gaDi;

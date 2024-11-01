@@ -13,10 +13,12 @@ public class ChuyenTau {
 	private ArrayList<Ga> tramDung;
 	private LocalDate ngayDi;
 	private LocalTime gioDi;
+	private LocalDate ngayDen;
+	private	LocalTime gioDen;
 	private ArrayList<Toa> dsToa;
 
-	public ChuyenTau(String maTau,Ga gaDi, Ga gaDen, ArrayList<Ga> tramDung, LocalDate ngayDi, LocalTime gioDi,
-			ArrayList<Toa> dsToa) {
+	public ChuyenTau(String maTau,Ga gaDi, Ga gaDen, ArrayList<Ga> tramDung, LocalDate ngayDi, LocalTime gioDi,LocalDate ngayDen, LocalTime gioDen
+			,ArrayList<Toa> dsToa) {
 		super();
 		this.setMaTau(maTau);
 		this.setGaDi(gaDi);
@@ -24,6 +26,8 @@ public class ChuyenTau {
 		this.setTramDung(tramDung);
 		this.setNgayDi(ngayDi);
 		this.setGioDi(gioDi);
+		this.setNgayDen(ngayDen);
+		this.setGioDen(gioDen);
 		this.setDsToa(dsToa);
 	}
 
@@ -87,6 +91,22 @@ public class ChuyenTau {
 		this.gioDi = gioDi;
 	}
 
+	
+	public LocalDate getNgayDen() {
+		return ngayDen;
+	}
+
+	public void setNgayDen(LocalDate ngayDen) {
+			this.ngayDen = ngayDen;
+	}
+
+	public LocalTime getGioDen() {
+		return gioDen;
+	}
+
+	public void setGioDen(LocalTime gioDen) {
+		this.gioDen = gioDen;
+	}
 	public ArrayList<Toa> getDsToa() {
 		return dsToa;
 	}
@@ -114,8 +134,11 @@ public class ChuyenTau {
 
 	@Override
 	public String toString() {
-		return "ChuyenTau [maTau=" + maTau + ", gaDi=" + gaDi +", gaDen=" + gaDen + ", tramDung=" + tramDung + ", ngayDi=" + ngayDi
-				+ ", gioDi=" + gioDi + ", dsToa=" + dsToa + "]";
+		return "ChuyenTau [maTau=" + maTau + ", gaDi=" + gaDi + ", gaDen=" + gaDen + ", tramDung=" + tramDung
+				+ ", ngayDi=" + ngayDi + ", gioDi=" + gioDi + ", ngayDen=" + ngayDen + ", gioDen=" + gioDen + ", dsToa="
+				+ dsToa + "]";
 	}
+
+	
 	
 }

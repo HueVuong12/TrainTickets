@@ -32,8 +32,11 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
 
 import components.ConTent_JPanel;
 import dao.Ca_DAO;
@@ -80,7 +83,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	private JLabel slvbtcIconLabel;
 	private JLabel lbl_slvbtc;
 	private JLabel lbl_titleSLVBTC;
-	private ChartPanel chartPanelTheoCa;
+	private ChartPanel chartPanelTheoCa_DTKM;
 	private JPanel jp_tkdt;
 	private JPanel jp_thoiGian;
 	private JPanel jp_header;
@@ -97,28 +100,32 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	private JPanel jp_header1;
 	private JPanel jp_content1;
 	private Color hoverLabelColor = new Color(0, 153, 255);
-	private HoaDon_DAO dsHD;
+	private HoaDon_DAO dsHD = new HoaDon_DAO();
 	private String tkdt_ngayBatDau;
 	private String tkdt_ngayKetThuc;
 	private JDateChooser dateChooser_TKDT_batDau;
 	private JDateChooser dateChooser_TKDT_ketThuc;
-	private ChiTietHoaDon_DAO dsCTHD;
-	private Ve_DAO dsVe;
+	private ChiTietHoaDon_DAO dsCTHD = new ChiTietHoaDon_DAO();
+	private Ve_DAO dsVe = new Ve_DAO();
 	private DefaultCategoryDataset dataset;
 	private JPanel jp_thongKe;
-	private ChuyenTau_DAO dsCT;
+	private ChuyenTau_DAO dsCT = new ChuyenTau_DAO();
 	private JDateChooser dateChooser_TKCT_batDau;
 	private JDateChooser dateChooser_TKCT_ketThuc;
 	private String tkct_ngayBatDau;
 	private String tkct_ngayKetThuc;
 	private JPanel jp_thongKeCT;
-	private NhanVien_DAO dsNV;
+	private NhanVien_DAO dsNV = new NhanVien_DAO();
 	private TrangChu_GUI trangChu;
 	private DangNhap_GUI dangNhap;
-	private TaiKhoan_DAO dsTK;
-	private Ca_DAO dsCa;
+	private TaiKhoan_DAO dsTK = new TaiKhoan_DAO();
+	private Ca_DAO dsCa = new Ca_DAO();
 	private JButton btnXem_TKDT;
 	private JButton btnXem_TKCT;
+	private JPanel jp_thongKeTheoKhuyenMai_TheoCa;
+	private JPanel jp_thongKeTheoHang_TheoCa;
+	private ChartPanel chartPanelTheoCa_Hang_SLKM;
+	private ChartPanel chartPanelTheoCa_Hang_TKDTH;
 	public ThongKe_GUI(TrangChu_GUI trangChu)  {
 		this.trangChu = trangChu;
 		setBackground(SystemColor.text);
@@ -142,8 +149,10 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		goBackIconLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				ConTent_JPanel jpct = new ConTent_JPanel();
-				jpct.setVisible(true);
-				ThongKe_GUI.this.setVisible(false);
+				trangChu.content.removeAll();
+				trangChu.content.add(jpct);
+				trangChu.content.revalidate();
+				trangChu.content.repaint();
 			}
 		});
 		goBackIconLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -277,28 +286,79 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		JPanel jp_thongKeTheoCa = new JPanel();
 		jp_thongKeTheoCa.setBounds(28, 133, 1311, 308);
 		jp_tkdttheoca.add(jp_thongKeTheoCa);
-
-		//JFreeChat thống kê theo loại vé
+		
+		
+		//JFreeChat thống kê theo đối tượng khuyến mãi
 		//Khởi tạo dữ liệu
-		DefaultCategoryDataset datasetTheoCa = createDatasetTKTheoCa(trangChu);
+		DefaultCategoryDataset datasetTheoDoiTuongKhuyenMai = createDatasetTKTheoCa(trangChu);
 		// Create chart
-		JFreeChart chartTheoCa = ChartFactory.createBarChart(
-				"Thống kê doanh thu theo ca",
+		JFreeChart chartDoiTuongKhuyenMai = ChartFactory.createBarChart(
+				"Thống kê doanh thu theo đối tượng khuyến mãi",
 				"Đối tượng bán",
 				"Doanh thu",
-				datasetTheoCa
+				datasetTheoDoiTuongKhuyenMai
 				);
-
-		// Giảm kích cỡ chữ cho tiêu đề
-		chartTheoCa.getTitle().setFont(new Font("Arial", Font.PLAIN, 16));
 		// Tạo ChartPanel và thiết lập kích thước
-		chartPanelTheoCa = new ChartPanel(chartTheoCa);
+		chartPanelTheoCa_DTKM = new ChartPanel(chartDoiTuongKhuyenMai);
 		jp_thongKeTheoCa.setLayout(null);
-		chartPanelTheoCa.setBounds(0, 0, 1312, 308);
+		// Giảm kích cỡ chữ cho tiêu đề
+		chartDoiTuongKhuyenMai.getTitle().setFont(new Font("Arial", Font.PLAIN, 16));
+		
+		//JFreeChat Hiển thị số lượng khách mua theo PieChart
+		//Khởi tạo dữ liệu
+		DefaultPieDataset dataset = createDatasetPieChart(trangChu);
+		// Create chart
+		// Tạo biểu đồ bánh
+		JFreeChart chartTheoHang_SLKM = ChartFactory.createPieChart(
+		        "Số lượng khách mua", // Tiêu đề biểu đồ
+		        dataset,                                     // Dataset
+		        true,                                             // Hiển thị legend?
+		        true,                                             // Hiển thị tooltips?
+		        false);                                           // Hiển thị URLs?
+		chartPanelTheoCa_Hang_SLKM = new ChartPanel(chartTheoHang_SLKM);
+		// Giảm kích cỡ chữ cho tiêu đề
+		chartTheoHang_SLKM.getTitle().setFont(new Font("Arial", Font.PLAIN, 16));
+		// Tạo ChartPanel và thiết lập kích thước
+		
+		DefaultCategoryDataset datasetTKDTTheoHang = createDatasetTKHangTheoCa(trangChu);
+		// Create chart
+		JFreeChart chartDoanhThuTheoHang = ChartFactory.createBarChart(
+				"Thống kê doanh thu theo hạng",
+				"Đối tượng bán",
+				"Doanh thu",
+				datasetTKDTTheoHang,
+				PlotOrientation.HORIZONTAL,
+				true,                     // Hiển thị legend?
+	            true,                     // Hiển thị tooltips?
+	            false                     // Hiển thị URLs?// Chỉ định chiều ngang cho biểu đồ
+				);
+		// Tạo ChartPanel và thiết lập kích thước
+		chartPanelTheoCa_Hang_TKDTH= new ChartPanel(chartDoanhThuTheoHang);
+		
+		chartDoanhThuTheoHang.getTitle().setFont(new Font("Arial", Font.PLAIN, 16));
+		JTabbedPane tabbedPane_theoCa = new JTabbedPane(JTabbedPane.RIGHT);
+		tabbedPane_theoCa.setBounds(10, 10, 1290, 288);
+		jp_thongKeTheoCa.add(tabbedPane_theoCa);
+		
+		
+		jp_thongKeTheoKhuyenMai_TheoCa = new JPanel();
+		tabbedPane_theoCa.addTab("Đối tượng", null, jp_thongKeTheoKhuyenMai_TheoCa, null);
+		jp_thongKeTheoKhuyenMai_TheoCa.setLayout(null);
+		chartPanelTheoCa_DTKM.setBounds(0, 0,  1205, 280);
 		// Thêm ChartPanel vào jp_thongKe
-		jp_thongKeTheoCa.add(chartPanelTheoCa);
-
-
+		jp_thongKeTheoKhuyenMai_TheoCa.add(chartPanelTheoCa_DTKM);
+		
+		jp_thongKeTheoHang_TheoCa = new JPanel();
+		tabbedPane_theoCa.addTab("Hạng", null, jp_thongKeTheoHang_TheoCa, null);
+		jp_thongKeTheoHang_TheoCa.setLayout(null);
+		//add PieChart số lượng khách mua
+		chartPanelTheoCa_Hang_SLKM.setBounds(0, 0, 500, 280);
+		// Thêm ChartPanel vào jp_thongKe
+		jp_thongKeTheoHang_TheoCa.add(chartPanelTheoCa_Hang_SLKM);
+		
+		//add Barchart thống kê doanh thu theo hạng
+		chartPanelTheoCa_Hang_TKDTH.setBounds(510, 0 ,700, 280);
+		jp_thongKeTheoHang_TheoCa.add(chartPanelTheoCa_Hang_TKDTH);
 		//TabbPane thống kê doanh thu
 		jp_tkdt = new JPanel();
 		jp_tkdt.setBackground(SystemColor.text);
@@ -641,12 +701,12 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	}
 	//Hàm truy vấn thông tin gán vào label của thống kê theo ca
 	public void updateKetQuaThongKeTheoCa(TrangChu_GUI trangChu) {
-		dsTK = new TaiKhoan_DAO();
-		dsNV = new NhanVien_DAO();
-		dsHD = new HoaDon_DAO();
-		dsVe = new Ve_DAO();
-		dsCTHD = new ChiTietHoaDon_DAO();
-		dsCa = new Ca_DAO();
+		dsTK.reset();
+		dsNV.reset(); 
+		dsHD.reset();
+		dsVe.reset();
+		dsCTHD.reset();
+		dsCa.reset();
 		float doanhThu = 0;
 		int slvb = 0;
 		int sltv = 0;
@@ -724,9 +784,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 
 	//Hàm truy vấn thông tin gán vào label 
 	public void updateKetQuaThongKeDoanhThu() {
-		dsHD = new HoaDon_DAO();
-		dsVe = new Ve_DAO();
-		dsCTHD = new ChiTietHoaDon_DAO();
+		dsHD.reset();
+		dsVe.reset();
+		dsCTHD.reset();
 		float doanhThu = 0; 
 		SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String formattedNgayBatDau = sqlDateFormat.format(dateChooser_TKDT_batDau.getDate());
@@ -779,9 +839,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 
 	//Hàm truy vấn thông tin gán vào JLabel của thống kê chuyến tàu
 	public void updateKetQuaThongKeChuyenTau() {
-		dsHD = new HoaDon_DAO();
-		dsVe = new Ve_DAO();
-		dsCTHD = new ChiTietHoaDon_DAO();
+		dsHD.reset();
+		dsVe.reset();
+		dsCTHD.reset();
 		float doanhThu = 0; 
 		SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String formattedNgayBatDau = sqlDateFormat.format(dateChooser_TKCT_batDau.getDate());
@@ -898,12 +958,12 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	//Hàm truy vấn dữ liệu thống kê theo ca hiện tại 
 	private DefaultCategoryDataset createDatasetTKTheoCa(TrangChu_GUI trangChu) {
 		dataset = new DefaultCategoryDataset();
-		dsTK = new TaiKhoan_DAO();
-		dsNV = new NhanVien_DAO();
-		dsHD = new HoaDon_DAO();
-		dsVe = new Ve_DAO();
-		dsCTHD = new ChiTietHoaDon_DAO();
-		dsCa= new Ca_DAO();
+		dsTK.reset();
+		dsNV.reset();
+		dsHD.reset();
+		dsVe.reset();
+		dsCTHD.reset();
+		dsCa.reset();
 
 		Map<String, Float> doanhThuTheoKhuyenMai = new HashMap<>();
 
@@ -964,15 +1024,169 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		}
 		return dataset;
 	}
+	
+	//Hàm truy vấn dữ liệu thống kê doanh thu theo hạng của thống kê ca
+	private DefaultCategoryDataset createDatasetTKHangTheoCa(TrangChu_GUI trangChu) {
+		dataset = new DefaultCategoryDataset();
+		dsTK.reset();
+		dsNV.reset();
+		dsHD.reset();
+		dsVe.reset();
+		dsCTHD.reset();
+		dsCa.reset();
+
+		Map<String, Float> doanhThuTheoHang = new HashMap<>();
+
+		// Lấy thông tin nhân viên theo tên
+		NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
+		if (nv == null) {
+			System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
+			return dataset;
+		}
+
+		// Lấy thông tin ca làm
+		Ca ca = dsCa.getCaTheoMaCa(nv.getCa().getMaCa());
+		if (ca == null) {
+			System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
+			return dataset;
+		}
+		LocalTime thoiGianBatDauCa = ca.getThoiGianBatDau();
+		LocalTime thoiGianKetThucCa = ca.getThoiGianKetThuc();
+
+		// Lấy danh sách hóa đơn của nhân viên
+		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
+		if (listHD == null) {
+			System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
+			return dataset ;
+		}
+
+		// Duyệt qua từng hóa đơn và kiểm tra thời gian
+		for (HoaDon hd : listHD) {
+			LocalTime thoiGianHoaDon = hd.getNgayLapHoaDon().toLocalTime();
+			if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
+				continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
+			}
+
+			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
+			if (cthd != null) {
+				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
+
+				for (Ve ve : listVe) {
+					String hang = ve.getHang();
+					// Sử dụng một Set để theo dõi mã chuyến tàu đã được xử lý
+					Set<String> processedHang = new HashSet<>();
+					if (!processedHang.contains(hang)) {
+						// Cộng doanh thu vào chuyến tàu tương ứng
+						doanhThuTheoHang.put(hang, doanhThuTheoHang.getOrDefault(hang, 0f) + ve.tinhGiaVe());
+						processedHang.add(hang); // Đánh dấu là đã xử lý
+						System.out.println("Cập nhật doanh thu: " + doanhThuTheoHang);
+					}
+				}
+			} else {
+				System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
+			}
+		}
+		// Duyệt qua từng mục trong doanh thu theo khuyến mãi
+		for (Map.Entry<String, Float> entry : doanhThuTheoHang.entrySet()) {
+			String hang = entry.getKey();
+			Float doanhThu = entry.getValue();
+
+			// Thêm dữ liệu vào dataset
+			dataset.addValue(doanhThu, "Doanh Thu", hang);
+		}
+		if (doanhThuTheoHang.isEmpty()) {
+		    System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
+		    dataset.addValue(0, "Doanh Thu", "");
+		}
+		return dataset;
+	}
+	
+	//Hàm truy vấn dữ liệu thống kê PieChart số lượng bán 
+	private DefaultPieDataset createDatasetPieChart(TrangChu_GUI trangChu) {
+	    DefaultPieDataset dataset = new DefaultPieDataset();
+	    dsTK.reset();
+	    dsNV.reset();
+	    dsHD.reset();
+	    dsVe.reset();
+	    dsCTHD.reset();
+	    dsCa.reset();
+
+	    Map<String, Float> doanhThuTheoHang = new HashMap<>();
+
+	    // Lấy thông tin nhân viên theo tên
+	    NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
+	    if (nv == null) {
+	        System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
+	        return dataset;
+	    }
+
+	    // Lấy thông tin ca làm
+	    Ca ca = dsCa.getCaTheoMaCa(nv.getCa().getMaCa());
+	    if (ca == null) {
+	        System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
+	        return dataset;
+	    }
+	    LocalTime thoiGianBatDauCa = ca.getThoiGianBatDau();
+	    LocalTime thoiGianKetThucCa = ca.getThoiGianKetThuc();
+
+	    // Lấy danh sách hóa đơn của nhân viên
+	    ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
+	    if (listHD == null) {
+	        System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
+	        return dataset;
+	    }
+
+	    // Duyệt qua từng hóa đơn và kiểm tra thời gian
+	    for (HoaDon hd : listHD) {
+	        LocalTime thoiGianHoaDon = hd.getNgayLapHoaDon().toLocalTime();
+	        if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
+	            continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
+	        }
+
+	        ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
+	        if (cthd != null) {
+	            ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
+	            Set<String> processedHang = new HashSet<>(); // Set để theo dõi mã chuyến tàu đã được xử lý
+
+	            for (Ve ve : listVe) {
+	                String hang = ve.getHang();
+	                if (!processedHang.contains(hang)) {
+	                    // Cộng doanh thu vào chuyến tàu tương ứng
+	                    doanhThuTheoHang.put(hang, doanhThuTheoHang.getOrDefault(hang, 0f) + ve.tinhGiaVe());
+	                    processedHang.add(hang); // Đánh dấu là đã xử lý
+	                    System.out.println("Cập nhật doanh thu: " + doanhThuTheoHang);
+	                }
+	            }
+	        } else {
+	            System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
+	        }
+	    }
+
+	    // Duyệt qua từng mục trong doanh thu theo khuyến mãi
+	    for (Map.Entry<String, Float> entry : doanhThuTheoHang.entrySet()) {
+	        String hang = entry.getKey();
+	        Float doanhThu = entry.getValue();
+	        // Thêm dữ liệu vào dataset
+	        dataset.setValue(hang, doanhThu); // Sử dụng setValue cho PieDataset
+	    }
+
+	    if (doanhThuTheoHang.isEmpty()) {
+	        System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
+	        dataset.setValue("Rỗng", 0); // Thêm giá trị cho trường hợp không có dữ liệu
+	    }
+
+	    return dataset;
+	}
+
 	//Hàm truy vấn dữ liệu thống kê doanh thu
 	private DefaultCategoryDataset createDatasetDoanhThu() {
 		dataset = new DefaultCategoryDataset();
 		SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String formattedNgayBatDau = sqlDateFormat.format(dateChooser_TKDT_batDau.getDate());
 		String formattedNgayKetThuc = sqlDateFormat.format(dateChooser_TKDT_ketThuc.getDate());
-		dsHD = new HoaDon_DAO();
-		dsVe = new Ve_DAO();
-		dsCTHD = new ChiTietHoaDon_DAO();
+		dsHD.reset();
+		dsVe.reset();
+		dsCTHD.reset();
 		Map<String, Float> doanhThuTheoKhuyenMai = new HashMap<>();
 		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoNgayLapHD(formattedNgayBatDau, formattedNgayKetThuc);
 		// Duyệt qua từng hóa đơn
@@ -1006,10 +1220,10 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	//Hàm truy vấn dữ liệu thống kê chuyến tàu
 	private DefaultCategoryDataset createDatasetChuyenTau() {
 		dataset = new DefaultCategoryDataset();
-		dsHD = new HoaDon_DAO();
-		dsVe = new Ve_DAO();
-		dsCTHD = new ChiTietHoaDon_DAO();
-		dsCT= new ChuyenTau_DAO();
+		dsHD.reset();
+		dsVe.reset();
+		dsCTHD.reset();
+		dsCT.reset();
 		SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String formattedNgayBatDau = sqlDateFormat.format(dateChooser_TKCT_batDau.getDate());
 		String formattedNgayKetThuc = sqlDateFormat.format(dateChooser_TKCT_ketThuc.getDate());
@@ -1062,29 +1276,26 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 
 
 	//Hàm truy vấn dữ liệu theo mẫu
+	private DefaultPieDataset createDatasetTKTheoCa() {
+	    DefaultPieDataset dataset = new DefaultPieDataset();
+	    
+	    // Thêm dữ liệu vào dataset
+	    dataset.setValue("Ghế mềm", 40); // Giá trị cho đối tượng 1
+	    dataset.setValue("Giường nằm", 30); // Giá trị cho đối tượng 2
+	    dataset.setValue("VIP", 20); // Giá trị cho đối tượng 3
+
+	    return dataset;
+	}
+
 	private DefaultCategoryDataset createDataset() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		// Add data to the dataset
-		dataset.addValue(0.4, "Revenue", "1");
-		dataset.addValue(0.5, "Revenue", "2");
-		dataset.addValue(0.9, "Revenue", "3");
-		dataset.addValue(0.10, "Revenue", "4");
-		dataset.addValue(0.12, "Revenue", "5");
-		dataset.addValue(0.1, "Revenue", "6");
-		dataset.addValue(0.3, "Revenue", "7");
-		dataset.addValue(0.5, "Revenue", "8");
-		dataset.addValue(0.8, "Revenue", "9");
-		dataset.addValue(0.7, "Revenue", "10");
-		dataset.addValue(0.6, "Revenue", "11");
-		dataset.addValue(0.10, "Revenue", "12");
-		dataset.addValue(0.17, "Revenue", "13");
-		dataset.addValue(0.51, "Revenue", "14");
-		dataset.addValue(0.22, "Revenue", "15");
-
-
+		dataset.addValue(0.4, "Ghế mềm", "1");
+		dataset.addValue(0.5, "Giường nằm", "2");
+		dataset.addValue(0.9, "VIP", "3");
 		return dataset;
 	}
-
+	
 	//Hàm định dạng tiền việt
 	public String dinhDangTienTe(double soTien) {
 		NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -1093,8 +1304,8 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 
 	//Hàm kiểm tra quyền Nhân viên
 	public void kiemTraQuyen(TrangChu_GUI trangChu) {
-	    dsTK = new TaiKhoan_DAO();
-	    dsNV= new NhanVien_DAO();
+	    dsTK.reset();
+	    dsNV.reset();
 	    NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
 	    
 	    // Kiểm tra nếu nhân viên tồn tại

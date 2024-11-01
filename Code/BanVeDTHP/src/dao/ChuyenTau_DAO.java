@@ -36,11 +36,13 @@ public class ChuyenTau_DAO {
                 String gaDen = rs.getString("gaDen");
                 LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
                 LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
+                LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
+                LocalTime gioDen = rs.getTime("gioDen").toLocalTime();
                 Ga gaDi1 = ga_Dao.getGaTheoMaGa(gaDi);
                 Ga gaDen1 = ga_Dao.getGaTheoMaGa(gaDen);
                 ArrayList<Toa> dsToa = toa_Dao.getDsToaTheoMaTau(maTau);
                 ArrayList<Ga> tramDung = ga_Dao.getDsTramDung(maTau);
-                ChuyenTau chuyenTau = new ChuyenTau(maTau, gaDi1,gaDen1, tramDung, ngayDi,gioDi, dsToa);
+                ChuyenTau chuyenTau = new ChuyenTau(maTau, gaDi1,gaDen1, tramDung, ngayDi,gioDi,ngayDen,gioDen ,dsToa);
                 dsChuyenTau.add(chuyenTau);
            } 
         } catch (SQLException e) { 
@@ -54,12 +56,14 @@ public class ChuyenTau_DAO {
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
-            stmt = con.prepareStatement("insert into ChuyenTau values(?, ?, ?, ?, ?)"); 
+            stmt = con.prepareStatement("insert into ChuyenTau values(?, ?, ?, ?, ?, ?, ?)"); 
             stmt.setString(1, chuyenTau.getMaTau());
             stmt.setString(2, chuyenTau.getGaDi().getMaGa());
             stmt.setString(3, chuyenTau.getGaDen().getMaGa());
             stmt.setObject(4, chuyenTau.getNgayDi());
-            stmt.setObject(5, chuyenTau.getGioDi());      
+            stmt.setObject(5, chuyenTau.getGioDi()); 
+            stmt.setObject(6, chuyenTau.getNgayDen());
+            stmt.setObject(7, chuyenTau.getGioDen());    
             n = stmt.executeUpdate();
         } catch (SQLException e) { 
             e.printStackTrace(); 
@@ -73,12 +77,14 @@ public class ChuyenTau_DAO {
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
-            stmt = con.prepareStatement("update ChuyenTau set gaDi = ?, gaDen = ?, ngayDi = ?, gioDi = ? where maTau = ?"); 
+            stmt = con.prepareStatement("update ChuyenTau set gaDi = ?, gaDen = ?, ngayDi = ?, gioDi = ?, ngayDen = ?, gioDen = ? where maTau = ?"); 
             stmt.setString(1, chuyenTau.getGaDi().getMaGa());
             stmt.setString(2, chuyenTau.getGaDen().getMaGa());
             stmt.setObject(3, chuyenTau.getNgayDi());
             stmt.setObject(4, chuyenTau.getGioDi()); 
-            stmt.setString(5, chuyenTau.getMaTau());
+            stmt.setObject(5, chuyenTau.getNgayDen());
+            stmt.setObject(6, chuyenTau.getGioDen()); 
+            stmt.setString(7, chuyenTau.getMaTau());
             n = stmt.executeUpdate(); 
         } catch (SQLException e) { 
             e.printStackTrace(); 
@@ -112,16 +118,18 @@ public class ChuyenTau_DAO {
             stmt.setString(1, maTau); 
             ResultSet rs = stmt.executeQuery(); 
             while (rs.next()) {
-            	String maTau1 = rs.getString("maTau");
+//            	String maTau1 = rs.getString("maTau");
                 String gaDi = rs.getString("gaDi");
                 String gaDen = rs.getString("gaDen");
                 LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
                 LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
+                LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
+                LocalTime gioDen = rs.getTime("gioDen").toLocalTime();
                 Ga gaDi1 = ga_Dao.getGaTheoMaGa(gaDi);
                 Ga gaDen1 = ga_Dao.getGaTheoMaGa(gaDen);
                 ArrayList<Toa> dsToa = toa_Dao.getDsToaTheoMaTau(maTau);
                 ArrayList<Ga> tramDung = ga_Dao.getDsTramDung(maTau);
-                chuyenTau = new ChuyenTau(maTau1, gaDi1,gaDen1, tramDung, ngayDi,gioDi, dsToa);
+                chuyenTau = new ChuyenTau(maTau, gaDi1,gaDen1, tramDung, ngayDi,gioDi,ngayDen,gioDen ,dsToa);
               
             } 
         } catch (SQLException e) { 
@@ -141,17 +149,18 @@ public class ChuyenTau_DAO {
             stmt.setString(2, ngayKetThuc); 
             ResultSet rs = stmt.executeQuery(); 
             while (rs.next()) {
-                String maTau1 = rs.getString("maTau");
+            	String maTau = rs.getString("maTau");
                 String gaDi = rs.getString("gaDi");
                 String gaDen = rs.getString("gaDen");
                 LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
                 LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
-                
+                LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
+                LocalTime gioDen = rs.getTime("gioDen").toLocalTime();
                 Ga gaDi1 = ga_Dao.getGaTheoMaGa(gaDi);
                 Ga gaDen1 = ga_Dao.getGaTheoMaGa(gaDen);
-                ArrayList<Toa> dsToa = toa_Dao.getDsToaTheoMaTau(maTau1);
-                ArrayList<Ga> tramDung = ga_Dao.getDsTramDung(maTau1);      
-                chuyenTau = new ChuyenTau(maTau1, gaDi1, gaDen1, tramDung, ngayDi, gioDi, dsToa);
+                ArrayList<Toa> dsToa = toa_Dao.getDsToaTheoMaTau(maTau);
+                ArrayList<Ga> tramDung = ga_Dao.getDsTramDung(maTau);
+                chuyenTau = new ChuyenTau(maTau, gaDi1,gaDen1, tramDung, ngayDi,gioDi,ngayDen,gioDen ,dsToa);
                 dsChuyenTau.add(chuyenTau);
             } 
         } catch (SQLException e) { 

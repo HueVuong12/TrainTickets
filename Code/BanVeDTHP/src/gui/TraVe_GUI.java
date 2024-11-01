@@ -363,6 +363,10 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	    
 	    if (o.equals(btnXoa)) {
 	        tienKhachDua = 0;
+	        // Hiển thị số tiền đã định dạng
+	        tienTraLai = 0;
+		    textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua));
+		    textField_TienTraLai.setText(dinhDangTienTe(tienTraLai));
 	    } else {
 	        float soTienThem = 0;
 	        
@@ -383,16 +387,14 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	        // Kiểm tra nếu text hiện tại là "0 đ" thì đặt `tienKhachDua` thành `soTienThem`
 	        if (textField_TienKhachDua.getText().equalsIgnoreCase("0 đ")) {
 	            tienKhachDua = soTienThem;
+	            textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua)); // Cập nhật textField
 	        } else {
 	            tienKhachDua += soTienThem;
+	            textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua));
 	        }
+	        tienTraLai = tienKhachDua - tongTienCoThue;
+	        textField_TienTraLai.setText(dinhDangTienTe(tienTraLai));
 	    }
 	    
-	    // Hiển thị số tiền đã định dạng
-	    textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua));
-	    tienTraLai= tienKhachDua-tongTienCoThue;
-	    if(tienTraLai !=0) {
-	    	textField_TienTraLai.setText(dinhDangTienTe(tienTraLai));
-	    }
 	}
 }
