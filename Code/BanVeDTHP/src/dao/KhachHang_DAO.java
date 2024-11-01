@@ -74,8 +74,8 @@ public class KhachHang_DAO {
 			stmt.setNString(1,p.getTenKH());
 			stmt.setString(2,p.getEmail());
 			stmt.setString(3,p.getSdt());
-			stmt.setString(3,p.getCccd());
-			stmt.setString(6,p.getMaKH());
+			stmt.setString(4,p.getCccd());
+			stmt.setString(5,p.getMaKH());
 		     
 		    n = stmt.executeUpdate(); 
 		} catch (SQLException e) { 

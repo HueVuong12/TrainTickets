@@ -308,50 +308,7 @@ public class Ve_DAO {
 		return ds;
 		
 	}
-//	public ArrayList<Ve> getVetheoKhuyenMai(String km, String ngayBatDau, String ngayKetThuc) {
-//	    ArrayList<Ve> ds = new ArrayList<Ve>();
-//	    try {
-//	        Connection con = ConnectDB.getInstance().getConnection();
-//	        // Sửa câu lệnh SQL để lọc vé dựa trên khuyến mãi và ngày đi
-//	        String sql = "SELECT * FROM Ve WHERE khuyenMai = ? AND ngayDi BETWEEN ? AND ?";
-//	        PreparedStatement stmt = con.prepareStatement(sql);
-//	        stmt.setString(1, km);
-//	        stmt.setString(2, ngayBatDau);
-//	        stmt.setString(3, ngayKetThuc);
-//	        ResultSet rs = stmt.executeQuery();
-//
-//	        while (rs.next()) {
-//	            String maVe1 = rs.getString("maVe");
-//	            String maTau = rs.getString("tau");
-//	            String maToa = rs.getString("toa");
-//	            int soGhe = rs.getInt("soGhe");
-//	            String maKH = rs.getString("khachHang");
-//	            LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
-//	            LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
-//	            String maGaDi = rs.getString("gaDi");
-//	            String maGaDen = rs.getString("gaDen");
-//	            String hang = rs.getString("hang");
-//	            String khuyenMai = rs.getString("khuyenMai");
-//	            boolean trangThai = rs.getBoolean("trangThai");
-//	            String maChiTiet = rs.getString("chiTiet");
-//
-//	            // Tạo các đối tượng thành phần và vé
-//	            ChuyenTau tau = new ChuyenTau(maTau);
-//	            Toa toa = new Toa(maToa);
-//	            Ghe ghe = new Ghe(soGhe, toa);
-//	            KhachHang khachHang = new KhachHang(maKH);
-//	            Ga gaDi = new Ga(maGaDi);
-//	            Ga gaDen = new Ga(maGaDen);
-//	            ChiTietHoaDon chiTiet = new ChiTietHoaDon(maChiTiet);
-//
-//	            Ve ve = new Ve(maVe1, tau, toa, ghe, khachHang, ngayDi, gioDi, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet);
-//	            ds.add(ve);
-//	        }
-//	    } catch (SQLException e) {
-//	        e.printStackTrace();
-//	    }
-//	    return ds;
-//	}
+
 	//Khuyến mãi
 	public ArrayList<String> getKhuyenMai(){
 		ArrayList<String> list = new ArrayList<String>();

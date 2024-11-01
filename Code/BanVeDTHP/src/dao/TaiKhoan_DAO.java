@@ -155,11 +155,6 @@ public class TaiKhoan_DAO {
 		return taiKhoan;
 	}
 
-	public void reset() {
-		dsTaiKhoan.removeAll(dsTaiKhoan);
-	}
-
-	////////// Toan
 	public ArrayList<TaiKhoan> getListQL() {
 		try {
 			Connection con = ConnectDB.getInstance().getConnection(); // Lấy kết nối CSDL
@@ -212,5 +207,9 @@ public class TaiKhoan_DAO {
 			e.printStackTrace();
 		}
 		return dsTaiKhoan; // Trả về danh sách tài khoản
+	}
+	
+	public void reset() {
+		dsTaiKhoan.removeAll(dsTaiKhoan);
 	}
 }

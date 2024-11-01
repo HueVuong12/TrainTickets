@@ -1,83 +1,37 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.SystemColor;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.border.AbstractBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextPane;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Insets;
-import java.awt.RenderingHints;
-
 import javax.swing.table.DefaultTableModel;
 
 import components.ConTent_JPanel;
 import components.RoundedButton;
 import components.RoundedTextField;
 import dao.KhachHang_DAO;
-import dao.NhanVien_DAO;
-import entity.Ca;
 import entity.KhachHang;
-import entity.NhanVien;
-
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
-import javax.swing.AbstractButton;
-import javax.swing.Icon;
-import javax.swing.border.TitledBorder;
 
 public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
 
-	private int cornerRadius;
-	private JTextField textField;
-	private JTextField textFieldTenKH;
-	private JTextField textFieldEmail;
-	private JTextField textFieldSDT;
-	private JTextField textFieldCCCD;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private String placeholder;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private KhachHang_DAO dskh;
-	private List<KhachHang> dsKH;
 	private JTable table;
 	private DefaultTableModel tableModel;
-
 	private RoundedTextField txtMaKH;
 
 	private RoundedTextField txtCCCD;
@@ -94,6 +48,8 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 
 	private RoundedButton btnThem;
 
+	// khai báo DAO
+	private KhachHang_DAO dskh = new KhachHang_DAO();
 	/**
 	 * Create the panel.
 	 */
@@ -311,15 +267,12 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 
 		btnSua.addActionListener(this);
 		btnTim.addActionListener(this);
-		dskh = new KhachHang_DAO();
 		datatoTable();
 		table.addMouseListener(this);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-
-		dskh = new KhachHang_DAO();
 
 		if (o.equals(btnThem)) {
 			update();
@@ -403,7 +356,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 	}
 
 	public void datatoTable() {
-		dskh = new KhachHang_DAO();
+		dskh.reset();
 		ArrayList<KhachHang> list = dskh.docTuBang();
 		tableModel = (DefaultTableModel) table.getModel();
 		tableModel.setRowCount(0);
@@ -415,7 +368,9 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 	}
 
 	public String generateMaKH() {
+		dskh.reset();
 		ArrayList<KhachHang> list = dskh.docTuBang();
+		System.err.println(list.size());
 		int sl = list.size() + 1;
 		String maKH = String.format("KH%04d", sl);
 		return maKH;
