@@ -775,11 +775,7 @@ public void mousePressed(MouseEvent e) {
 	//Hàm tạo mã nhân viên tự động
 	public String generateMaNV() {
 		ArrayList<NhanVien> list = dsnv.docTuBang();
-		int sl = 0;
-		for (int i = 0; i < list.size(); i++) {
-			sl++;
-		}sl++;
-		String maNV = String.format("NV%03d", sl);// Tạo mã với định dạng "NV" + 3 chữ số, ví dụ "NV001"
+		String maNV = String.format("NV%03d", list.size() + 1);// Tạo mã với định dạng "NV" + 3 chữ số, ví dụ "NV001"
 		return maNV;
 	}
 
