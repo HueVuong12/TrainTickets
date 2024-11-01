@@ -22,8 +22,9 @@ CREATE TABLE ChuyenTau (
 	gaDi VARCHAR(50) NOT NULL,
     gaDen VARCHAR(50) NOT NULL,
     ngayDi DATE NOT NULL,
-	ngayDen DATE NOT NULL,
     gioDi TIME NOT NULL,
+	ngayDen DATE NOT NULL,
+	gioDen TIME NOT NULL,
     FOREIGN KEY (gaDen) REFERENCES Ga(maGa)
 );
 
@@ -32,7 +33,9 @@ CREATE TABLE ChuyenTau_Ga (
     maTau VARCHAR(50),
     maGa VARCHAR(50),
 	ngayDi DATE NOT NULL,
+    gioDi TIME NOT NULL,
 	ngayDen DATE NOT NULL,
+	gioDen TIME NOT NULL,
     PRIMARY KEY (maTau, maGa),
     FOREIGN KEY (maTau) REFERENCES ChuyenTau(maTau),
     FOREIGN KEY (maGa) REFERENCES Ga(maGa)
@@ -116,6 +119,8 @@ CREATE TABLE Ve (
     khachHang VARCHAR(50) NOT NULL,
     ngayDi DATE NOT NULL,
     gioDi TIME NOT NULL,
+	ngayDen DATE NOT NULL,
+	gioDen TIME NOT NULL,
 	gaDi VARCHAR(50) NOT NULL,
     gaDen VARCHAR(50) NOT NULL,
 	hang NVARCHAR(100) NOT NULL,
@@ -194,19 +199,19 @@ INSERT INTO Ga (maGa, tenGa, diaChi, chiSoKm, trangThai) VALUES
 ('GA035', N'Ga Hà Nội', N'Hà Nội', 1726, 1);
 
 -- Thêm 3 chuyến tàu
-INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi) VALUES
-('TA001', 'GA001', 'GA035', '2024-11-21', '08:00:00'),
-('TA002', 'GA001', 'GA035', '2024-11-21', '09:00:00'),
-('TA003', 'GA001', 'GA035', '2024-11-21', '10:00:00');
+INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen) VALUES
+('TA001', 'GA001', 'GA035', '2024-11-21', '08:00:00', '2024-11-21', '16:00:00'),
+('TA002', 'GA001', 'GA035', '2024-11-21', '09:00:00', '2024-11-21', '17:00:00'),
+('TA003', 'GA001', 'GA035', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00');
 
 -- Thêm các trạm dừng cho 3 chuyến tàu
-INSERT INTO ChuyenTau_Ga (maTau, maGa) VALUES
-('TA001', 'GA016'), -- Núi Thành
-('TA001', 'GA020'), -- Huế
-('TA002', 'GA016'), -- Núi Thành
-('TA002', 'GA020'), -- Huế
-('TA003', 'GA016'), -- Núi Thành
-('TA003', 'GA020'); -- Huế
+INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen) VALUES
+('TA001', 'GA016', '2024-11-21', '11:00:00', '2024-11-21', '11:30:00'), -- Núi Thành
+('TA001', 'GA020', '2024-11-21', '13:00:00', '2024-11-21', '13:30:00'), -- Huế
+('TA002', 'GA016', '2024-11-21', '12:00:00', '2024-11-21', '12:30:00'), -- Núi Thành
+('TA002', 'GA020', '2024-11-21', '14:00:00', '2024-11-21', '14:30:00'), -- Huế
+('TA003', 'GA016', '2024-11-21', '13:00:00', '2024-11-21', '13:30:00'), -- Núi Thành
+('TA003', 'GA020', '2024-11-21', '15:00:00', '2024-11-21', '15:30:00'); -- Huế
 
 -- Thêm các toa cho mỗi chuyến tàu
 -- Chuyến tàu TA001
@@ -307,16 +312,16 @@ INSERT INTO ChiTietHoaDon (maChiTiet, hoaDon, soLuong, thue) VALUES
 ('CT220924NV00200001', '220924NV00200001', 3, 1000);
 
 -- Thêm vé cho chi tiết hóa đơn 1
-INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES 
-('VE2609240001', 'TA001', 'TA001_01', 1, 'KH0001', '2024-11-21', '08:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 1, 'CT220924NV00100002');
+INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES 
+('VE2609240001', 'TA001', 'TA001_01', 1, 'KH0001', '2024-11-21', '08:00:00', '2024-11-21', '16:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 1, 'CT220924NV00100002');
 
 -- Thêm vé cho chi tiết hóa đơn 2
-INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES 
-('VE2609240002', 'TA002', 'TA002_01', 1, 'KH0001', '2024-11-21', '09:00:00', 'GA001', 'GA035', N'Giường nằm', N'Trẻ em dưới 6 tuổi', 1, 'CT220924NV00100001'),
-('VE2609240003', 'TA002', 'TA002_01', 2, 'KH0002', '2024-11-21', '09:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 1, 'CT220924NV00100001');
+INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES 
+('VE2609240002', 'TA002', 'TA002_01', 1, 'KH0001', '2024-11-21', '09:00:00', '2024-11-21', '17:00:00', 'GA001', 'GA035', N'Giường nằm', N'Trẻ em dưới 6 tuổi', 1, 'CT220924NV00100001'),
+('VE2609240003', 'TA002', 'TA002_01', 2, 'KH0002', '2024-11-21', '09:00:00', '2024-11-21', '17:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 1, 'CT220924NV00100001');
 
 -- Thêm vé cho chi tiết hóa đơn 3
-INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES 
-('VE2609240004', 'TA003', 'TA003_01', 1, 'KH0001', '2024-11-21', '10:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn tuổi', 1, 'CT220924NV00200001'),
-('VE2609240005', 'TA003', 'TA003_01', 2, 'KH0002', '2024-11-21', '10:00:00', 'GA001', 'GA035', N'Giường nằm', N'Sinh viên', 1, 'CT220924NV00200001'),
-('VE2609240006', 'TA003', 'TA003_01', 3, 'KH0003', '2024-11-21', '10:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 1, 'CT220924NV00200001');
+INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES 
+('VE2609240004', 'TA003', 'TA003_01', 1, 'KH0001', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn tuổi', 1, 'CT220924NV00200001'),
+('VE2609240005', 'TA003', 'TA003_01', 2, 'KH0002', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Sinh viên', 1, 'CT220924NV00200001'),
+('VE2609240006', 'TA003', 'TA003_01', 3, 'KH0003', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 1, 'CT220924NV00200001');
