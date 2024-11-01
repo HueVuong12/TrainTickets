@@ -36,6 +36,10 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField txtMaHD;
 	private JTextField txtNhanVien;
 	private JTextField txtKH;
@@ -53,21 +57,23 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 	private JTextField txtTu;
 	private JTextField txtDen;
 	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
+	private JButton btnTraVe;
+	public HoaDon hoaDonTraVe;
 
 	@SuppressWarnings("serial")
-	public QuanLyHoaDon_GUI() {
+	public QuanLyHoaDon_GUI(TrangChu_GUI trangChu) {
 		setBackground(Color.white);
 		setBounds(0, 170, 1460, 610);
 		setLayout(null);
 
 		JPanel panelTimKiem_Tong = new JPanel();
-		panelTimKiem_Tong.setBounds(10, 10, 286, 229);
+		panelTimKiem_Tong.setBounds(10, 10, 300, 229);
 		add(panelTimKiem_Tong);
 		panelTimKiem_Tong.setLayout(null);
 
 		JPanel panel_TimKiem = new JPanel();
 		panel_TimKiem.setBackground(new Color(51, 102, 153));
-		panel_TimKiem.setBounds(0, 0, 286, 34);
+		panel_TimKiem.setBounds(0, 0, 300, 34);
 		panelTimKiem_Tong.add(panel_TimKiem);
 		panel_TimKiem.setLayout(null);
 
@@ -109,13 +115,13 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
-		panel_2.setBounds(10, 249, 286, 121);
+		panel_2.setBounds(10, 249, 300, 121);
 		add(panel_2);
 
 		JPanel panelThoiGian = new JPanel();
 		panelThoiGian.setLayout(null);
 		panelThoiGian.setBackground(new Color(51, 102, 153));
-		panelThoiGian.setBounds(0, 0, 286, 34);
+		panelThoiGian.setBounds(0, 0, 300, 34);
 		panel_2.add(panelThoiGian);
 
 		JLabel lblThiGian = new JLabel("Thời gian");
@@ -172,13 +178,13 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 
 		JPanel panel_2_1 = new JPanel();
 		panel_2_1.setLayout(null);
-		panel_2_1.setBounds(10, 380, 286, 137);
+		panel_2_1.setBounds(10, 380, 300, 137);
 		add(panel_2_1);
 
 		JPanel panelTrangThai = new JPanel();
 		panelTrangThai.setLayout(null);
 		panelTrangThai.setBackground(new Color(51, 102, 153));
-		panelTrangThai.setBounds(0, 0, 286, 34);
+		panelTrangThai.setBounds(0, 0, 300, 34);
 		panel_2_1.add(panelTrangThai);
 
 		JLabel lblTrngThi = new JLabel("Trạng thái");
@@ -254,13 +260,13 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		scrollPane.setViewportView(table);
 
 		btnXemChiTiet = new JButton("Xem chi tiết");
-		btnXemChiTiet.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnXemChiTiet.setBounds(10, 527, 125, 30);
+		btnXemChiTiet.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnXemChiTiet.setBounds(10, 527, 100, 30);
 		add(btnXemChiTiet);
 
 		btnXuatHoaDon = new JButton("Xuất hóa đơn");
-		btnXuatHoaDon.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnXuatHoaDon.setBounds(163, 527, 133, 30);
+		btnXuatHoaDon.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnXuatHoaDon.setBounds(120, 527, 100, 30);
 		add(btnXuatHoaDon);
 
 		btnXemChiTiet.addActionListener(this);
@@ -275,6 +281,30 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		chckbxDaHoanVe.addActionListener(this);
 		chckbxDaHoanTien.addActionListener(this);
 		chckbxTatCa.addActionListener(this);
+		
+		btnTraVe = new JButton("Trả vé");
+		btnTraVe.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnTraVe.setBounds(230, 527, 85, 30);
+		add(btnTraVe);
+		btnTraVe.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        int row = table.getSelectedRow();
+		        if (row != -1) { // Kiểm tra nếu có dòng nào được chọn
+		            hoaDonTraVe = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
+		            System.out.println(hoaDonTraVe);
+		            if (hoaDonTraVe != null) {
+		                TraVe_GUI traVe_GUI = new TraVe_GUI(QuanLyHoaDon_GUI.this, trangChu);
+		                trangChu.content.removeAll();
+		                trangChu.content.add(traVe_GUI);
+		                trangChu.content.revalidate();
+		                trangChu.content.repaint();
+		            }
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn muốn trả", "Thông báo", JOptionPane.WARNING_MESSAGE);
+		        }
+		    }
+		});
 
 		datatoTable();
 	}

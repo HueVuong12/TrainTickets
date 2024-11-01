@@ -48,6 +48,7 @@ import entity.ChiTietHoaDon;
 import entity.ChuyenTau;
 import entity.HoaDon;
 import entity.NhanVien;
+import entity.TaiKhoan;
 import entity.Ve;
 
 import javax.swing.JTabbedPane;
@@ -621,6 +622,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		//        tabbedPane.setBackgroundAt(1, Color.LIGHT_GRAY);
 		//        tabbedPane.setBackgroundAt(2, Color.LIGHT_GRAY);
 		updateKetQuaThongKeTheoCa(trangChu);
+		kiemTraQuyen(trangChu);
 	}
 
 	//Chọn 1 radio để thực hiện
@@ -1087,6 +1089,38 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	public String dinhDangTienTe(double soTien) {
 		NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 		return formatter.format(soTien);
+	}
+
+	//Hàm kiểm tra quyền Nhân viên
+	public void kiemTraQuyen(TrangChu_GUI trangChu) {
+	    dsTK = new TaiKhoan_DAO();
+	    dsNV= new NhanVien_DAO();
+	    NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
+	    
+	    // Kiểm tra nếu nhân viên tồn tại
+	    if (nv != null) {
+	        TaiKhoan tk = dsTK.getTaiKhoanTheoMaNV(nv.getMaNV());
+
+	        // Kiểm tra nếu tài khoản tồn tại
+	        if (tk != null) {
+	            // In ra giá trị phân quyền để kiểm tra
+	            System.out.println("Phân quyền: " + tk.getPhanQuyen());
+
+	            if (tk.getPhanQuyen() == 2) {
+	                tabbedPane.setSelectedIndex(0); // Chọn tab 0 nếu quyền là 2
+	                tabbedPane.setEnabledAt(1, false); // Vô hiệu hóa tab 1
+	                tabbedPane.setEnabledAt(2, false); // Vô hiệu hóa tab 2
+	            } else {
+	            	tabbedPane.setSelectedIndex(0);
+	            	tabbedPane.setEnabledAt(1, true); // Bật tab 1
+	                tabbedPane.setEnabledAt(2, true); // Bật tab 2
+	            }
+	        } else {
+	            System.out.println("Tài khoản không tồn tại.");
+	        }
+	    } else {
+	        System.out.println("Nhân viên không tồn tại.");
+	    }
 	}
 
 	//Hàm chỉ định tabbedPane

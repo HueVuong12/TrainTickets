@@ -35,7 +35,7 @@ public class DangNhap_GUI extends JFrame {
 	private Color hoverColor = new Color(0, 102, 204); // Màu khi di chuột qua
 	private Color defaultColor = new Color(0, 153, 255); // Màu mặc định
 	private LocalTime thoiGianBatDau;
-	private TaiKhoan taiKhoanLogined;
+	public TaiKhoan taiKhoanLogined;
 
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
 

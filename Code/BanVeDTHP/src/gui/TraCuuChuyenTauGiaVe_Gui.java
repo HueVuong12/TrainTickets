@@ -24,6 +24,8 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel {
 	private JTable table_1;
 
 	private final JLabel lblChGi = new JLabel("Chú ý: giá vé đã bao gồm tiền bảo hiểm\nGía vé có thể thay đổi theo 1 số điều kiện: thời gian mua vé, đối tượng đi tàu, vị trí chỗ trên toa ...");
+	private JLabel muiTenIconLabel;
+	private JLabel dauTauIconLabel;
 	public TraCuuChuyenTauGiaVe_Gui(TrangChu_GUI trangChu) {
 		setBackground(new Color(255, 255, 255));
 		setBounds(0, 170, 1460, 570);
@@ -67,7 +69,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel {
 			new Object[][] {
 			},
 			new String[] {
-				"STT", "Ga \u0111i", "C\u1EF1 ly(km)", "Ng\u00E0y \u0111i", "Gi\u1EDD \u0111\u1EBFn", "Gi\u1EDD \u0111i"
+				"STT", "Ga đi", "Cự ly(km)", "Ngày đi", "Giờ đến", "Giờ đi"
 			}
 		));
 		scrollPane.setViewportView(table);
@@ -141,7 +143,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel {
 		txtTau.setBounds(85, 0, 366, 38);
 		panel_2_1_1.add(txtTau);
 		
-		JPanel panel_ThongTinTau = new JPanel();
+		JPanel panel_ThongTinTau = 	new JPanel();
 		panel_ThongTinTau.setBackground(new Color(159, 214, 239));
 		panel_ThongTinTau.setBounds(56, 188, 1347, 144);
 		add(panel_ThongTinTau);
@@ -173,21 +175,22 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel {
 		panel_ThongTinTau.add(lblNgayDi);
 		
 		 // Load hình ảnh gốc
-        ImageIcon icon = new ImageIcon("/img/muiten.png");
+		ImageIcon muiTenIcon = new ImageIcon(getClass().getResource("/img/arrow_back_icon -.png"));
+  		Image scaledMuiTenIcon = muiTenIcon.getImage().getScaledInstance(100, 43, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
+  		muiTenIconLabel = new JLabel(new ImageIcon(scaledMuiTenIcon));
+  		muiTenIconLabel.setBounds(640, 50, 90, 43);
+  		panel_ThongTinTau.add(muiTenIconLabel);
 
-        // Scale ảnh về kích thước mong muốn (ví dụ: 108x20)
-        Image scaledImage = icon.getImage().getScaledInstance(108, 20, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-
-        // Gán ảnh đã scale vào JLabel
-        JLabel lblNewLabel_MuiTen = new JLabel(scaledIcon);
-		lblNewLabel_MuiTen.setBounds(605, 50, 144, 43);
-		panel_ThongTinTau.add(lblNewLabel_MuiTen);
 		
-		JLabel lblNewLabel_9 = new JLabel("");
-		lblNewLabel_9.setIcon(new ImageIcon(getClass().getResource("/img/container_Zoom-removebg-preview - Copy.png")));
-		lblNewLabel_9.setBounds(605, -20, 161, 94);
-		panel_ThongTinTau.add(lblNewLabel_9);
+  		ImageIcon dauTauIcon = new ImageIcon(getClass().getResource("/img/Toa_Dau.png"));
+  		Image scaledDauTauIcon =dauTauIcon.getImage().getScaledInstance(100, 43, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
+  		dauTauIconLabel = new JLabel(new ImageIcon(scaledDauTauIcon));
+  		dauTauIconLabel.setBounds(566, 10, 100, 43);
+  		panel_ThongTinTau.add(dauTauIconLabel);
+//		JLabel lblNewLabel_9 = new JLabel("");
+//		lblNewLabel_9.setIcon(new ImageIcon(getClass().getResource("/img/container_Zoom-removebg-preview - Copy.png")));
+//		lblNewLabel_9.setBounds(605, -20, 161, 94);
+//		panel_ThongTinTau.add(lblNewLabel_9);
 		
 		JLabel lblNewLabel_3 = new JLabel("TÀU TA001");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -239,7 +242,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel {
 				{null, null, null, null},
 			},
 			new String[] {
-				"STT", "M\u00E3", "Lo\u1EA1i v\u00E9", "Gi\u1EDD \u0111i"
+				"STT", "Mã toa", "Hạng","Khuyến mãi", "Ga đi"
 			}
 		));
 		scrollPane_1.setViewportView(table_1);
