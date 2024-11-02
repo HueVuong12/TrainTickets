@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
 import components.RoundedTextField;
+import java.awt.BorderLayout;
 
 public class TraCuuChuyenTauGiaVe_Gui extends JPanel {
 	private JTable table;
@@ -121,10 +122,16 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel {
 		lblNewLabel_3_2.setBounds(0, 0, 85, 38);
 		panel_2_2.add(lblNewLabel_3_2);
 		
-		RoundedTextField dateChooser = new RoundedTextField(15);
-//		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(85, 0, 366, 38);
-		panel_2_2.add(dateChooser);
+		JDateChooser dateChooser_Ngay = new JDateChooser();
+		dateChooser_Ngay.getCalendarButton().setFont(new Font("Tahoma", Font.PLAIN, 10));
+		dateChooser_Ngay.getCalendarButton().setBounds(315, 0, 50, 38);
+		dateChooser_Ngay.setBounds(86, 0, 365, 38);
+		panel_2_2.add(dateChooser_Ngay);
+		dateChooser_Ngay.setLayout(null);
+		
+		RoundedTextField textField_NgayChon = new RoundedTextField(15);
+		textField_NgayChon.setBounds(0, 0, 324, 38);
+		dateChooser_Ngay.add(textField_NgayChon);
 		
 		JPanel panel_2_1_1 = new JPanel();
 		panel_2_1_1.setLayout(null);

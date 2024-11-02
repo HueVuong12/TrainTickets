@@ -64,10 +64,10 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	private JTextField textField_TienTraLai;
 	private JButton btnXacNhan;
 	private JButton btnHuy;
-	private ChiTietHoaDon_DAO dsCTHD;
+	private ChiTietHoaDon_DAO dsCTHD = new ChiTietHoaDon_DAO();
 	private DefaultTableModel model_CTHD;
-	private Ve_DAO dsVe;
-	private KhachHang_DAO dsKH;
+	private Ve_DAO dsVe = new Ve_DAO();
+	private KhachHang_DAO dsKH = new KhachHang_DAO();
 	private DefaultTableModel model_DSV;
 	float tongTien=0;
 	float tienKhachDua= 0;
@@ -305,9 +305,9 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	}
 
 	public void datatoTable_CTHD(QuanLyHoaDon_GUI qlhd) {
-		dsCTHD= new ChiTietHoaDon_DAO();
-		dsVe = new Ve_DAO();
-		dsKH= new KhachHang_DAO();
+		dsCTHD.reset();
+		dsVe.reset();
+		dsKH.reset();
 		
 		ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(qlhd.hoaDonTraVe.getChiTiet().getMaChiTiet());
 		if(cthd != null) {
@@ -337,8 +337,8 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	}
 
 	public void datatoTable_Ve(QuanLyHoaDon_GUI qlhd) {
-		dsVe = new Ve_DAO();
-		dsCTHD = new ChiTietHoaDon_DAO();
+		dsVe.reset();
+		dsCTHD.reset();
 		ArrayList<Ve> list= dsVe.getDsVeTheoMaChiTiet(qlhd.hoaDonTraVe.getChiTiet().getMaChiTiet());
 		model_DSV = (DefaultTableModel) table_DSV.getModel();
 		int stt = 1; // Biến đếm bắt đầu từ 1 cho STT

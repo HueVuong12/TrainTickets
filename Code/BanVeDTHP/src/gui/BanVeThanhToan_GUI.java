@@ -1,11 +1,16 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -14,22 +19,42 @@ import javax.swing.JPanel;
 import components.ConTent_JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import javax.swing.border.LineBorder;
 
-public class BanVeThanhToan_GUI extends JPanel {
+public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private JTextField textField_TKD;
 	private JTextField textField_TTL;
-
-	/**
-	 * Create the panel.
-	 */
-	public BanVeThanhToan_GUI() {
+	private JTable table_2;
+	private JTable table_1;
+	private JButton btn500;
+	private JButton btn200;
+	private JButton btn100;
+	private JButton btn50;
+	private JButton btn20;
+	private JButton btn10;
+	private JButton btn5;
+	private JButton btn2;
+	private JButton btn1;
+	private JButton btn33;
+	private JButton btn35;
+	private JButton btn44;
+	private JButton btn_XacNhan;
+	private JButton btnXoa;
+	float tienKhachDua= 0;
+	float tienTraLai=0;
+	private float tongTienCoThue=0;
+	
+	public BanVeThanhToan_GUI(BanVeNhapThongTin_Gui banVeNhapThongTin_GUI, TrangChu_GUI trangChu) {
 		setBackground(SystemColor.text);
 		setForeground(new Color(255, 255, 255));
 		setBounds(0, 170, 1440, 570);
@@ -125,20 +150,114 @@ public class BanVeThanhToan_GUI extends JPanel {
 		panel.add(lb_TKH);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 146, 906, 356);
+		scrollPane.setBounds(10, 146, 906, 293);
 		panel.add(scrollPane);
 		
 		table = new JTable();
+		table.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"a", "b", "c", "d", "e", "f=d*e", "g", "h=f*g", "i=f+h"},
-				{"1", "VE001", "Tên sản phẩm 1", "1", "1000", "1000", "10%", "100", "1100"}
+				{"a", "b", "c", "d", "e", "e -> f", "g = d - f"},
+				{"1", "VE2209240001", "Từ Ga Sài Gòn đến Ga Hà Nội Ngày 12/11/2024  Lúc: 08:00 Giường nằm Toa 02 Ghế số 2", "601,920", "Trẻ em từ 6 tuổi đến 10 tuổi", "150,480", "451,440"},
+				{"2"},
+				{"3"},
+				{"4"},
 			},
 			new String[] {
-				"STT", "Mã vé", "Tên dịch vụ", "Số lượng", "Đơn giá", "Thành tiền chưa thuế", "Thuế suất", "Thuế GTGT", "Thành tiền có thuế"
+				"STT", "Mã vé", "Thông tin vé", "Giá gốc (VND)", "Đối tượng", "Khuyến mãi (VND)", "Thành tiền chưa thuế (VND)"
 			}
 		));
+		table.setRowHeight(1,45);
+		table.setRowHeight(2,45);
+		table.setRowHeight(3,45);
+		table.setRowHeight(4,45);
+		
+		//Điều chính kích thước ô
+		table.getColumnModel().getColumn(0).setPreferredWidth(30);
+		table.getColumnModel().getColumn(1).setPreferredWidth(170);
+		table.getColumnModel().getColumn(2).setPreferredWidth(206);
+		table.getColumnModel().getColumn(3).setPreferredWidth(98);
+		table.getColumnModel().getColumn(4).setPreferredWidth(206);
+		table.getColumnModel().getColumn(5).setPreferredWidth(98);
+		table.getColumnModel().getColumn(6).setPreferredWidth(98);
+		
+		// Tạo DefaultTableCellRenderer và căn giữa
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+		// Áp dụng renderer cho tất cả các cột
+		for (int i = 0; i < table.getColumnCount(); i++) {
+		    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+		
 		scrollPane.setViewportView(table);
+		
+		table_2 = new JTable();
+		table_2.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		table_2.setBorder(new LineBorder(new Color(0, 0, 0)));
+		table_2.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"Thuế giá trị gia tăng (10%):", "140,448 VND"},
+				{"Tổng tiền bằng số:", "140,448 VND"},
+				{"Tổng tiền bằng chữ:", "MỘT TRIỆU NĂM TRĂM BỐN MƯƠI BỐN NGHÌN CHÍN TRĂM HAI MƯƠI TÁM ĐỒNG"},
+			},
+			new String[] {
+				"New column", "New column"
+			}
+		));
+		
+		table_2.getColumnModel().getColumn(0).setPreferredWidth(200); // Cột đầu tiên rộng 200px
+		table_2.getColumnModel().getColumn(1).setPreferredWidth(706); // Cột thứ hai rộng 300px
+		
+		// Áp dụng căn giữa cho cột thứ hai
+		table_2.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+		
+		// Tạo DefaultTableCellRenderer và thiết lập font in đậm cho cột thứ nhất
+		DefaultTableCellRenderer boldRenderer = new DefaultTableCellRenderer() {
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+		        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		        c.setFont(c.getFont().deriveFont(Font.BOLD)); // Thiết lập font in đậm
+		        return c;
+		    }
+		};
+
+		// Áp dụng boldRenderer cho cột thứ nhất
+		table_2.getColumnModel().getColumn(0).setCellRenderer(boldRenderer);
+		
+		table_2.setBounds(10, 454, 906, 48);
+		panel.add(table_2);
+		
+		table_1 = new JTable();
+		table_1.setBorder(new LineBorder(new Color(0, 0, 0)));
+		table_1.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"Tổng cộng (VND):", null, "2,207,040", null, "802,560", "1,404,480"},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column", "New column", "New column"
+			}
+		));
+		
+		//Điều chính kích thước ô
+		table_1.getColumnModel().getColumn(0).setPreferredWidth(200);
+		table_1.getColumnModel().getColumn(1).setPreferredWidth(206);
+		table_1.getColumnModel().getColumn(2).setPreferredWidth(98);
+		table_1.getColumnModel().getColumn(3).setPreferredWidth(206);
+		table_1.getColumnModel().getColumn(4).setPreferredWidth(98);
+		table_1.getColumnModel().getColumn(5).setPreferredWidth(98);
+		
+		// Áp dụng căn giữa cho cột thứ hai
+		table_1.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+		table_1.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+		table_1.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+		
+		// Áp dụng boldRenderer cho cột thứ nhất
+		table_1.getColumnModel().getColumn(0).setCellRenderer(boldRenderer);
+		
+		table_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		table_1.setBounds(10, 439, 906, 15);
+		panel.add(table_1);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(986, 48, 444, 512);
@@ -150,96 +269,188 @@ public class BanVeThanhToan_GUI extends JPanel {
 		lblNewLabel_1.setBounds(53, 10, 327, 30);
 		panel_1.add(lblNewLabel_1);
 		
-		textField_TKD = new JTextField();
+		textField_TKD = new JTextField("0 đ");
 		textField_TKD.setBackground(Color.CYAN);
 		textField_TKD.setBounds(53, 44, 327, 30);
 		panel_1.add(textField_TKD);
 		textField_TKD.setColumns(10);
+		textField_TKD.setEditable(false);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Nhập số tiền theo mệnh giá");
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblNewLabel_1_1.setBounds(53, 97, 327, 30);
 		panel_1.add(lblNewLabel_1_1);
 		
-		JButton btnNewButton = new JButton("500.000");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton.setBounds(53, 137, 100, 30);
-		panel_1.add(btnNewButton);
+		btn500 = new JButton("500.000");
+		btn500.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn500.setBounds(53, 137, 100, 30);
+		panel_1.add(btn500);
 		
-		JButton btnNewButton_1 = new JButton("200.000");
-		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_1.setBounds(163, 137, 100, 30);
-		panel_1.add(btnNewButton_1);
+		btn200 = new JButton("200.000");
+		btn200.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn200.setBounds(163, 137, 100, 30);
+		panel_1.add(btn200);
 		
-		JButton btnNewButton_2 = new JButton("100.000");
-		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_2.setBounds(273, 137, 100, 30);
-		panel_1.add(btnNewButton_2);
+		btn100 = new JButton("100.000");
+		btn100.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn100.setBounds(273, 137, 100, 30);
+		panel_1.add(btn100);
 		
-		JButton btnNewButton_3 = new JButton("50.000");
-		btnNewButton_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_3.setBounds(53, 184, 100, 30);
-		panel_1.add(btnNewButton_3);
+		btn50 = new JButton("50.000");
+		btn50.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn50.setBounds(53, 184, 100, 30);
+		panel_1.add(btn50);
 		
-		JButton btnNewButton_3_1 = new JButton("20.000");
-		btnNewButton_3_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_3_1.setBounds(163, 184, 100, 30);
-		panel_1.add(btnNewButton_3_1);
+		btn20 = new JButton("20.000");
+		btn20.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn20.setBounds(163, 184, 100, 30);
+		panel_1.add(btn20);
 		
-		JButton btnNewButton_3_1_1 = new JButton("10.000");
-		btnNewButton_3_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_3_1_1.setBounds(273, 184, 100, 30);
-		panel_1.add(btnNewButton_3_1_1);
+		btn10 = new JButton("10.000");
+		btn10.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn10.setBounds(273, 184, 100, 30);
+		panel_1.add(btn10);
 		
-		JButton btnNewButton_3_2 = new JButton("5.000");
-		btnNewButton_3_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_3_2.setBounds(53, 231, 100, 30);
-		panel_1.add(btnNewButton_3_2);
+		btn5 = new JButton("5.000");
+		btn5.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn5.setBounds(53, 231, 100, 30);
+		panel_1.add(btn5);
 		
-		JButton btnNewButton_3_3 = new JButton("2.000");
-		btnNewButton_3_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_3_3.setBounds(163, 231, 100, 30);
-		panel_1.add(btnNewButton_3_3);
+		btn2 = new JButton("2.000");
+		btn2.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn2.setBounds(163, 231, 100, 30);
+		panel_1.add(btn2);
 		
-		JButton btnNewButton_3_4 = new JButton("1.000");
-		btnNewButton_3_4.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_3_4.setBounds(273, 231, 100, 30);
-		panel_1.add(btnNewButton_3_4);
+		btn1 = new JButton("1.000");
+		btn1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn1.setBounds(273, 231, 100, 30);
+		panel_1.add(btn1);
 		
 		JLabel lblNewLabel_1_1_1 = new JLabel("Gợi ý tiền mặt");
 		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblNewLabel_1_1_1.setBounds(53, 282, 327, 30);
 		panel_1.add(lblNewLabel_1_1_1);
 		
-		JButton btnNewButton_3_2_1 = new JButton("5.000");
-		btnNewButton_3_2_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_3_2_1.setBounds(53, 325, 100, 30);
-		panel_1.add(btnNewButton_3_2_1);
+		btn33 = new JButton("5.000");
+		btn33.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn33.setBounds(53, 325, 100, 30);
+		panel_1.add(btn33);
 		
-		JButton btnNewButton_3_2_2 = new JButton("5.000");
-		btnNewButton_3_2_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_3_2_2.setBounds(163, 325, 100, 30);
-		panel_1.add(btnNewButton_3_2_2);
+		btn35 = new JButton("5.000");
+		btn35.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn35.setBounds(163, 325, 100, 30);
+		panel_1.add(btn35);
 		
-		JButton btnNewButton_3_2_3 = new JButton("5.000");
-		btnNewButton_3_2_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton_3_2_3.setBounds(273, 325, 100, 30);
-		panel_1.add(btnNewButton_3_2_3);
+		btn44 = new JButton("5.000");
+		btn44.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btn44.setBounds(273, 325, 100, 30);
+		panel_1.add(btn44);
 		
 		JLabel lblNewLabel_1_1_1_1 = new JLabel("Tiền trả lại");
 		lblNewLabel_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblNewLabel_1_1_1_1.setBounds(53, 382, 327, 30);
 		panel_1.add(lblNewLabel_1_1_1_1);
 		
-		textField_TTL = new JTextField();
+		textField_TTL = new JTextField("0 đ");
 		textField_TTL.setColumns(10);
 		textField_TTL.setBackground(Color.CYAN);
 		textField_TTL.setBounds(53, 419, 327, 30);
 		panel_1.add(textField_TTL);
-		
-		JButton btn_XacNhan = new JButton("Xác nhận");
+		textField_TTL.setEditable(false);
+		btn_XacNhan = new JButton("Xác nhận");
 		btn_XacNhan.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btn_XacNhan.setBounds(301, 472, 106, 30);
 		panel_1.add(btn_XacNhan);
+		
+		btnXoa = new JButton("Nhập lại");
+		btnXoa.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnXoa.setBounds(180, 472, 106, 30);
+		panel_1.add(btnXoa);
+		
+		//Sự kiện nút
+		btn1.addActionListener(this);
+		btn2.addActionListener(this);
+		btn5.addActionListener(this);
+		btn10.addActionListener(this);
+		btn20.addActionListener(this);
+		btn50.addActionListener(this);
+		btn100.addActionListener(this);
+		btn200.addActionListener(this);
+		btn500.addActionListener(this);
+
+		btn33.addActionListener(this);
+		btn35.addActionListener(this);
+		btn44.addActionListener(this);
+		
+		btnXoa.addActionListener(this);
+	}
+	
+	// Renderer tùy chỉnh để gộp hai cột đầu tiên (STT & Mã vé)
+    static class CombinedColumnRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            // Lấy giá trị từ cột 0 và cột 1 (STT & Mã vé)
+            String stt = (String) table.getModel().getValueAt(row, 0);
+            String maVe = (String) table.getModel().getValueAt(row, 1);
+
+            // Hiển thị gộp dữ liệu của hai cột
+            JLabel label = new JLabel("<html><b>" + stt + "</b><br>" + maVe + "</html>");
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.setOpaque(true);
+            if (isSelected) {
+                label.setBackground(table.getSelectionBackground());
+                label.setForeground(table.getSelectionForeground());
+            } else {
+                label.setBackground(table.getBackground());
+                label.setForeground(table.getForeground());
+            }
+            return label;
+        }
+    }
+
+    public String dinhDangTienTe(double soTien) {
+		NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+		return formatter.format(soTien);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object o = e.getSource();
+
+		if (o.equals(btnXoa)) {
+			tienKhachDua = 0;
+			// Hiển thị số tiền đã định dạng
+			tienTraLai = 0;
+			textField_TKD.setText(dinhDangTienTe(tienKhachDua));
+			textField_TTL.setText(dinhDangTienTe(tienTraLai));
+		} else {
+			float soTienThem = 0;
+
+			// Xác định số tiền cần thêm dựa trên nút bấm
+			if (o.equals(btn1)) soTienThem = 1000;
+			if (o.equals(btn2)) soTienThem = 2000;
+			if (o.equals(btn5)) soTienThem = 5000;
+			if (o.equals(btn10)) soTienThem = 10000;
+			if (o.equals(btn20)) soTienThem = 20000;
+			if (o.equals(btn50)) soTienThem = 50000;
+			if (o.equals(btn100)) soTienThem = 100000;
+			if (o.equals(btn200)) soTienThem = 200000;
+			if (o.equals(btn500)) soTienThem = 500000;
+			if (o.equals(btn33)) soTienThem = 33000;
+			if (o.equals(btn35)) soTienThem = 35000;
+			if (o.equals(btn44)) soTienThem = 44000;
+
+			// Kiểm tra nếu text hiện tại là "0 đ" thì đặt `tienKhachDua` thành `soTienThem`
+			if (textField_TKD.getText().equalsIgnoreCase("0 đ")) {
+				tienKhachDua = soTienThem;
+				textField_TKD.setText(dinhDangTienTe(tienKhachDua)); // Cập nhật textField
+			} else {
+				tienKhachDua += soTienThem;
+				textField_TKD.setText(dinhDangTienTe(tienKhachDua));
+			}
+			tienTraLai = tienKhachDua - tongTienCoThue;
+			textField_TTL.setText(dinhDangTienTe(tienTraLai));
+		}
+
 	}
 }

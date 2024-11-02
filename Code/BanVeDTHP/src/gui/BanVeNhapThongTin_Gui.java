@@ -61,6 +61,7 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 	
 	private Ga_DAO ga_DAO = new Ga_DAO();
 	private JButton bt_Chuyen;
+	private JButton bt_ThanhToan_KHSDV;
 	
 	public BanVeNhapThongTin_Gui(BanVe_GUI banVe_GUI,TrangChu_GUI trangChu) {
 		setBackground(SystemColor.window);
@@ -272,10 +273,19 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 		add(jp_Table);
 		jp_Table.setLayout(null);
 		
-		JButton bt_ThanhToan_KHSDV = new JButton("Thanh toán");
+		bt_ThanhToan_KHSDV = new JButton("Thanh toán");
 		bt_ThanhToan_KHSDV.setBounds(1245, 303, 118, 25);
 		jp_Table.add(bt_ThanhToan_KHSDV);
 		bt_ThanhToan_KHSDV.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		bt_ThanhToan_KHSDV.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BanVeThanhToan_GUI banVeThanToan_GUI= new BanVeThanhToan_GUI(BanVeNhapThongTin_Gui.this, trangChu);
+				trangChu.content.removeAll();
+				trangChu.content.add(banVeThanToan_GUI);
+				trangChu.content.revalidate();
+				trangChu.content.repaint();
+			}
+		});
 		
 		JScrollPane scrollPane_KHSDV = new JScrollPane();
 		scrollPane_KHSDV.setBounds(10, 5, 1353, 289);
