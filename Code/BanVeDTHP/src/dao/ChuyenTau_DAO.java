@@ -138,6 +138,7 @@ public class ChuyenTau_DAO {
         
         return chuyenTau; 
     } 
+    
     public ArrayList<ChuyenTau> getChuyenTauTheoThoiGian(String ngayBatDau, String ngayKetThuc) { 
         Connection con = ConnectDB.getInstance().getConnection(); 
         PreparedStatement stmt = null; 
@@ -161,6 +162,37 @@ public class ChuyenTau_DAO {
                 ArrayList<Toa> dsToa = toa_Dao.getDsToaTheoMaTau(maTau);
                 ArrayList<Ga> tramDung = ga_Dao.getDsTramDung(maTau);
                 chuyenTau = new ChuyenTau(maTau, gaDi1,gaDen1, tramDung, ngayDi,gioDi,ngayDen,gioDen ,dsToa);
+                dsChuyenTau.add(chuyenTau);
+            } 
+        } catch (SQLException e) { 
+            e.printStackTrace();     
+        } 
+        
+        return dsChuyenTau; 
+    }
+    
+    public ArrayList<ChuyenTau> getChuyenTauTheoGaVaNgayDi(String gaDi, String gaDen, String ngayDi){
+    	Connection con = ConnectDB.getInstance().getConnection(); 
+        PreparedStatement stmt = null; 
+        ChuyenTau chuyenTau = null;
+        try {       
+            String sql = "SELECT * FROM ChuyenTau WHERE gaDi = ? AND gaDen = ? AND ngayDi = ?"; 
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, gaDi);
+            stmt.setString(2, gaDen);
+            stmt.setString(3, ngayDi);
+            ResultSet rs = stmt.executeQuery(); 
+            while (rs.next()) {
+            	String maTau = rs.getString("maTau");
+                LocalDate ngayDi1 = rs.getDate("ngayDi").toLocalDate();
+                LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
+                LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
+                LocalTime gioDen = rs.getTime("gioDen").toLocalTime();
+                Ga gaDi1 = ga_Dao.getGaTheoMaGa(gaDi);
+                Ga gaDen1 = ga_Dao.getGaTheoMaGa(gaDen);
+                ArrayList<Toa> dsToa = toa_Dao.getDsToaTheoMaTau(maTau);
+                ArrayList<Ga> tramDung = ga_Dao.getDsTramDung(maTau);
+                chuyenTau = new ChuyenTau(maTau, gaDi1,gaDen1, tramDung, ngayDi1,gioDi,ngayDen,gioDen ,dsToa);
                 dsChuyenTau.add(chuyenTau);
             } 
         } catch (SQLException e) { 

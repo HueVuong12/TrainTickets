@@ -351,6 +351,8 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 					cthd.getThue(), // Hiển thị thuế dưới dạng %
 					dinhDangTienTe(cthd.tinhTien()) // Định dạng tổng tiền bao gồm thuế
 			});
+			System.out.println(cthd);
+			System.out.println(cthd.getMaChiTiet());
 		}
 	}	
 	public String dinhDangTienTe(double soTien) {

@@ -117,7 +117,28 @@ public class Ga_DAO {
         
         return ga; 
     }
-    
+    public Ga getGaTheoDiaChi(String diaChi) { 
+        Connection con = ConnectDB.getInstance().getConnection(); 
+        PreparedStatement stmt = null; 
+        Ga ga = null;
+        try {       
+            String sql = "Select * from Ga where diaChi = ?"; 
+            stmt = con.prepareStatement(sql); 
+            stmt.setString(1, diaChi); 
+            ResultSet rs = stmt.executeQuery(); 
+            while (rs.next()) {
+            	String maGa = rs.getString("maGa");
+                String tenGa = rs.getNString("tenGa");
+                boolean trangThai = rs.getBoolean("trangThai");
+                int chiSoKm= rs.getInt("chiSoKm");
+                ga = new Ga(maGa, tenGa, diaChi, chiSoKm,trangThai);
+            } 
+        } catch (SQLException e) { 
+            e.printStackTrace();     
+        } 
+        
+        return ga; 
+    }
     public ArrayList<Ga> getDsTramDung(String maChuyenTau) {
     	Connection con = ConnectDB.getInstance().getConnection(); 
         PreparedStatement stmt = null; 
