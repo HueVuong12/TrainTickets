@@ -8,33 +8,81 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
 
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.RowFilter.Entry;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
+import com.itextpdf.layout.element.List;
+import com.toedter.calendar.JDateChooser;
+
+import components.ComboBoxRenderer;
 import components.ConTent_JPanel;
 import components.RoundedButton;
 import components.RoundedTextField;
+import dao.Ve_DAO;
+import entity.Ve;
+import dao.Ga_DAO;
+import dao.KhachHang_DAO;
+import entity.Ga;
+import entity.KhachHang;
+import entity.NhanVien;
 
-public class QuanLyVe_Gui extends JPanel {
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTextField textField_9;
+public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener{
+	
+	private RoundedTextField txt_TenKH;
+	private RoundedTextField txt_GaDi;
+	private RoundedTextField txt_GaDen;
+	private RoundedTextField txt_Hang;
+	private RoundedTextField txt_KhuyenMai;
+	private RoundedTextField txt_MaToa;
+	private RoundedTextField txt_MaGhe;
+	private RoundedTextField txt_MaVe;
+	private RoundedTextField txt_MaCT;
+	private RoundedTextField txt_NgayDi;
+	private RoundedTextField txt_ChiTiet;
+//	private RoundedTextField txt_TrangThai;
+	private JComboBox<String> comboBox_Hang;
+	private JComboBox<String> comboBox_KhuyenMai;
+	private JComboBox<String> comboBox_TrangThai;
 	private JTable table;
 	private JTable table_TTV;
+	private RoundedButton btn_DoiVe;
+	private DefaultTableModel model;
+	private TableRowSorter<TableModel> sorter;
+	private JRadioButton cb_TTTrue;
+	private JRadioButton cb_TTFalse;
+	private JPanel jp_TTV;
+	private Ve_DAO dsVe = new Ve_DAO();
+	private JDateChooser dateChooser_NgayDi;
+	private KhachHang_DAO dsKh = new KhachHang_DAO();
+	private Ga_DAO dsGa = new Ga_DAO();
+	
 	public QuanLyVe_Gui(TrangChu_GUI trangChu) {
 		setBackground(SystemColor.window);
 		setForeground(new Color(255, 255, 255));
@@ -42,11 +90,13 @@ public class QuanLyVe_Gui extends JPanel {
 		setLayout(null);
 		
 		JPanel panel = new JPanel();
+		panel.setBackground(new Color(255, 255, 255));
 		panel.setBounds(0, 0, 1460, 570);
 		add(panel);
 		panel.setLayout(null);
 		
 		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(255, 255, 255));
 		panel_1.setBounds(10, 10, 124, 28);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
@@ -69,8 +119,8 @@ public class QuanLyVe_Gui extends JPanel {
 		});
 		panel_1.add(goBackIconLabel);
 		
-		JPanel jp_TTV = new JPanel();
-		jp_TTV.setBounds(35, 65, 356, 416);
+		jp_TTV = new JPanel();
+		jp_TTV.setBounds(35, 65, 356, 428);
 		panel.add(jp_TTV);
 		jp_TTV.setLayout(null);
 		
@@ -90,110 +140,184 @@ public class QuanLyVe_Gui extends JPanel {
 		lb_TenKH.setBounds(10, 43, 97, 22);
 		jp_TTV.add(lb_TenKH);
 		
-		JLabel lblGan = new JLabel("Ga đến:");
+		JLabel lblGan = new JLabel("Ga đi:");
 		lblGan.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblGan.setBounds(10, 80, 97, 22);
+		lblGan.setBounds(10, 75, 97, 22);
 		jp_TTV.add(lblGan);
 		
-		JLabel lblNgyi = new JLabel("Ngày đi:");
+		JLabel lblNgyi = new JLabel("Ga đến:");
 		lblNgyi.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblNgyi.setBounds(10, 117, 97, 22);
+		lblNgyi.setBounds(10, 107, 97, 22);
 		jp_TTV.add(lblNgyi);
 		
-		JLabel lblLoiV = new JLabel("Loại vé:");
+		JLabel lblLoiV = new JLabel("Hạng:");
 		lblLoiV.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblLoiV.setBounds(10, 154, 97, 22);
+		lblLoiV.setBounds(10, 139, 97, 22);
 		jp_TTV.add(lblLoiV);
 		
-		JLabel lblMToa = new JLabel("Mã toa:");
+		JLabel lblMToa = new JLabel("Khuyến mãi:");
 		lblMToa.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblMToa.setBounds(10, 191, 97, 22);
+		lblMToa.setBounds(10, 171, 97, 22);
 		jp_TTV.add(lblMToa);
 		
-		JLabel lblMSGh = new JLabel("Mã số ghế:");
+		JLabel lblMSGh = new JLabel("Mã toa:");
 		lblMSGh.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblMSGh.setBounds(10, 228, 97, 22);
+		lblMSGh.setBounds(10, 203, 97, 22);
 		jp_TTV.add(lblMSGh);
 		
-		JLabel lblMV = new JLabel("Mã vé:");
+		JLabel lblMV = new JLabel("Mã ghế:");
 		lblMV.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblMV.setBounds(10, 265, 97, 22);
+		lblMV.setBounds(10, 235, 97, 22);
 		jp_TTV.add(lblMV);
 		
-		JLabel lblMChuynTu = new JLabel("Mã chuyến tàu:");
+		JLabel lblMChuynTu = new JLabel("Mã vé:");
 		lblMChuynTu.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblMChuynTu.setBounds(10, 302, 97, 22);
+		lblMChuynTu.setBounds(10, 267, 97, 22);
 		jp_TTV.add(lblMChuynTu);
 		
-		JLabel lblGii = new JLabel("Giờ đi:");
+		JLabel lblGii = new JLabel("Mã chuyến tàu:");
 		lblGii.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblGii.setBounds(10, 339, 97, 22);
+		lblGii.setBounds(10, 299, 97, 22);
 		jp_TTV.add(lblGii);
 		
-		JLabel lblGi = new JLabel("Giá:");
+		JLabel lblGi = new JLabel("Ngày đi:");
 		lblGi.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblGi.setBounds(10, 376, 97, 22);
+		lblGi.setBounds(10, 331, 97, 22);
 		jp_TTV.add(lblGi);
 		
-		RoundedTextField textField = new RoundedTextField(10);
+		txt_TenKH = new RoundedTextField(10);
+		txt_TenKH.setFont(new Font("Tahoma", Font.PLAIN, 13));
 //		textField = new JTextField();
-		textField.setBounds(130, 43, 216, 22);
-		jp_TTV.add(textField);
-		textField.setColumns(10);
+		txt_TenKH.setBounds(130, 43, 216, 22);
+		jp_TTV.add(txt_TenKH);
+		txt_TenKH.setColumns(10);
 		
-		RoundedTextField textField_1 = new RoundedTextField(10);
+		txt_GaDi = new RoundedTextField(10);
+		txt_GaDi.setFont(new Font("Tahoma", Font.PLAIN, 13));
 //		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(130, 83, 216, 22);
-		jp_TTV.add(textField_1);
+		txt_GaDi.setColumns(10);
+		txt_GaDi.setBounds(130, 75, 216, 22);
+		jp_TTV.add(txt_GaDi);
 		
-		RoundedTextField textField_2 = new RoundedTextField(10);
+		txt_GaDen = new RoundedTextField(10);
+		txt_GaDen.setFont(new Font("Tahoma", Font.PLAIN, 13));
 //		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(130, 120, 216, 22);
-		jp_TTV.add(textField_2);
+		txt_GaDen.setColumns(10);
+		txt_GaDen.setBounds(130, 107, 216, 22);
+		jp_TTV.add(txt_GaDen);
 		
-		RoundedTextField textField_3 = new RoundedTextField(10);
-//		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(130, 157, 216, 22);
-		jp_TTV.add(textField_3);
+		// Tạo JComboBox Ca trong JPanel thông tin vé
+		comboBox_Hang = new JComboBox<String>();
+		comboBox_Hang.setBounds(130, 139, 216, 22);
+		comboBox_Hang.addItem("Giường nằm");
+		comboBox_Hang.addItem("Ghế mềm");
+		comboBox_Hang.addItem("VIP");
+		jp_TTV.add(comboBox_Hang);
 		
-		RoundedTextField textField_4 = new RoundedTextField(10);
-//		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(130, 195, 216, 22);
-		jp_TTV.add(textField_4);
+		comboBox_KhuyenMai = new JComboBox<String>();
+		comboBox_KhuyenMai.setBounds(130, 171, 216, 22);
+		comboBox_KhuyenMai.addItem("Trẻ em dưới 6 tuổi");
+		comboBox_KhuyenMai.addItem("Trẻ em từ 6 đến 10 tuổi");
+		comboBox_KhuyenMai.addItem("Người lớn");
+		comboBox_KhuyenMai.addItem("Người lớn tuổi");
+		comboBox_KhuyenMai.addItem("Sinh viên");
+		jp_TTV.add(comboBox_KhuyenMai);
 		
-		RoundedTextField textField_5 = new RoundedTextField(10);
+		txt_MaToa = new RoundedTextField(10);
+		txt_MaToa.setFont(new Font("Tahoma", Font.PLAIN, 13));
 //		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(130, 231, 216, 22);
-		jp_TTV.add(textField_5);
+		txt_MaToa.setColumns(10);
+		txt_MaToa.setBounds(130, 203, 216, 22);
+		jp_TTV.add(txt_MaToa);
 		
-		RoundedTextField textField_6 = new RoundedTextField(10);
+		txt_MaGhe = new RoundedTextField(10);
+		txt_MaGhe.setFont(new Font("Tahoma", Font.PLAIN, 13));
 //		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(130, 268, 216, 22);
-		jp_TTV.add(textField_6);
+		txt_MaGhe.setColumns(10);
+		txt_MaGhe.setBounds(130, 235, 216, 22);
+		jp_TTV.add(txt_MaGhe);
 		
-		RoundedTextField textField_7 = new RoundedTextField(10);
+		txt_MaVe = new RoundedTextField(10);
+		txt_MaVe.setFont(new Font("Tahoma", Font.PLAIN, 13));
 //		textField_7 = new JTextField();
-		textField_7.setColumns(10);
-		textField_7.setBounds(130, 303, 216, 22);
-		jp_TTV.add(textField_7);
+		txt_MaVe.setColumns(10);
+		txt_MaVe.setBounds(130, 267, 216, 22);
+		jp_TTV.add(txt_MaVe);
 		
-		RoundedTextField textField_8 = new RoundedTextField(10);
+		txt_MaCT = new RoundedTextField(10);
+		txt_MaCT.setFont(new Font("Tahoma", Font.PLAIN, 13));
 //		textField_8 = new JTextField();
-		textField_8.setColumns(10);
-		textField_8.setBounds(130, 339, 216, 22);
-		jp_TTV.add(textField_8);
+		txt_MaCT.setColumns(10);
+		txt_MaCT.setBounds(130, 299, 216, 22);
+		jp_TTV.add(txt_MaCT);
 		
-		RoundedTextField textField_9 = new RoundedTextField(10);
+//		txt_NgayDi = new RoundedTextField(10);
+//		txt_NgayDi.setFont(new Font("Tahoma", Font.PLAIN, 13));
 //		textField_9 = new JTextField();
-		textField_9.setColumns(10);
-		textField_9.setBounds(130, 376, 216, 22);
-		jp_TTV.add(textField_9);
+//		txt_NgayDi.setColumns(10);
+//		txt_NgayDi.setBounds(130, 331, 216, 22);
+//		jp_TTV.add(txt_NgayDi);
+		
+		dateChooser_NgayDi = new JDateChooser();
+		dateChooser_NgayDi.setBounds(130, 331, 216, 22);
+		jp_TTV.add(dateChooser_NgayDi);
+		dateChooser_NgayDi.setDateFormatString("dd/MM/yyyy");
+		
+		txt_NgayDi = new RoundedTextField(10);
+		txt_NgayDi.setBounds(0, 0, 195, 22);
+		dateChooser_NgayDi.add(txt_NgayDi);
+		txt_NgayDi.setColumns(10);
+		
+		// Thêm sự kiện PropertyChangeListener
+        dateChooser_NgayDi.getDateEditor().addPropertyChangeListener("date", evt -> {
+            Date selectedDate = dateChooser_NgayDi.getDate();
+            if (selectedDate != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                txt_NgayDi.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
+            } else {
+            	txt_NgayDi.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
+            }
+        });
+
+        
+		JLabel lblGi_1 = new JLabel("Chi tiết:");
+		lblGi_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblGi_1.setBounds(10, 363, 97, 22);
+		jp_TTV.add(lblGi_1);
+		
+		txt_ChiTiet = new RoundedTextField(10);
+		txt_ChiTiet.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txt_ChiTiet.setColumns(10);
+		txt_ChiTiet.setBounds(130, 363, 216, 22);
+		jp_TTV.add(txt_ChiTiet);
+		
+		JLabel lblGi_1_1 = new JLabel("Trạng thái:");
+		lblGi_1_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblGi_1_1.setBounds(10, 395, 97, 22);
+		jp_TTV.add(lblGi_1_1);
+		
+//		txt_TrangThai = new RoundedTextField(10);
+//		txt_TrangThai.setFont(new Font("Tahoma", Font.PLAIN, 13));
+//		txt_TrangThai.setColumns(10);
+//		txt_TrangThai.setBounds(130, 395, 216, 22);
+//		jp_TTV.add(txt_TrangThai);
+		
+		cb_TTTrue = new JRadioButton("Đã hoàn thành");
+		cb_TTTrue.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		cb_TTTrue.setToolTipText("");
+		cb_TTTrue.setBounds(130, 395, 93, 22);
+		jp_TTV.add(cb_TTTrue);
+
+		cb_TTFalse = new JRadioButton("Chưa hoàn thành");
+		cb_TTFalse.setToolTipText("");
+		cb_TTFalse.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		cb_TTFalse.setBounds(228, 395, 118, 22);
+		jp_TTV.add(cb_TTFalse);
+		
+		// Tạo nhóm button để chỉ cho phép chọn một trong hai trạng thái
+		ButtonGroup group = new ButtonGroup();
+		group.add(cb_TTTrue);
+		group.add(cb_TTFalse);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(401, 65, 1050, 477);
@@ -204,25 +328,102 @@ public class QuanLyVe_Gui extends JPanel {
 		scrollPane.setBounds(0, 0, 1050, 477);
 		panel_3.add(scrollPane);
 		
-		table_TTV = new JTable();
-		scrollPane.setViewportView(table_TTV);
-		table_TTV.setModel(new DefaultTableModel(
+		table = new JTable();
+		model = new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"STT", "Tên khách hàng", "Ga đến", "Ngày đi", "Loại vé", "Toa", "Ghế", "Mã vé", "Mã chuyến tàu", "Giờ đi", "Giá"
+					"STT", "Tên khách hàng", "Ga đi", "Ga đến", "Hạng", "Khuyến mãi", "Toa", "Ghế", "Mã vé", "Mã chuyến tàu", "Ngày đi", "Giờ đi", "Trạng thái", "Chi tiết"
 			}
-		));
+		);
+		sorter = new TableRowSorter<>(model);
+		table.setRowSorter(sorter);
+		table.setModel(model);
+		scrollPane.setViewportView(table);
+		table.setRowHeight(25); // Set chiều cao hàng
 		
+		//Thêm sự kiện table listener
+		model.addTableModelListener(new TableModelListener() {
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				// TODO Auto-generated method stub
+				int row = e.getFirstRow();
+				int column =e.getColumn();
+				if(column == 12) {
+					String trangThaiValue = (String) table.getValueAt(row, column);
+					if(trangThaiValue.equalsIgnoreCase("Đã hoàn thành")) {
+						cb_TTTrue.setSelected(true);
+					}else {
+						cb_TTFalse.setSelected(true);
+					}
+				}
+				if(column == 4) {
+					String hangValue = (String) table.getValueAt(row, column);
+					if(hangValue.equalsIgnoreCase("Giường nằm")) {
+						comboBox_Hang.setSelectedIndex(0);
+					}
+					if(hangValue.equalsIgnoreCase("Ghế mềm"))
+					{
+						comboBox_Hang.setSelectedIndex(1);
+					}
+					if(hangValue.equalsIgnoreCase("VIP")) {
+						comboBox_Hang.setSelectedIndex(2);
+					}
+				}
+				if(column == 5) {
+					String KMValue = (String) table.getValueAt(row, column);
+					if(KMValue.equalsIgnoreCase("Trẻ em dưới 6 tuổi")) {
+						comboBox_KhuyenMai.setSelectedIndex(0);
+					}
+					if(KMValue.equalsIgnoreCase("Trẻ em từ 6 đến 10 tuổi")) {
+						comboBox_KhuyenMai.setSelectedIndex(1);
+					}
+					if(KMValue.equalsIgnoreCase("Người lớn")) {
+						comboBox_KhuyenMai.setSelectedIndex(2);
+					}
+					if(KMValue.equalsIgnoreCase("Người lớn tuổi")) {
+						comboBox_KhuyenMai.setSelectedIndex(3);
+					}
+					if(KMValue.equalsIgnoreCase("Sinh viên")) {
+						comboBox_KhuyenMai.setSelectedIndex(4);
+					}
+				}
+			}
+		});
 		
-		RoundedButton btnNewButton = new RoundedButton("Đổi vé", 15);
-		btnNewButton.setForeground(new Color(255, 255, 255));
+		// Tạo JComboBox cho cột "Trạng Thái"
+		JComboBox<String> comboBoxTrangThai = new JComboBox<>();
+		comboBoxTrangThai.addItem("Đã hoàn thành");
+		comboBoxTrangThai.addItem("Chưa hoàn thành");
+
+		// Lấy cột "Trạng Thái" từ bảng
+		TableColumn trangThaiColumn = table.getColumnModel().getColumn(12);
+		// Thiết lập JComboBox làm editor cho cột "Trạng Thái"
+		trangThaiColumn.setCellEditor(new DefaultCellEditor(comboBoxTrangThai));
+		// Thiết lập renderer cho cột để hiển thị JComboBox
+		trangThaiColumn.setCellRenderer(new ComboBoxRenderer(comboBoxTrangThai));
+		
+//		// Tạo JComboBox cho cột "Hạng"
+//		JComboBox<String> comboBoxHang = new JComboBox<>();
+//		comboBoxHang.addItem("Giường mềm");
+//		comboBoxHang.addItem("Ghế nằm");
+//		comboBoxHang.addItem("VIP");
+//
+//		// Lấy cột "Hạng" từ bảng
+//		TableColumn hangColumn = table.getColumnModel().getColumn(4); // 4 là chỉ số của cột "Hạng"
+//		// Thiết lập JComboBox làm editor cho cột "Hạng"
+//		hangColumn.setCellEditor(new DefaultCellEditor(comboBoxHang));
+//		// Thiết lập renderer cho cột để hiển thị JComboBox
+//		hangColumn.setCellRenderer(new ComboBoxRenderer(comboBoxHang));
+		
+		btn_DoiVe = new RoundedButton("Đổi vé", 15);
+		btn_DoiVe.setForeground(new Color(255, 255, 255));
 //		JButton btnNewButton = new JButton("Đổi vé");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton.setBackground(new Color(51, 102, 153));
-		btnNewButton.setBounds(145, 504, 85, 25);
-		panel.add(btnNewButton);
-		btnNewButton.addActionListener(new ActionListener() {
+		btn_DoiVe.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btn_DoiVe.setBackground(new Color(51, 102, 153));
+		btn_DoiVe.setBounds(141, 510, 85, 25);
+		panel.add(btn_DoiVe);
+		btn_DoiVe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DoiVe_GUI doiVe = new DoiVe_GUI(QuanLyVe_Gui.this,trangChu);
 				trangChu.content.removeAll();
@@ -231,5 +432,293 @@ public class QuanLyVe_Gui extends JPanel {
 				trangChu.content.repaint();
 			}
 		});
+		
+		table.addMouseListener(this);
+		txt_TenKH.getDocument().addDocumentListener(new FilterListener());
+		txt_GaDi.getDocument().addDocumentListener(new FilterListener());
+		txt_GaDen.getDocument().addDocumentListener(new FilterListener());
+		txt_MaVe.getDocument().addDocumentListener(new FilterListener());
+		txt_MaToa.getDocument().addDocumentListener(new FilterListener());
+		txt_MaGhe.getDocument().addDocumentListener(new FilterListener());
+		txt_MaCT.getDocument().addDocumentListener(new FilterListener());
+		txt_NgayDi.getDocument().addDocumentListener(new FilterListener());
+		cb_TTTrue.addActionListener(this);
+		cb_TTFalse.addActionListener(this);
+		comboBox_Hang.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        filterRows(); // Gọi hàm lọc khi lựa chọn thay đổi
+		    }
+		});
+		
+		comboBox_KhuyenMai.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        filterRows(); // Gọi hàm lọc khi lựa chọn thay đổi
+		    }
+		});
+		datatoTable();
 	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+		int row = table.getSelectedRow();
+		
+		System.out.println(row);
+		if (row != -1) {
+			// Lấy mã vé từ cột thích hợp (cột 8 ở đây, cần đảm bảo đúng với cấu trúc bảng)
+	        String maVe = table.getValueAt(row, 8).toString(); 
+	        Ve ve = dsVe.getVeTheoMaVe(maVe);
+	        
+			System.out.println(table.getValueAt(row, 1).toString());
+			KhachHang kh = dsKh.getKhachHangTheoMaKH(ve.getKhachHang().getMaKH());
+			Ga gaDi = dsGa.getGaTheoMaGa(ve.getGaDi().getMaGa());
+			Ga gaDen = dsGa.getGaTheoMaGa(ve.getGaDen().getMaGa());
+	        String soGheString = String.valueOf(ve.getSoGhe().getSoGhe());
+			// Cập nhật thông tin vào các trường nhập
+			txt_MaVe.setText(ve.getMaVe());
+			txt_TenKH.setText(kh.getTenKH());
+			txt_GaDi.setText(gaDi.getTenGa());
+			txt_GaDen.setText(gaDen.getTenGa());
+			// Cập nhật trạng thái cho radio button
+			cb_TTTrue.setSelected(!ve.isTrangThai());
+			cb_TTFalse.setSelected(ve.isTrangThai());
+			
+			// Cập nhật ngày đi
+			dateChooser_NgayDi.setDate(Date.from(ve.getNgayDi().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			
+			// Cập nhật thông tin toa và chuyến tàu
+			txt_MaToa.setText(ve.getToa().getMaToa());
+			txt_MaGhe.setText(soGheString);
+			txt_MaCT.setText(ve.getChuyenTau().getMaTau());
+
+			if(ve.getHang().equalsIgnoreCase("Giường nằm")) {
+				comboBox_Hang.setSelectedIndex(0);
+			}else if(ve.getHang().equalsIgnoreCase("Ghế mềm")) {
+				comboBox_Hang.setSelectedIndex(1);
+			}else {
+				comboBox_Hang.setSelectedIndex(2);
+			}
+			if(ve.getKhuyenMai().equalsIgnoreCase("Trẻ em dưới 6 tuổi")) {
+				comboBox_KhuyenMai.setSelectedIndex(0);
+			}else if(ve.getKhuyenMai().equalsIgnoreCase("Trẻ em từ 6 đến 10 tuổi")) {
+				comboBox_KhuyenMai.setSelectedIndex(1);
+			}else if(ve.getKhuyenMai().equalsIgnoreCase("Người lớn")) {
+				comboBox_KhuyenMai.setSelectedIndex(2);
+			}else if(ve.getKhuyenMai().equalsIgnoreCase("Người lớn tuổi")) {
+				comboBox_KhuyenMai.setSelectedIndex(3);
+			}else {
+				comboBox_KhuyenMai.setSelectedIndex(4);
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		// Xóa các bộ lọc cũ trước khi áp dụng bộ lọc mới
+	    ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
+
+	    // Lọc theo trạng thái hoàn thành
+	    if (cb_TTTrue.isSelected() || cb_TTFalse.isSelected()) {
+	        String status = cb_TTTrue.isSelected() ? "Đã hoàn thành" : "Chưa hoàn thành";
+	        
+	        filters.add(new RowFilter<Object, Object>() {
+	            @Override
+	            public boolean include(Entry<? extends Object, ? extends Object> entry) {
+	                String entryStatus = entry.getStringValue(12); // Giả sử cột 11 chứa trạng thái
+	                return entryStatus.equals(status);
+	            }
+	        });
+	    }
+
+	    // Áp dụng các bộ lọc vào TableRowSorter của bảng
+	    TableRowSorter<?> sorter = (TableRowSorter<?>) table.getRowSorter();
+	    sorter.setRowFilter(RowFilter.andFilter(filters));
+	    
+	}
+	//Hàm tải dữ liệu vào bảng
+	public void datatoTable() {
+		dsKh.reset();
+		dsGa.reset();
+		ArrayList<Ve> list = dsVe.docTuBang();
+		model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0); // Xóa tất cả hàng trong bảng
+		int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); // Định dạng cho giờ
+	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // Định dạng cho ngày
+	    
+		for (Ve ve : list) {
+			KhachHang kh = dsKh.getKhachHangTheoMaKH(ve.getKhachHang().getMaKH());
+			Ga gaDi = dsGa.getGaTheoMaGa(ve.getGaDi().getMaGa());
+			Ga gaDen = dsGa.getGaTheoMaGa(ve.getGaDen().getMaGa());
+			
+			model.addRow(new Object[] {
+		            stt++, 
+		            kh.getTenKH(), 
+		            gaDi.getTenGa(),
+		            gaDen.getTenGa(),
+		            ve.getHang().equalsIgnoreCase("Ghế mềm") ? "Ghế mềm" : ve.getHang().equalsIgnoreCase("Giường nằm") ? "Giường nằm" : "VIP",
+		            ve.getKhuyenMai().equalsIgnoreCase("Trẻ em dưới 6 tuổi") ? "Trẻ em dưới 6 tuổi" : ve.getKhuyenMai().equalsIgnoreCase("Trẻ em từ 6 đến 10 tuổi") ? "Trẻ em từ 6 đến 10 tuổi" : ve.getKhuyenMai().equalsIgnoreCase("Người lớn") ? "Người lớn" : ve.getKhuyenMai().equalsIgnoreCase("Người lớn tuổi") ? "Người lớn tuổi" : "Sinh viên",
+		            ve.getToa().getMaToa(),
+		            ve.getSoGhe().getSoGhe(),
+		            ve.getMaVe(),
+		            ve.getChuyenTau().getMaTau(),
+		            ve.getNgayDi().format(dateFormatter),
+		            ve.getGioDi().format(timeFormatter),
+		            ve.isTrangThai() ? "Chưa hoàn thành" : "Đã hoàn thành",
+		            ve.getChiTiet().getMaChiTiet()
+		        });
+		}
+		//Mặc định các button và combobox trong thông tin nhân viên
+		deleteField();	
+	}
+	//Hàm xóa thông tin 
+	public void deleteField() {
+		txt_TenKH.setText("");
+		txt_GaDi.setText("");
+		txt_GaDen.setText("");
+		txt_MaVe.setText("");
+		dateChooser_NgayDi.setDate(null);  // Đặt lại giá trị ngày thành null
+		txt_MaToa.setText("");
+		txt_MaGhe.setText("");
+		txt_MaCT.setText("");
+		txt_ChiTiet.setText("");
+		comboBox_Hang.setSelectedItem(null);
+		comboBox_KhuyenMai.setSelectedItem(null);
+		cb_TTTrue.setSelected(false);
+		cb_TTFalse.setSelected(false);
+	}
+	// Lớp FilterListener để lắng nghe các thay đổi trong các ô tìm kiếm
+	private class FilterListener implements DocumentListener{
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			// TODO Auto-generated method stub
+			filterRows();
+		}
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			// TODO Auto-generated method stub
+			filterRows();
+		}
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			// TODO Auto-generated method stub
+			filterRows();
+		}
+	}
+	// Hàm để thực hiện lọc
+	private void filterRows() {
+		String tenKH = txt_TenKH.getText().trim();
+		String gaDi = txt_GaDi.getText().trim();
+		String gaDen = txt_GaDen.getText().trim();
+		String maToa = txt_MaToa.getText().trim();
+		String maGhe = txt_MaGhe.getText().trim();
+		String maVe = txt_MaVe.getText().trim();
+		String maCT = txt_MaCT.getText().trim();
+		String ngayDi = txt_NgayDi.getText().trim();
+		String hang = comboBox_Hang.getSelectedItem() != null ? comboBox_Hang.getSelectedItem().toString().trim() : "";
+		String khuyenMai = comboBox_KhuyenMai.getSelectedItem() != null ? comboBox_KhuyenMai.getSelectedItem().toString().trim() : "";
+		
+		ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
+
+		// Thêm bộ lọc nếu các ô không trống
+		if (!tenKH.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + tenKH, 1)); 
+		}
+		if (!gaDi.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + gaDi, 2)); 
+		}
+		if (!gaDen.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + gaDen, 3)); 
+		}
+		if (!maToa.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + maToa, 6)); 
+		}
+		if (!maGhe.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + maGhe, 7)); 
+		}
+		if (!maVe.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + maVe, 8)); 
+		}
+		if (!maCT.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + maCT, 9));
+		}
+		// Lọc theo ngày đi
+	    if (!ngayDi.isEmpty()) {
+	        Date dateTu = parseDate(ngayDi);
+	        if (dateTu != null) {
+	            filters.add(new RowFilter<Object, Object>() {
+	                @Override
+	                public boolean include(Entry<? extends Object, ? extends Object> entry) {
+	                    Date entryDate = parseDate(entry.getStringValue(10)); // Giả sử cột 2 là cột ngày
+	                    return entryDate != null && entryDate.equals(dateTu);
+	                }
+	            });
+	        }
+	    }
+		
+		// Lọc theo hạng vé (comboBox_Hang)
+//	    String hangVe = comboBox_Hang.getSelectedItem().toString();
+//	    System.out.println("Lọc theo hạng vé: " + hangVe); // Debugging line
+//	    if (hangVe != null && !hangVe.isEmpty()) {
+//	        filters.add(RowFilter.regexFilter(hangVe, 4)); // Cột 4 cho hạng vé
+//	    }
+	    if (!hang.isEmpty()) {
+			filters.add(RowFilter.regexFilter(hang, 4));
+		}
+
+	    // Lọc theo khuyến mãi (comboBox_KhuyenMai)
+//	    String khuyenMai = comboBox_KhuyenMai.getSelectedItem().toString();
+//	    if (khuyenMai != null && !khuyenMai.isEmpty()) {
+//	        filters.add(RowFilter.regexFilter(khuyenMai, 5)); // Cột 5 cho khuyến mãi
+//	    }
+	    if (!khuyenMai.isEmpty()) {
+			filters.add(RowFilter.regexFilter(khuyenMai, 5));
+		}
+
+		if (filters.isEmpty()) {
+			sorter.setRowFilter(null); // Loại bỏ bộ lọc nếu không có điều kiện nào
+		} else {
+			sorter.setRowFilter(RowFilter.andFilter(filters)); // Kết hợp các bộ lọc
+		}
+	}
+	private Date parseDate(String dateStr) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            // Chuyển đổi chuỗi thành đối tượng Date
+            Date date = dateFormat.parse(dateStr);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

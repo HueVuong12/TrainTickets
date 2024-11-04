@@ -297,7 +297,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		
 		//JFreeChat Hiển thị số lượng khách mua theo PieChart
 		//Khởi tạo dữ liệu
-		DefaultPieDataset dataset = createDatasetPieChart(trangChu);
+		DefaultPieDataset dataset = 
+				//createDatasetTKTheoCa();
+				createDatasetPieChart(trangChu);
 		// Create chart
 		// Tạo biểu đồ bánh
 		JFreeChart chartTheoHang_SLKM = ChartFactory.createPieChart(
@@ -311,7 +313,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		chartTheoHang_SLKM.getTitle().setFont(new Font("Arial", Font.PLAIN, 16));
 		// Tạo ChartPanel và thiết lập kích thước
 		
-		DefaultCategoryDataset datasetTKDTTheoHang = createDatasetTKHangTheoCa(trangChu);
+		DefaultCategoryDataset datasetTKDTTheoHang = 
+				//createDataset();
+				createDatasetTKHangTheoCa(trangChu);
 		// Create chart
 		JFreeChart chartDoanhThuTheoHang = ChartFactory.createBarChart(
 				"Thống kê doanh thu theo hạng",
@@ -855,6 +859,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 					Set<String> processedChuyenTau = new HashSet<>();
 
 					for (Ve ve : listVe) {
+						slvb++;
 						String chuyenTau = ve.getChuyenTau().getMaTau(); // Lấy mã chuyến tàu
 						System.out.println("Mã chuyến tàu: " + chuyenTau);
 
