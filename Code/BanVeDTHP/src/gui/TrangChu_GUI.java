@@ -76,7 +76,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	private JLabel exitIconLabel;
 	public JPanel content;
 	private Color hoverLabelColor = new Color(0, 153, 255);
-	private DangNhap_GUI dangNhap;
+	public DangNhap_GUI dangNhap;
 	
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
 	private TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();

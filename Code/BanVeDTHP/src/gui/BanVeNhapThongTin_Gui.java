@@ -7,6 +7,8 @@ import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.format.DateTimeFormatter;
@@ -15,8 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -31,6 +37,8 @@ import components.ButtonRenderer;
 import components.ComboBoxRenderer;
 import components.TextAreaRenderer;
 import dao.Ga_DAO;
+import dao.KhachHang_DAO;
+import entity.Ga;
 import entity.KhachHang;
 import entity.Ve;
 
@@ -40,7 +48,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultCellEditor;
 import java.awt.BorderLayout;
 
-public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
+public class BanVeNhapThongTin_Gui extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private JLabel goBackIconLabel;
 	private JLabel lbl_quayLai;
@@ -58,12 +66,15 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 	public JTable table;
 	private JPanel jp_Table;
 	public Map<Integer, KhachHang> map = new HashMap<>();
+	public KhachHang khachHangMua;
 	
 	private Ga_DAO ga_DAO = new Ga_DAO();
+	private KhachHang_DAO dskh = new KhachHang_DAO();
+	private ArrayList<KhachHang> list = dskh.docTuBang();
 	private JButton bt_Chuyen;
 	private JButton bt_ThanhToan_KHSDV;
 	
-	public BanVeNhapThongTin_Gui(BanVe_GUI banVe_GUI,TrangChu_GUI trangChu) {
+	public BanVeNhapThongTin_Gui(BanVe_GUI banVe_GUI, TrangChu_GUI trangChu) {
 		setBackground(SystemColor.window);
 		setForeground(new Color(255, 255, 255));
 		setBounds(0, 170, 1460, 570);
@@ -109,12 +120,12 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 		lbl_quayLai.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				goBackIconLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				lbl_quayLai.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				goBackIconLabel.setCursor(Cursor.getDefaultCursor());
+				lbl_quayLai.setCursor(Cursor.getDefaultCursor());
 			}
 			
 			@Override
@@ -253,8 +264,14 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 				int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) {
                     DefaultTableModel model = (DefaultTableModel) table.getModel();
-                    KhachHang khachHang = new KhachHang("KH0000", textField_Ten_KHSDV.getText(), textField_Email_KHSDV.getText(), textField_SDT_KHSDV.getText(), textField_CCCD_KHSDV.getText());
-                    map.put(selectedRow, khachHang);
+    				KhachHang khachHangExist = list.stream().filter(kh -> textField_SDT_KHSDV.getText().equals(kh.getSdt())).findFirst().orElse(null);
+    				if (khachHangExist!=null) {
+    					map.put(selectedRow, khachHangExist);
+    				} else {    					
+    					KhachHang khachHang = new KhachHang("KH0000", textField_Ten_KHSDV.getText(), textField_Email_KHSDV.getText(), textField_SDT_KHSDV.getText(), textField_CCCD_KHSDV.getText());
+    					map.put(selectedRow, khachHang);
+    				}
+    				banVe_GUI.dsVeDatTam.get(selectedRow).setKhuyenMai(table.getValueAt(selectedRow, 2).toString());
                     model.setValueAt(textField_Ten_KHSDV.getText(), selectedRow, 1);
                     textField_Ten_KHSDV.setText("");
 					textField_SDT_KHSDV.setText("");
@@ -279,7 +296,17 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 		bt_ThanhToan_KHSDV.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		bt_ThanhToan_KHSDV.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				BanVeThanhToan_GUI banVeThanToan_GUI= new BanVeThanhToan_GUI(BanVeNhapThongTin_Gui.this, trangChu);
+				if (map.size() != banVe_GUI.dsVeDatTam.size()) {
+					JOptionPane.showMessageDialog(null, "Chưa nhập đủ khách hàng sử dụng vé");
+					return;
+				}
+				
+				KhachHang khachHang = list.stream().filter(kh -> textField_SDT_KHMV.getText().equals(kh.getSdt())).findFirst().orElse(null);
+				BanVeNhapThongTin_Gui.this.khachHangMua = new KhachHang(khachHang != null?khachHang.getMaKH():generateMaKH(), textField_Ten_KHMV.getText(), textField_Email_KHMV.getText(), textField_SDT_KHMV.getText(), textField_CCCD_KHMV.getText());
+				BanVeThanhToan_GUI banVeThanToan_GUI= new BanVeThanhToan_GUI(BanVeNhapThongTin_Gui.this, trangChu, banVe_GUI);
+				
+				//Gán giá trị khuyễn mãi cho các Ve trong ds đặt tạm
+				
 				trangChu.content.removeAll();
 				trangChu.content.add(banVeThanToan_GUI);
 				trangChu.content.revalidate();
@@ -324,22 +351,7 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 		// Đặt renderer và editor cho nút xóa
         table.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
         table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), banVe_GUI, BanVeNhapThongTin_Gui.this));
-//        table.getColumnModel().getColumn(7).addPropertyChangeListener(new PropertyChangeListener() {
-//        	@Override
-//        	public void propertyChange(PropertyChangeEvent evt) {
-//        		// Kiểm tra từng loại thay đổi thuộc tính
-//        		if ("width".equals(evt.getPropertyName())) {
-//        			System.out.println("Độ rộng của cột đã thay đổi: " + evt.getNewValue());
-//        		} else if ("preferredWidth".equals(evt.getPropertyName())) {
-//        			System.out.println("Độ rộng mong muốn của cột đã thay đổi: " + evt.getNewValue());
-//        		} else if ("cellEditor".equals(evt.getPropertyName())) {
-//        			System.out.println("CellEditor của cột đã thay đổi");
-//        		} else if ("cellRenderer".equals(evt.getPropertyName())) {
-//        			System.out.println("CellRenderer của cột đã thay đổi");
-//        		}
-//        	}
-//        });
-
+        
         // Tạo JComboBox cho cột "trạng thái"
         JComboBox<String> comboBoxKhuyenMai = new JComboBox<>();
         comboBoxKhuyenMai.setPreferredSize(new Dimension(20, 20));
@@ -357,6 +369,7 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
                 if (selectedRow != -1) {
                     DefaultTableModel model = (DefaultTableModel) table.getModel();
                     int selectedItemIndex = comboBoxKhuyenMai.getSelectedIndex();
+                    banVe_GUI.dsVeDatTam.get(selectedRow).setKhuyenMai(table.getValueAt(selectedRow, 2).toString());
                     float baseValue = (float) model.getValueAt(selectedRow, 4); // Lấy giá trị cột 4
 
                     double newValue;
@@ -392,7 +405,10 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
         // Thiết lập renderer cho cột để hiển thị JComboBox
         khuyenMaiColumn.setCellRenderer(new ComboBoxRenderer(comboBoxKhuyenMai));        
         table.getColumnModel().getColumn(3).setCellRenderer(new TextAreaRenderer());
-		
+
+        chonSdt(textField_SDT_KHMV,textField_Ten_KHMV,textField_Email_KHMV, textField_CCCD_KHMV);
+        chonSdt(textField_SDT_KHSDV,textField_Ten_KHSDV,textField_Email_KHSDV, textField_CCCD_KHSDV);
+
         loadThongTin(banVe_GUI.dsVeDatTam);
 	}
 	
@@ -421,15 +437,63 @@ public class BanVeNhapThongTin_Gui extends JPanel implements ActionListener{
 						+ ve.getToa().getMaToa().substring(ve.getToa().getMaToa().length() - 2) + " Ghế số "
 						+ ve.getSoGhe().getSoGhe();
 			}
-			DefaultTableModel model = (DefaultTableModel) table.getModel();
-			model.addRow(new Object[] {count++, null, "Người lớn", thongTinVe, ve.tinhGiaVeGoc(), 0, ve.tinhGiaVeGoc()});
+			defaultModel.addRow(new Object[] {count++, null, "Người lớn", thongTinVe, ve.tinhGiaVeGoc(), 0, ve.tinhGiaVeGoc()});
 		}
 	}
 	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+	public String generateMaKH() {
+		dskh.reset();
+		ArrayList<KhachHang> list = dskh.docTuBang();
+		int sl = list.size() + 1;
+		String maKH = String.format("KH%04d", sl);
+		return maKH;
 	}
 	
+	private void chonSdt(JTextField txt_sdt, JTextField txt_ten, JTextField txt_email, JTextField txt_cccd) {
+		// Tạo JPopupMenu để hiển thị gợi ý
+		JPopupMenu suggestionMenu = new JPopupMenu();
+
+		// Hàm cập nhật gợi ý khi người dùng nhập vào text field
+		txt_sdt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String input = txt_sdt.getText();
+				suggestionMenu.removeAll(); // Xóa các gợi ý cũ
+
+				if (!input.isEmpty()) {
+					int count = 0; // Biến đếm số gợi ý đã thêm
+					// Lọc danh sách ga theo từ khóa người dùng nhập
+					for (KhachHang kh : list) {
+						if (kh.getSdt().toLowerCase().startsWith(input.toLowerCase())) {
+							JMenuItem item = new JMenuItem(kh.getSdt());
+							item.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									txt_sdt.setText(item.getText());
+									suggestionMenu.setVisible(false); // Ẩn gợi ý sau khi chọn
+									KhachHang khachHang = list.stream().filter(kh -> txt_sdt.getText().equals(kh.getSdt())).findFirst().orElse(null);
+									txt_ten.setText(khachHang.getTenKH());
+									txt_email.setText(khachHang.getEmail());
+									txt_cccd.setText(khachHang.getCccd());
+								}
+							});
+							suggestionMenu.add(item);
+							count++; // Tăng biến đếm
+						}
+						if (count >= 5) { // Kiểm tra nếu đã có 5 gợi ý
+							break; // Thoát vòng lặp nếu đã đủ 5 gợi ý
+						}
+					}
+				}
+
+				// Hiển thị danh sách gợi ý nếu có ít nhất một gợi ý
+				if (suggestionMenu.getComponentCount() > 0) {
+					suggestionMenu.show(txt_sdt, 0, txt_sdt.getHeight());
+					txt_sdt.requestFocus(); // Đặt lại focus cho JTextField
+				} else {
+					suggestionMenu.setVisible(false); // Ẩn nếu không có gợi ý
+				}
+			}
+		});
+	}
 }

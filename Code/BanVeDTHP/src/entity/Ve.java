@@ -198,8 +198,6 @@ public class Ve {
 	
 	public float tinhGiaVeGoc() {
 		int quangDuong = Math.abs(gaDen.getChiSoKm() - gaDi.getChiSoKm());
-		System.out.println(gaDen);
-		System.out.println(gaDi);
 		float tiGia = 0;
 		if (hang.equalsIgnoreCase("Ghế mềm"))
 			tiGia += 1;

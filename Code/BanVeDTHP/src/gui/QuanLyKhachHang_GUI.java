@@ -10,8 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.border.LineBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.JScrollPane;
 import java.awt.Image;
 import javax.swing.table.DefaultTableModel;
@@ -23,8 +21,6 @@ import components.RoundedButton;
 import components.RoundedTextField;
 import dao.KhachHang_DAO;
 import entity.KhachHang;
-import entity.NhanVien;
-
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -286,13 +282,13 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		scrollPane.setViewportView(table);
 		table.setRowHeight(25); // Set chiều cao hàng
 
-		tableModel.addTableModelListener(new TableModelListener() {
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				int row = e.getFirstRow();
-				int column = e.getColumn();
-			}
-		});
+//		tableModel.addTableModelListener(new TableModelListener() {
+//			@Override
+//			public void tableChanged(TableModelEvent e) {
+//				int row = e.getFirstRow();
+//				int column = e.getColumn();
+//			}
+//		});
 
 		btnSua.addActionListener(this);
 		btnTim.addActionListener(this);

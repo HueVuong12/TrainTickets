@@ -39,8 +39,25 @@ public class ButtonEditor extends DefaultCellEditor {
 				fireEditingStopped();
 				int row = table.getSelectedRow();
 				if (row != -1) {
-					((DefaultTableModel) table.getModel()).removeRow(row);
+					DefaultTableModel model = ((DefaultTableModel) table.getModel());
+					model.removeRow(row);
 					banVe_GUI.dsVeDatTam.remove(row);
+					
+					if (nhapThongTin_GUI.map.get(row) != null) {
+						nhapThongTin_GUI.map.remove(row);						
+					}
+					nhapThongTin_GUI.loadThongTin(banVe_GUI.dsVeDatTam);
+					
+					for (int key: nhapThongTin_GUI.map.keySet()) {
+						if (key > row) {
+							nhapThongTin_GUI.map.put(key-1, nhapThongTin_GUI.map.get(key));
+							model.setValueAt(nhapThongTin_GUI.map.get(key).getTenKH(), key-1, 1);
+							nhapThongTin_GUI.map.remove(key);
+						} else {
+							model.setValueAt(nhapThongTin_GUI.map.get(key).getTenKH(), key, 1);
+						}
+					}
+					
 					if (banVe_GUI.toaCu != null) {
 						Toa_JPanel pToa;
 						if (banVe_GUI.toaCu.getLoaiToa().equals("VIP")) {
@@ -54,12 +71,7 @@ public class ButtonEditor extends DefaultCellEditor {
 						// su kien
 						banVe_GUI.loadGhe(pToa, banVe_GUI.toaCu);
 					}
-
-					for (int key = row+1; key < nhapThongTin_GUI.map.size(); key++){
-						nhapThongTin_GUI.map.put(key-1, nhapThongTin_GUI.map.get(key));
-					}
-					
-					nhapThongTin_GUI.loadThongTin(banVe_GUI.dsVeDatTam);
+		
 					
 					// Tạo panel Vé
 					banVe_GUI.jp_VeMua.removeAll();

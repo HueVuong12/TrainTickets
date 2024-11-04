@@ -17,10 +17,10 @@ public class TextAreaRenderer extends JTextArea implements TableCellRenderer {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            // Đặt văn bản cho ô
             setText(value != null ? value.toString() : "");
-            setFont(table.getFont());
-
-            // Điều chỉnh màu khi chọn ô
+            
+            // Điều chỉnh màu nền khi ô được chọn
             if (isSelected) {
                 setBackground(table.getSelectionBackground());
                 setForeground(table.getSelectionForeground());
@@ -29,6 +29,12 @@ public class TextAreaRenderer extends JTextArea implements TableCellRenderer {
                 setForeground(table.getForeground());
             }
 
+            // Đặt chiều cao hàng dựa trên nội dung của JTextArea
+            int height = getPreferredSize().height;
+            if (table.getRowHeight(row) < height) {
+                table.setRowHeight(row, height);
+            }
+            
             return this;
         }
     }

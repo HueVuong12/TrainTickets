@@ -10,22 +10,37 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Locale;
-
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import components.ConTent_JPanel;
+import components.TextAreaRenderer;
+import dao.ChiTietHoaDon_DAO;
+import dao.Ghe_DAO;
+import dao.HoaDon_DAO;
+import dao.KhachHang_DAO;
+import dao.Ve_DAO;
+import entity.ChiTietHoaDon;
+import entity.Ghe;
+import entity.HoaDon;
+import entity.KhachHang;
+import entity.NhanVien;
+import entity.Ve;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
 import javax.swing.border.LineBorder;
 
 public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
@@ -45,16 +60,27 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 	private JButton btn5;
 	private JButton btn2;
 	private JButton btn1;
-	private JButton btn33;
-	private JButton btn35;
-	private JButton btn44;
+	private JButton btnGoiY1;
+	private JButton btnGoiY2;
+	private JButton btnGoiY3;
 	private JButton btn_XacNhan;
 	private JButton btnXoa;
 	float tienKhachDua= 0;
 	float tienTraLai=0;
 	private float tongTienCoThue=0;
+	private float tongThue=0;
 	
-	public BanVeThanhToan_GUI(BanVeNhapThongTin_Gui banVeNhapThongTin_GUI, TrangChu_GUI trangChu) {
+	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
+	private ChiTietHoaDon_DAO chiTietHoaDon_DAO = new ChiTietHoaDon_DAO();
+	private KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+	private ArrayList<KhachHang> dsKH = khachHang_DAO.docTuBang();
+	private Ve_DAO ve_DAO = new Ve_DAO();
+	private Ghe_DAO ghe_DAO = new Ghe_DAO();
+	
+	private static final String[] CHU_SO = { "không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín" };
+	private static final String[] DON_VI = { "", "nghìn", "triệu", "tỷ" };
+	
+	public BanVeThanhToan_GUI(BanVeNhapThongTin_Gui banVeNhapThongTin_GUI, TrangChu_GUI trangChu, BanVe_GUI banVe_GUI) {
 		setBackground(SystemColor.text);
 		setForeground(new Color(255, 255, 255));
 		setBounds(0, 170, 1440, 570);
@@ -74,9 +100,10 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		goBackIconLabel.setBounds(10, 0, 39, 27);
 		goBackIconLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				ConTent_JPanel jpct = new ConTent_JPanel();
-				jpct.setVisible(true);
-				BanVeThanhToan_GUI.this.setVisible(false);
+					trangChu.content.removeAll();
+					trangChu.content.add(banVeNhapThongTin_GUI);
+					trangChu.content.revalidate();
+					trangChu.content.repaint();
 				}
 		});
 		JLabel lb_quaylai = new JLabel("Quay lại");
@@ -109,17 +136,17 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		lblSdtKhchHng.setBounds(10, 112, 125, 24);
 		panel.add(lblSdtKhchHng);
 		
-		JLabel lb_SDT = new JLabel("0919128639");
+		JLabel lb_SDT = new JLabel(banVeNhapThongTin_GUI.khachHangMua.getSdt());
 		lb_SDT.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lb_SDT.setBounds(154, 112, 125, 24);
 		panel.add(lb_SDT);
 		
-		JLabel lb_MKH = new JLabel("KH0001");
+		JLabel lb_MKH = new JLabel(banVeNhapThongTin_GUI.khachHangMua.getMaKH());
 		lb_MKH.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lb_MKH.setBounds(154, 78, 125, 24);
 		panel.add(lb_MKH);
 		
-		JLabel lb_MNV = new JLabel("NV001");
+		JLabel lb_MNV = new JLabel(trangChu.dangNhap.taiKhoanLogined.getNhanVien().getMaNV());
 		lb_MNV.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lb_MNV.setBounds(154, 44, 125, 24);
 		panel.add(lb_MNV);
@@ -144,7 +171,7 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		lblTnKhchHng.setBounds(410, 78, 125, 24);
 		panel.add(lblTnKhchHng);
 		
-		JLabel lb_TKH = new JLabel("Lê Tấn Phong");
+		JLabel lb_TKH = new JLabel(banVeNhapThongTin_GUI.khachHangMua.getTenKH());
 		lb_TKH.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lb_TKH.setBounds(554, 78, 125, 24);
 		panel.add(lb_TKH);
@@ -154,23 +181,16 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		panel.add(scrollPane);
 		
 		table = new JTable();
-		table.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"a", "b", "c", "d", "e", "e -> f", "g = d - f"},
-				{"1", "VE2209240001", "Từ Ga Sài Gòn đến Ga Hà Nội Ngày 12/11/2024  Lúc: 08:00 Giường nằm Toa 02 Ghế số 2", "601,920", "Trẻ em từ 6 tuổi đến 10 tuổi", "150,480", "451,440"},
-				{"2"},
-				{"3"},
-				{"4"},
 			},
 			new String[] {
-				"STT", "Mã vé", "Thông tin vé", "Giá gốc (VND)", "Đối tượng", "Khuyến mãi (VND)", "Thành tiền chưa thuế (VND)"
+				"STT", "Khách hàng", "Thông tin vé", "Giá gốc", "Đối tượng", "Khuyến mãi", "Thành tiền"
 			}
 		));
-		table.setRowHeight(1,45);
-		table.setRowHeight(2,45);
-		table.setRowHeight(3,45);
-		table.setRowHeight(4,45);
+		
+		table.setRowHeight(45);
+		table.setRowHeight(0,12);
 		
 		//Điều chính kích thước ô
 		table.getColumnModel().getColumn(0).setPreferredWidth(30);
@@ -186,9 +206,10 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
 		// Áp dụng renderer cho tất cả các cột
-		for (int i = 0; i < table.getColumnCount(); i++) {
-		    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-		}
+		table.setDefaultRenderer(Object.class, centerRenderer);
+
+		// Áp dụng TextAreaRenderer cho cột "Thông tin vé" để xuống dòng
+        table.getColumnModel().getColumn(2).setCellRenderer(new TextAreaRenderer());
 		
 		scrollPane.setViewportView(table);
 		
@@ -232,7 +253,7 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		table_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		table_1.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Tổng cộng (VND):", null, "2,207,040", null, "802,560", "1,404,480"},
+				{"Tổng cộng (VND):", null, null, null, null, null},
 			},
 			new String[] {
 				"New column", "New column", "New column", "New column", "New column", "New column"
@@ -331,20 +352,20 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		lblNewLabel_1_1_1.setBounds(53, 282, 327, 30);
 		panel_1.add(lblNewLabel_1_1_1);
 		
-		btn33 = new JButton("5.000");
-		btn33.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btn33.setBounds(53, 325, 100, 30);
-		panel_1.add(btn33);
+		btnGoiY1 = new JButton("5.000");
+		btnGoiY1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnGoiY1.setBounds(53, 325, 100, 30);
+		panel_1.add(btnGoiY1);
 		
-		btn35 = new JButton("5.000");
-		btn35.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btn35.setBounds(163, 325, 100, 30);
-		panel_1.add(btn35);
+		btnGoiY2 = new JButton("5.000");
+		btnGoiY2.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnGoiY2.setBounds(163, 325, 100, 30);
+		panel_1.add(btnGoiY2);
 		
-		btn44 = new JButton("5.000");
-		btn44.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btn44.setBounds(273, 325, 100, 30);
-		panel_1.add(btn44);
+		btnGoiY3 = new JButton("5.000");
+		btnGoiY3.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnGoiY3.setBounds(273, 325, 100, 30);
+		panel_1.add(btnGoiY3);
 		
 		JLabel lblNewLabel_1_1_1_1 = new JLabel("Tiền trả lại");
 		lblNewLabel_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -358,6 +379,54 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		panel_1.add(textField_TTL);
 		textField_TTL.setEditable(false);
 		btn_XacNhan = new JButton("Xác nhận");
+		btn_XacNhan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (tienTraLai < 0) {
+					return;
+				}
+				
+				// Tạo hóa đơn
+				hoaDon_DAO.reset();
+				ArrayList<HoaDon> dsHD = hoaDon_DAO.docTuBang();
+				String maHD = generateMaHD(dsHD, trangChu.dangNhap.taiKhoanLogined.getNhanVien().getMaNV());
+				LocalDateTime ngayLapHoaDon = LocalDateTime.now();
+				NhanVien nhanVien = trangChu.dangNhap.taiKhoanLogined.getNhanVien();
+				KhachHang khachHang = banVeNhapThongTin_GUI.khachHangMua;
+				ChiTietHoaDon chiTiet = null;
+				HoaDon hoaDon = new HoaDon(maHD, ngayLapHoaDon, nhanVien, khachHang, chiTiet, false, false);
+				hoaDon_DAO.create(hoaDon);
+				
+				// Tạo chi tiết hóa đơn
+				String maCT = "CT" + maHD;
+				int soLuong = banVe_GUI.dsVeDatTam.size();
+				ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(maCT, hoaDon, soLuong, banVe_GUI.dsVeDatTam, tongThue);
+				chiTietHoaDon_DAO.create(chiTietHoaDon);
+				
+				// Tạo khách hàng
+				Boolean khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.khachHangMua);
+				if (!khachHangExist) {
+					khachHang_DAO.create(banVeNhapThongTin_GUI.khachHangMua);
+				}
+				for (int key: banVeNhapThongTin_GUI.map.keySet()) {
+					khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.map.get(key));
+					if (!khachHangExist) {
+						banVeNhapThongTin_GUI.map.get(key).setMaKH(generateMaKH());
+						khachHang_DAO.create(banVeNhapThongTin_GUI.map.get(key));
+					}
+				}
+				
+				// Tạo danh sách vé
+				for (Ve ve: banVe_GUI.dsVeDatTam) {
+					ve.setMaVe(ve_DAO.generateMaVe());
+					ve.setKhachHang(banVeNhapThongTin_GUI.map.get(banVe_GUI.dsVeDatTam.indexOf(ve)));
+					ve.setChiTiet(chiTietHoaDon);
+					ve_DAO.create(ve);
+					Ghe ghe = ve.getSoGhe();
+					ghe.setTrangThai(false);
+					ghe_DAO.update(ghe);
+				}
+			}
+		});
 		btn_XacNhan.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btn_XacNhan.setBounds(301, 472, 106, 30);
 		panel_1.add(btn_XacNhan);
@@ -378,11 +447,13 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		btn200.addActionListener(this);
 		btn500.addActionListener(this);
 
-		btn33.addActionListener(this);
-		btn35.addActionListener(this);
-		btn44.addActionListener(this);
+		btnGoiY1.addActionListener(this);
+		btnGoiY2.addActionListener(this);
+		btnGoiY3.addActionListener(this);
 		
 		btnXoa.addActionListener(this);
+		
+		loadThongTin(banVe_GUI.dsVeDatTam, banVeNhapThongTin_GUI.map);
 	}
 	
 	// Renderer tùy chỉnh để gộp hai cột đầu tiên (STT & Mã vé)
@@ -412,6 +483,7 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 		return formatter.format(soTien);
 	}
+    
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -436,9 +508,9 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 			if (o.equals(btn100)) soTienThem = 100000;
 			if (o.equals(btn200)) soTienThem = 200000;
 			if (o.equals(btn500)) soTienThem = 500000;
-			if (o.equals(btn33)) soTienThem = 33000;
-			if (o.equals(btn35)) soTienThem = 35000;
-			if (o.equals(btn44)) soTienThem = 44000;
+			if (o.equals(btnGoiY1)) soTienThem = 33000;
+			if (o.equals(btnGoiY2)) soTienThem = 35000;
+			if (o.equals(btnGoiY3)) soTienThem = 44000;
 
 			// Kiểm tra nếu text hiện tại là "0 đ" thì đặt `tienKhachDua` thành `soTienThem`
 			if (textField_TKD.getText().equalsIgnoreCase("0 đ")) {
@@ -451,6 +523,178 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 			tienTraLai = tienKhachDua - tongTienCoThue;
 			textField_TTL.setText(dinhDangTienTe(tienTraLai));
 		}
-
 	}
+	
+	private void loadThongTin(ArrayList<Ve> dsVeDatTam,  Map<Integer, KhachHang> map) {
+		DefaultTableModel defaultModel = ((DefaultTableModel) table.getModel());
+		defaultModel.setRowCount(0);
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		int count = 1;
+		float tongGiaGoc = 0;
+		float tongKhuyenMai = 0;
+		for (Ve ve: dsVeDatTam) {
+			// Thông tin vé + giá gốc
+			String thongTinVe = ve.getChuyenTau().getMaTau() + ": Từ " + ve.getGaDi().getTenGa() + " đến "
+					+ ve.getGaDen().getTenGa() + "\nNgày: "
+					+ ve.getNgayDi().format(formatter) + "   Lúc: " + ve.getGioDi().toString();
+			if (ve.getHang().equalsIgnoreCase("VIP")) {
+				thongTinVe = thongTinVe + "\nHạng VIP Toa "
+						+ ve.getToa().getMaToa().substring(ve.getToa().getMaToa().length() - 2) + " Ghế số "
+						+ ve.getSoGhe().getSoGhe();
+			} else if (ve.getHang().equalsIgnoreCase("Giường nằm")) {
+				thongTinVe = thongTinVe + "\nGiường nằm Toa "
+						+ ve.getToa().getMaToa().substring(ve.getToa().getMaToa().length() - 2) + " Ghế số "
+						+ ve.getSoGhe().getSoGhe();
+			} else {
+				thongTinVe = thongTinVe + "\nGhế mềm Toa "
+						+ ve.getToa().getMaToa().substring(ve.getToa().getMaToa().length() - 2) + " Ghế số "
+						+ ve.getSoGhe().getSoGhe();
+			}
+			
+			// Khuyến mãi
+			float giaGoc = ve.tinhGiaVeGoc();
+			float khuyenMai = 0;
+			if (ve.getKhuyenMai().equalsIgnoreCase("Sinh viên"))
+				khuyenMai = giaGoc * 0.1f;
+			else if (ve.getKhuyenMai().equalsIgnoreCase("Người lớn"))
+				khuyenMai = giaGoc * 0;
+			else if (ve.getKhuyenMai().equalsIgnoreCase("Người lớn tuổi"))
+				khuyenMai = giaGoc * 0.15f;
+			else if (ve.getKhuyenMai().equalsIgnoreCase("Trẻ em từ 6 đến 10 tuổi"))
+				khuyenMai = giaGoc * 0.25f;
+			else
+				khuyenMai = giaGoc * 1;
+			
+			KhachHang khachHang = map.get(count-1);
+			
+			defaultModel.addRow(new Object[] {count++, khachHang.getTenKH(), thongTinVe, giaGoc, ve.getKhuyenMai(), khuyenMai, giaGoc-khuyenMai});
+			
+			tongGiaGoc += giaGoc;
+			tongKhuyenMai += khuyenMai;
+			
+			for (Ve e: dsVeDatTam) {
+				System.out.println(e);
+			}
+		}
+		
+		defaultModel = ((DefaultTableModel) table_1.getModel());
+		defaultModel.setValueAt(tongGiaGoc, 0, 2);
+		defaultModel.setValueAt(tongKhuyenMai, 0, 4);
+		defaultModel.setValueAt(tongGiaGoc - tongKhuyenMai, 0, 5);
+		
+		defaultModel = ((DefaultTableModel) table_2.getModel());
+		defaultModel.setValueAt((tongGiaGoc - tongKhuyenMai)*0.1, 0, 1);
+		tongTienCoThue = (tongGiaGoc - tongKhuyenMai)*0.9f;
+		defaultModel.setValueAt(tongTienCoThue, 1, 1);
+		defaultModel.setValueAt(convertToWords((long)tongTienCoThue), 2, 1);
+		
+		tongThue = tongKhuyenMai;
+	}
+	
+	// Hàm chính để chuyển đổi số sang chữ
+		public static String convertToWords(long soTien) {
+			if (soTien == 0) {
+				return "không đồng";
+			}
+
+			StringBuilder result = new StringBuilder();
+			int donViIndex = 0;
+
+			while (soTien > 0) {
+				int group = (int) (soTien % 1000); // Nhóm ba chữ số
+				if (group > 0) {
+					String groupText = convertThreeDigitNumber(group);
+					result.insert(0, groupText + " " + DON_VI[donViIndex] + " ");
+				}
+				soTien /= 1000;
+				donViIndex++;
+			}
+
+			result.append("đồng");
+			return result.toString().trim().replaceAll("\\s+", " ");
+		}
+
+		// Hàm chuyển đổi một nhóm ba chữ số thành chữ
+		private static String convertThreeDigitNumber(int number) {
+			StringBuilder groupText = new StringBuilder();
+
+			int tram = number / 100;
+			int chuc = (number % 100) / 10;
+			int donVi = number % 10;
+
+			if (tram > 0) {
+				groupText.append(CHU_SO[tram]).append(" trăm ");
+				if (chuc == 0 && donVi > 0) {
+					groupText.append("lẻ ");
+				}
+			}
+
+			if (chuc > 1) {
+				groupText.append(CHU_SO[chuc]).append(" mươi ");
+				if (donVi == 1) {
+					groupText.append("mốt");
+				} else if (donVi == 5) {
+					groupText.append("lăm");
+				} else if (donVi > 0) {
+					groupText.append(CHU_SO[donVi]);
+				}
+			} else if (chuc == 1) {
+				groupText.append("mười ");
+				if (donVi == 1) {
+					groupText.append("một");
+				} else if (donVi == 5) {
+					groupText.append("lăm");
+				} else if (donVi > 0) {
+					groupText.append(CHU_SO[donVi]);
+				}
+			} else if (donVi > 0) {
+				groupText.append(CHU_SO[donVi]);
+			}
+
+			return groupText.toString().trim();
+		}
+		
+		public static String generateMaHD(ArrayList<HoaDon> danhSachHD, String maNhanVien) {
+	        // 1. Lấy ngày hiện tại và định dạng theo "ddMMyy"
+	        LocalDate today = LocalDate.now();
+	        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyy");
+	        String datePart = today.format(dateFormatter);
+
+	        // 2. Đảm bảo mã nhân viên có dạng "NVXXX"
+	        String formattedMaNV = formatMaNhanVien(maNhanVien);
+
+	        // 3. Lấy mã hóa đơn cuối cùng từ danh sách
+	        HoaDon lastHD = danhSachHD.isEmpty() ? null : danhSachHD.get(danhSachHD.size() - 1);
+	        String lastMaHD = lastHD.getMaHoaDon();
+
+	        // 4. Xử lý dãy số tự tăng
+	        int newCounter = 1; // Nếu danh sách rỗng, bắt đầu từ 1
+	        if (lastMaHD != null && lastMaHD.startsWith(datePart + formattedMaNV)) {
+	            String lastCounterStr = lastMaHD.substring(lastMaHD.length() - 5);
+	            newCounter = Integer.parseInt(lastCounterStr) + 1;
+	        }
+
+	        String counterPart = String.format("%05d", newCounter); // Định dạng thành 5 chữ số
+
+	        // 5. Tạo mã hóa đơn mới
+	        return datePart + formattedMaNV + counterPart;
+	    }
+
+	    // Phương thức định dạng mã nhân viên
+	    private static String formatMaNhanVien(String maNhanVien) {
+	        // Đảm bảo mã nhân viên có dạng "NVXXX"
+	        if (!maNhanVien.startsWith("NV")) {
+	            maNhanVien = "NV" + maNhanVien;
+	        }
+	        return maNhanVien;
+	    }
+	    
+	    public String generateMaKH() {
+			khachHang_DAO.reset();
+			ArrayList<KhachHang> list = khachHang_DAO.docTuBang();
+			int sl = list.size() + 1;
+			String maKH = String.format("KH%04d", sl);
+			return maKH;
+		}
 }

@@ -417,12 +417,6 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 //		hangColumn.setCellRenderer(new ComboBoxRenderer(comboBoxHang));
 		
 		btn_DoiVe = new RoundedButton("Đổi vé", 15);
-		btn_DoiVe.setForeground(new Color(255, 255, 255));
-//		JButton btnNewButton = new JButton("Đổi vé");
-		btn_DoiVe.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn_DoiVe.setBackground(new Color(51, 102, 153));
-		btn_DoiVe.setBounds(141, 510, 85, 25);
-		panel.add(btn_DoiVe);
 		btn_DoiVe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DoiVe_GUI doiVe = new DoiVe_GUI(QuanLyVe_Gui.this,trangChu);
@@ -432,6 +426,13 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 				trangChu.content.repaint();
 			}
 		});
+		btn_DoiVe.setForeground(new Color(255, 255, 255));
+//		JButton btnNewButton = new JButton("Đổi vé");
+		btn_DoiVe.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btn_DoiVe.setBackground(new Color(51, 102, 153));
+		btn_DoiVe.setBounds(141, 510, 85, 25);
+		panel.add(btn_DoiVe);
+
 		
 		table.addMouseListener(this);
 		txt_TenKH.getDocument().addDocumentListener(new FilterListener());
