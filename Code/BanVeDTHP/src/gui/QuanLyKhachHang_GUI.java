@@ -8,16 +8,23 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.border.LineBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.JScrollPane;
 import java.awt.Image;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import components.ConTent_JPanel;
 import components.RoundedButton;
 import components.RoundedTextField;
 import dao.KhachHang_DAO;
 import entity.KhachHang;
+import entity.NhanVien;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -50,6 +57,15 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 
 	// khai báo DAO
 	private KhachHang_DAO dskh = new KhachHang_DAO();
+
+	private TableRowSorter<TableModel> sorter;
+
+	private RoundedTextField txtTimTen;
+
+	private RoundedTextField txtTimMa;
+
+	private RoundedTextField txtTimSDT;
+
 	/**
 	 * Create the panel.
 	 */
@@ -110,10 +126,10 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		btnTim.setBounds(1283, 8, 85, 25);
 		panel_1.add(btnTim);
 
-		RoundedTextField textField_5_1 = new RoundedTextField(15);
-		textField_5_1.setColumns(10);
-		textField_5_1.setBounds(215, 49, 250, 30);
-		panelTimKiem.add(textField_5_1);
+		txtTimMa = new RoundedTextField(15);
+		txtTimMa.setColumns(10);
+		txtTimMa.setBounds(215, 49, 250, 30);
+		panelTimKiem.add(txtTimMa);
 
 		JLabel lblNewLabel_5 = new JLabel("Mã khách hàng");
 		lblNewLabel_5.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -125,20 +141,20 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		lblNewLabel_5_1.setBounds(501, 46, 126, 30);
 		panelTimKiem.add(lblNewLabel_5_1);
 
-		RoundedTextField textField_6_1 = new RoundedTextField(15);
-		textField_6_1.setColumns(10);
-		textField_6_1.setBounds(647, 49, 250, 30);
-		panelTimKiem.add(textField_6_1);
+		txtTimTen = new RoundedTextField(15);
+		txtTimTen.setColumns(10);
+		txtTimTen.setBounds(647, 49, 250, 30);
+		panelTimKiem.add(txtTimTen);
 
 		JLabel lblNewLabel_5_2 = new JLabel("Số điện thoại");
 		lblNewLabel_5_2.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblNewLabel_5_2.setBounds(966, 46, 116, 30);
 		panelTimKiem.add(lblNewLabel_5_2);
 
-		RoundedTextField textField_7_1 = new RoundedTextField(15);
-		textField_7_1.setColumns(10);
-		textField_7_1.setBounds(1089, 49, 250, 30);
-		panelTimKiem.add(textField_7_1);
+		txtTimSDT = new RoundedTextField(15);
+		txtTimSDT.setColumns(10);
+		txtTimSDT.setBounds(1089, 49, 250, 30);
+		panelTimKiem.add(txtTimSDT);
 
 		JPanel panelThongTinKhachHang = new JPanel();
 		panelThongTinKhachHang.setLayout(null);
@@ -262,28 +278,98 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		table = new JTable();
 		tableModel = new DefaultTableModel(new Object[][] {}, new String[] { "STT", "Mã khách hàng", "Tên khách hàng",
 				"Email", "Số điện thoại", "Căn cước công dân" });
+		sorter = new TableRowSorter<>(tableModel);
+		table.setRowSorter(sorter);
+		table.setModel(tableModel);
+
 		table.setModel(tableModel);
 		scrollPane.setViewportView(table);
+		table.setRowHeight(25); // Set chiều cao hàng
+
+		tableModel.addTableModelListener(new TableModelListener() {
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				int row = e.getFirstRow();
+				int column = e.getColumn();
+			}
+		});
 
 		btnSua.addActionListener(this);
 		btnTim.addActionListener(this);
-		datatoTable();
+		btnThem.addActionListener(this);
 		table.addMouseListener(this);
+		datatoTable();
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-
+//		dskh.reset();
 		if (o.equals(btnThem)) {
-			update();
+			if (validData()) {
+				KhachHang kh = revertKH();
+				if (kh != null) {
+					// Kiểm tra xem nhân viên đã tồn tại hay chưa
+					KhachHang existingKH = dskh.getKhachHangTheoMaKH(kh.getMaKH());
+					if (existingKH != null) {
+						JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại trong cơ sở dữ liệu.", "Lỗi",
+								JOptionPane.ERROR_MESSAGE);
+					} else {
+						try {
+							dskh.create(kh);
+							tableModel.setRowCount(0);
+							datatoTable();
+						} catch (Exception e1) {
+							JOptionPane.showMessageDialog(this,
+									"Lỗi khi thêm nhân viên vào cơ sở dữ liệu: " + e1.getMessage(), "Lỗi",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+				deleteField();
+			}
 		}
 		if (o.equals(btnSua)) {
 			update();
 		}
 		if (o.equals(btnTim)) {
-			
+			if (txtTimMa.getText() != null) {
+				filterRows();
+
+			}
+			if (txtTimTen.getText() != null) {
+				filterRows();
+
+			}
+			if (txtTimSDT.getText() != null) {
+				filterRows();
+
+			}
 		}
-		
+
+	}
+
+	private void filterRows() {
+		ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
+		String maKH = txtTimMa.getText().trim();
+		String hoTen = txtTimTen.getText().trim();
+		String sdt = txtTimSDT.getText().trim();
+		// Lọc theo các điều kiện
+		if (!maKH.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + maKH, 1));
+		}
+		if (!hoTen.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + hoTen, 2));
+		}
+		if (!sdt.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + sdt, 4));
+		}
+		// Cập nhật bộ lọc
+		if (filters.isEmpty()) {
+			sorter.setRowFilter(null); // Nếu không có bộ lọc nào, xóa bộ lọc
+		} else {
+			sorter.setRowFilter(RowFilter.andFilter(filters));
+		}
 	}
 
 	@Override

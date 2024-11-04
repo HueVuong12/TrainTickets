@@ -2,19 +2,15 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.SystemColor;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,7 +32,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
 
 import components.ConTent_JPanel;
 import dao.Ca_DAO;
@@ -48,19 +43,15 @@ import dao.TaiKhoan_DAO;
 import dao.Ve_DAO;
 import entity.Ca;
 import entity.ChiTietHoaDon;
-import entity.ChuyenTau;
 import entity.HoaDon;
 import entity.NhanVien;
 import entity.TaiKhoan;
 import entity.Ve;
 
 import javax.swing.JTabbedPane;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.UIManager;
 import javax.swing.JButton;
 
 public class ThongKe_GUI extends JPanel implements ActionListener{
@@ -226,7 +217,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		jp_ketQuaTheoCa.add(doanhThuTheoCaIconLabel);
 		doanhThuTheoCaIconLabel.setBounds(334, 41, 40, 40);
 
-		lbl_doanhThuTheoCa = new JLabel("200.000.000đ");
+		lbl_doanhThuTheoCa = new JLabel();
 		lbl_doanhThuTheoCa.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lbl_doanhThuTheoCa.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_doanhThuTheoCa.setBounds(384, 41, 114, 20);
@@ -247,7 +238,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		jp_ketQuaTheoCa.add(sltvtcIconLabel);
 		sltvtcIconLabel.setBounds(615, 41, 40, 40);
 
-		lbl_sltvtc = new JLabel("15");
+		lbl_sltvtc = new JLabel();
 		lbl_sltvtc.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lbl_sltvtc.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_sltvtc.setBounds(665, 41, 114, 20);
@@ -268,7 +259,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		jp_ketQuaTheoCa.add(slvbtcIconLabel);
 		slvbtcIconLabel.setBounds(888, 41, 40, 40);
 
-		lbl_slvbtc = new JLabel("100");
+		lbl_slvbtc = new JLabel();
 		lbl_slvbtc.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lbl_slvbtc.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_slvbtc.setBounds(938, 41, 114, 20);
