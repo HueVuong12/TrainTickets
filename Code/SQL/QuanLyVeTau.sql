@@ -307,9 +307,9 @@ INSERT INTO HoaDon (maHoaDon, ngayLapHoaDon, nhanVien, khachHang, daHoanVe, daHo
 
 -- Thêm 3 chi tiết hóa đơn vào bảng ChiTietHoaDon
 INSERT INTO ChiTietHoaDon (maChiTiet, hoaDon, soLuong, thue) VALUES
-('CT220924NV00100001', '220924NV00100001', 2, 1000),
-('CT220924NV00100002', '220924NV00100002', 1, 1000),
-('CT220924NV00200001', '220924NV00200001', 3, 1000);
+('CT220924NV00100001', '220924NV00100001', 2, 0.1),
+('CT220924NV00100002', '220924NV00100002', 1, 0.1),
+('CT220924NV00200001', '220924NV00200001', 3, 0.1);
 
 -- Thêm vé cho chi tiết hóa đơn 1
 INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES 

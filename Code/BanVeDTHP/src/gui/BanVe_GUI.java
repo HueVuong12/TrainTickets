@@ -840,6 +840,36 @@ public class BanVe_GUI extends JPanel {
 	private void chonGa(JTextField txt_Ga) {
 		// Tạo JPopupMenu để hiển thị gợi ý
 		JPopupMenu suggestionMenu = new JPopupMenu();
+		
+		// Lắng nghe sự kiện focus vào JTextField để hiển thị 10 ga đầu tiên
+	    txt_Ga.addFocusListener(new FocusAdapter() {
+	        @Override
+	        public void focusGained(FocusEvent e) {
+	            suggestionMenu.removeAll(); // Xóa các gợi ý cũ
+
+	            // Hiển thị 10 ga đầu tiên từ dsGa
+	            int count = 0;
+	            for (Ga ga : dsGa) {
+	                if (count >= 10) break; // Dừng sau khi thêm đủ 10 ga
+	                JMenuItem item = new JMenuItem(ga.getDiaChi());
+	                item.addActionListener(new ActionListener() {
+	                    @Override
+	                    public void actionPerformed(ActionEvent e) {
+	                        txt_Ga.setText(item.getText());
+	                        suggestionMenu.setVisible(false); // Ẩn gợi ý sau khi chọn
+	                    }
+	                });
+	                suggestionMenu.add(item);
+	                count++;
+	            }
+
+	            // Hiển thị danh sách gợi ý
+	            if (suggestionMenu.getComponentCount() > 0) {
+	                suggestionMenu.show(txt_Ga, 0, txt_Ga.getHeight());
+	                txt_Ga.requestFocus(); // Đặt lại focus cho JTextField
+	            }
+	        }
+	    });
 
 		// Hàm cập nhật gợi ý khi người dùng nhập vào text field
 		txt_Ga.addKeyListener(new KeyAdapter() {

@@ -68,8 +68,6 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 	float tienKhachDua= 0;
 	float tienTraLai=0;
 	private float tongTienCoThue=0;
-	private float tongThue=0;
-	
 	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
 	private ChiTietHoaDon_DAO chiTietHoaDon_DAO = new ChiTietHoaDon_DAO();
 	private KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
@@ -399,7 +397,7 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 				// Tạo chi tiết hóa đơn
 				String maCT = "CT" + maHD;
 				int soLuong = banVe_GUI.dsVeDatTam.size();
-				ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(maCT, hoaDon, soLuong, banVe_GUI.dsVeDatTam, tongThue);
+				ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(maCT, hoaDon, soLuong, banVe_GUI.dsVeDatTam, 0.1f);
 				chiTietHoaDon_DAO.create(chiTietHoaDon);
 				
 				// Tạo khách hàng
@@ -588,8 +586,6 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		tongTienCoThue = (tongGiaGoc - tongKhuyenMai)*0.9f;
 		defaultModel.setValueAt(tongTienCoThue, 1, 1);
 		defaultModel.setValueAt(convertToWords((long)tongTienCoThue), 2, 1);
-		
-		tongThue = tongKhuyenMai;
 	}
 	
 	// Hàm chính để chuyển đổi số sang chữ
