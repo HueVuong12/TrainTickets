@@ -126,7 +126,7 @@ public class DangNhap_GUI extends JFrame {
 		txtUser.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (txtUser.getText().equals("Mã đăng nhập")) {
+				if (txtUser.getForeground().equals(Color.GRAY)) {
 					txtUser.setText("");
 					txtUser.setForeground(Color.WHITE);
 				}
@@ -156,7 +156,7 @@ public class DangNhap_GUI extends JFrame {
 		txtPassword.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (new String(txtPassword.getPassword()).equals("Mật khẩu")) {
+				if (txtPassword.getForeground().equals(Color.GRAY)) {
 					txtPassword.setText("");
 					txtPassword.setForeground(Color.WHITE);
 				}
@@ -195,6 +195,11 @@ public class DangNhap_GUI extends JFrame {
 
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				if (txtUser.getForeground().equals(Color.GRAY)) {
+					JOptionPane.showMessageDialog(null, "Tài khoản không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);					
+					return;
+				}
 				TaiKhoan_DAO dsTK = new TaiKhoan_DAO();
 				ArrayList<TaiKhoan> list = dsTK.docTuBang(); // Đọc danh sách tài khoản từ cơ sở dữ liệu
 
@@ -221,6 +226,10 @@ public class DangNhap_GUI extends JFrame {
 								return;
 							}
 						} else {
+							if (txtPassword.getForeground().equals(Color.GRAY)) {
+								JOptionPane.showMessageDialog(null, "Mật khẩu không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);					
+								return;
+							}
 							// Mật khẩu không đúng
 							JOptionPane.showMessageDialog(null, "Mật khẩu không đúng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
 							return; // Kết thúc vòng lặp
