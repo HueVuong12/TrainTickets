@@ -227,7 +227,7 @@ public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
 		int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
 
 		for (KhachHang kh : list) {
-			model.addRow(new Object[] { stt++, kh.getMaKH(), kh.getTenKH(), kh.getCccd(), kh.getEmail(), kh.getSdt()
+			model.addRow(new Object[] { stt++, kh.getMaKH(), kh.getTenKH(),kh.getEmail(),   kh.getSdt(),kh.getCccd()
 
 			});
 		}
@@ -280,10 +280,10 @@ public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
 			filters.add(RowFilter.regexFilter("(?i)" + email, 3));
 		}
 		if (!sdt.isEmpty()) {
-			filters.add(RowFilter.regexFilter("(?i)" + email, 4));
+		    filters.add(RowFilter.regexFilter("(?i)" + sdt, 4));
 		}
 		if (!cccd.isEmpty()) {
-			filters.add(RowFilter.regexFilter("(?i)" + email, 5));
+		    filters.add(RowFilter.regexFilter("(?i)" + cccd, 5));
 		}
 		// Cập nhật bộ lọc
 		if (filters.isEmpty()) {
