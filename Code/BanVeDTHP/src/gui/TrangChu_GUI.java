@@ -217,7 +217,8 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		xemcthd = new JMenuItem("Xem chi tiết hóa đơn");
 		xemcthd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChiTietHoaDon_GUI ChiTietHD= new ChiTietHoaDon_GUI(TrangChu_GUI.this);
+				QuanLyHoaDon_GUI QLHoaDon= new QuanLyHoaDon_GUI(TrangChu_GUI.this);
+				ChiTietHoaDon_GUI ChiTietHD= new ChiTietHoaDon_GUI(QLHoaDon,TrangChu_GUI.this);
 				content.removeAll();
 				System.out.println("thành công xóa");
 				content.add(ChiTietHD); // Sử dụng layout thích hợp

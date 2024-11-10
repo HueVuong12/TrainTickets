@@ -257,4 +257,27 @@ public class Ve {
 	    }
 	    return false;
 	}
+	//tính phí hoàn vé
+	public float tinhPhiHoanVe(Boolean isTapThe) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime thoiGianDi = LocalDateTime.of(ngayDi, gioDi);
+        long hoursDiff = java.time.Duration.between(now, thoiGianDi).toHours();
+        double phiHoan = 0.0;
+
+        if (isTapThe) {
+            if (hoursDiff >= 72) {
+                phiHoan = 0.1; // 10% phí
+            } else if (hoursDiff >= 24) {
+                phiHoan = 0.2; // 20% phí
+            }
+        } else {
+            if (hoursDiff >= 24) {
+                phiHoan = 0.1; // 10% phí
+            } else if (hoursDiff >= 4) {
+                phiHoan = 0.2; // 20% phí
+            }
+        }
+
+        return (float) (phiHoan * tinhGiaVe()); // Tính phí hoàn dựa trên giá vé
+    }
 }

@@ -271,7 +271,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		lbl_titleSLVBTC.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lbl_titleSLVBTC.setBounds(948, 61, 126, 20);
 		jp_ketQuaTheoCa.add(lbl_titleSLVBTC);
-		System.out.println("đúng");
 
 		//JPane chứa thống kê theo ca
 		JPanel jp_thongKeTheoCa = new JPanel();
@@ -409,7 +408,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				tkdt_ngayBatDau= dateFormat.format(selectedDate);
-				System.out.println("Ngày bắt đầu"+tkdt_ngayBatDau);
+//				System.out.println("Ngày bắt đầu"+tkdt_ngayBatDau);
 			} else {
 				tkdt_ngayBatDau = "";  // Đặt lại chữ gợi ý nếu không có ngày nào được chọn
 			}
@@ -426,7 +425,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				tkdt_ngayKetThuc= dateFormat.format(selectedDate);
-				System.out.println("Ngày kết thúc"+ tkdt_ngayKetThuc);
+//				System.out.println("Ngày kết thúc"+ tkdt_ngayKetThuc);
 			} else {
 				tkdt_ngayBatDau = "";  // Đặt lại chữ gợi ý nếu không có ngày nào được chọn
 			}
@@ -500,12 +499,12 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		lbl_titleSLVB.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lbl_titleSLVB.setBounds(579, 61, 126, 20);
 		jp_ketQua.add(lbl_titleSLVB);
-		System.out.println("đúng");
+//		System.out.println("đúng");
 
 		//JPane chứa JFreeChat
 		jp_thongKe = new JPanel();
 		jp_thongKe.setBounds(28, 133, 1311, 308);
-		System.out.println("đúng");
+//		System.out.println("đúng");
 		jp_thongKe.setBackground(SystemColor.controlHighlight);
 		jp_tkdt.add(jp_thongKe);
 		jp_thongKe.setLayout(null);
@@ -572,7 +571,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				tkct_ngayBatDau= dateFormat.format(selectedDate);
-				System.out.println("Ngày bắt đầu ct"+tkct_ngayBatDau);
+//				System.out.println("Ngày bắt đầu ct"+tkct_ngayBatDau);
 			} else {
 				tkct_ngayBatDau = "";  // Đặt lại chữ gợi ý nếu không có ngày nào được chọn
 			}
@@ -587,7 +586,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				tkct_ngayKetThuc= dateFormat.format(selectedDate);
-				System.out.println("Ngày kết thúc ct"+tkct_ngayKetThuc);
+//				System.out.println("Ngày kết thúc ct"+tkct_ngayKetThuc);
 			} else {
 				tkct_ngayKetThuc = "";  // Đặt lại chữ gợi ý nếu không có ngày nào được chọn
 			}
@@ -662,7 +661,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		lbl_titleSLVBCT.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lbl_titleSLVBCT.setBounds(675, 61, 114, 20);
 		jp_ketQuaCT.add(lbl_titleSLVBCT);
-		System.out.println("đúng");
 
 		//JPane chứa thống kê theo chuyến tàu
 		jp_thongKeCT = new JPanel();
@@ -710,14 +708,14 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Lấy thông tin nhân viên theo tên
 		NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
 		if (nv == null) {
-			System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
+//			System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
 			return;
 		}
 
 		// Lấy thông tin ca làm
 		Ca ca = dsCa.getCaTheoMaCa(nv.getCa().getMaCa());
 		if (ca == null) {
-			System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
+//			System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
 			return;
 		}
 		LocalTime thoiGianBatDauCa = ca.getThoiGianBatDau();
@@ -726,7 +724,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Lấy danh sách hóa đơn của nhân viên
 		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
 		if (listHD == null) {
-			System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
+//			System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
 			return;
 		}
 
@@ -756,19 +754,18 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Tính số lượng vé tồn tại chưa hoàn vé
 		for (HoaDon hd : listHD) {
 			LocalTime thoiGianHoaDon = hd.getNgayLapHoaDon().toLocalTime();
-			if (!hd.getDaHoanVe() && !thoiGianHoaDon.isBefore(thoiGianBatDauCa) && !thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
+			if (hd.getDaHoanVe() && !thoiGianHoaDon.isBefore(thoiGianBatDauCa) && !thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 				ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 				if (cthd != null) {
-					ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
-					sltv += listVe.size();
+					sltv += cthd.getSoLuong();
 				}
 			}
 		}
 
-		// Hiển thị kết quả doanh thu theo khuyến mãi
-		for (Map.Entry<String, Float> entry : doanhThuTheoKhuyenMai.entrySet()) {
-			System.out.println("Khuyến mãi: " + entry.getKey() + ", Doanh thu: " + entry.getValue());
-		}
+//		// Hiển thị kết quả doanh thu theo khuyến mãi
+//		for (Map.Entry<String, Float> entry : doanhThuTheoKhuyenMai.entrySet()) {
+//			System.out.println("Khuyến mãi: " + entry.getKey() + ", Doanh thu: " + entry.getValue());
+//		}
 
 		// Gán giá trị cho các label
 		lbl_ca.setText(nv.getCa().getMaCa());
@@ -799,7 +796,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				if (cthd != null) {
 					ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 					doanhThu += cthd.tinhTien();
-					System.out.println(doanhThu);
 					for (Ve ve : listVe) {
 						slvb++;
 						String khuyenMai = ve.getKhuyenMai(); // Lấy mã khuyến mãi của vé
@@ -812,18 +808,17 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				}
 			}
 			for(HoaDon hd: listHD) {
-				if(!hd.getDaHoanVe()) {
+				if(hd.getDaHoanVe()) {
 					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
-					ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
-					sltv = listVe.size();
+					sltv += cthd.getSoLuong();
 				}
 			}
 
-			// Hiển thị kết quả doanh thu theo khuyến mãi
-			for (Map.Entry<String, Float> entry : doanhThuTheoKhuyenMai.entrySet()) {
-				System.out.println("Khuyến mãi: " + entry.getKey() + ", Doanh thu: " + entry.getValue());
-				//				doanhThu +=entry.getValue();
-			}
+//			// Hiển thị kết quả doanh thu theo khuyến mãi
+//			for (Map.Entry<String, Float> entry : doanhThuTheoKhuyenMai.entrySet()) {
+//				System.out.println("Khuyến mãi: " + entry.getKey() + ", Doanh thu: " + entry.getValue());
+//				//				doanhThu +=entry.getValue();
+//			}
 			lbl_doanhThu.setText(dinhDangTienTe(doanhThu));
 			lbl_slvb.setText(String.valueOf(slvb));
 			lbl_sltv.setText(String.valueOf(sltv));
@@ -854,21 +849,21 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				if (cthd != null) {
 					ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 					doanhThu += cthd.tinhTien();
-					System.out.println(doanhThu);
+//					System.out.println(doanhThu);
 					// Sử dụng một Set để theo dõi mã chuyến tàu đã được xử lý
 					Set<String> processedChuyenTau = new HashSet<>();
 
 					for (Ve ve : listVe) {
 						slvb++;
 						String chuyenTau = ve.getChuyenTau().getMaTau(); // Lấy mã chuyến tàu
-						System.out.println("Mã chuyến tàu: " + chuyenTau);
+//						System.out.println("Mã chuyến tàu: " + chuyenTau);
 
 						// Kiểm tra xem mã chuyến tàu đã được xử lý chưa
 						if (!processedChuyenTau.contains(chuyenTau)) {
 							// Cộng doanh thu vào chuyến tàu tương ứng
 							doanhThuTheoChuyenTau.put(chuyenTau, doanhThuTheoChuyenTau.getOrDefault(chuyenTau, 0f) + doanhThu);
 							processedChuyenTau.add(chuyenTau); // Đánh dấu là đã xử lý
-							System.out.println("Cập nhật doanh thu: " + doanhThuTheoChuyenTau);
+//							System.out.println("Cập nhật doanh thu: " + doanhThuTheoChuyenTau);
 						}
 					}
 				} else {
@@ -876,10 +871,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				}
 			}
 			for(HoaDon hd: listHD) {
-				if(!hd.getDaHoanVe()) {
+				if(hd.getDaHoanVe()) {
 					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
-					ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
-					sltv = listVe.size();
+					sltv += cthd.getSoLuong();
 				}
 			}
 
@@ -966,14 +960,14 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Lấy thông tin nhân viên theo tên
 		NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
 		if (nv == null) {
-			System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
+//			System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
 			return dataset;
 		}
 
 		// Lấy thông tin ca làm
 		Ca ca = dsCa.getCaTheoMaCa(nv.getCa().getMaCa());
 		if (ca == null) {
-			System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
+//			System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
 			return dataset;
 		}
 		LocalTime thoiGianBatDauCa = ca.getThoiGianBatDau();
@@ -982,7 +976,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Lấy danh sách hóa đơn của nhân viên
 		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
 		if (listHD == null) {
-			System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
+//			System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
 			return dataset ;
 		}
 
@@ -1015,7 +1009,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			dataset.addValue(doanhThu, "Doanh Thu", khuyenMai);
 		}
 		if (doanhThuTheoKhuyenMai.isEmpty()) {
-		    System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
+//		    System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
 		    dataset.addValue(0, "Doanh Thu", "Không có hóa đơn");
 		}
 		return dataset;
@@ -1036,14 +1030,14 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Lấy thông tin nhân viên theo tên
 		NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
 		if (nv == null) {
-			System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
+//			System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
 			return dataset;
 		}
 
 		// Lấy thông tin ca làm
 		Ca ca = dsCa.getCaTheoMaCa(nv.getCa().getMaCa());
 		if (ca == null) {
-			System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
+//			System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
 			return dataset;
 		}
 		LocalTime thoiGianBatDauCa = ca.getThoiGianBatDau();
@@ -1052,7 +1046,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Lấy danh sách hóa đơn của nhân viên
 		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
 		if (listHD == null) {
-			System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
+//			System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
 			return dataset ;
 		}
 
@@ -1075,7 +1069,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 						// Cộng doanh thu vào chuyến tàu tương ứng
 						doanhThuTheoHang.put(hang, doanhThuTheoHang.getOrDefault(hang, 0f) + ve.tinhGiaVe());
 						processedHang.add(hang); // Đánh dấu là đã xử lý
-						System.out.println("Cập nhật doanh thu: " + doanhThuTheoHang);
+//						System.out.println("Cập nhật doanh thu: " + doanhThuTheoHang);
 					}
 				}
 			} else {
@@ -1091,7 +1085,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			dataset.addValue(doanhThu, "Doanh Thu", hang);
 		}
 		if (doanhThuTheoHang.isEmpty()) {
-		    System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
+//		    System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
 		    dataset.addValue(0, "Doanh Thu", "");
 		}
 		return dataset;
@@ -1112,14 +1106,14 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	    // Lấy thông tin nhân viên theo tên
 	    NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
 	    if (nv == null) {
-	        System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
+//	        System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
 	        return dataset;
 	    }
 
 	    // Lấy thông tin ca làm
 	    Ca ca = dsCa.getCaTheoMaCa(nv.getCa().getMaCa());
 	    if (ca == null) {
-	        System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
+//	        System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
 	        return dataset;
 	    }
 	    LocalTime thoiGianBatDauCa = ca.getThoiGianBatDau();
@@ -1128,7 +1122,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	    // Lấy danh sách hóa đơn của nhân viên
 	    ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
 	    if (listHD == null) {
-	        System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
+//	        System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
 	        return dataset;
 	    }
 
@@ -1150,7 +1144,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	                    // Cộng doanh thu vào chuyến tàu tương ứng
 	                    doanhThuTheoHang.put(hang, doanhThuTheoHang.getOrDefault(hang, 0f) + ve.tinhGiaVe());
 	                    processedHang.add(hang); // Đánh dấu là đã xử lý
-	                    System.out.println("Cập nhật doanh thu: " + doanhThuTheoHang);
+//	                    System.out.println("Cập nhật doanh thu: " + doanhThuTheoHang);
 	                }
 	            }
 	        } else {
@@ -1167,7 +1161,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	    }
 
 	    if (doanhThuTheoHang.isEmpty()) {
-	        System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
+//	        System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
 	        dataset.setValue("Rỗng", 0); // Thêm giá trị cho trường hợp không có dữ liệu
 	    }
 
@@ -1234,7 +1228,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			// Kiểm tra cthd có null hay không
 			if (cthd != null) {
 				float doanhThu = cthd.tinhTien(); // Tính doanh thu từ cthd
-				System.out.println("Doanh thu từ cthd: " + doanhThu);
+//				System.out.println("Doanh thu từ cthd: " + doanhThu);
 
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 
@@ -1243,14 +1237,14 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 
 				for (Ve ve : listVe) {
 					String chuyenTau = ve.getChuyenTau().getMaTau(); // Lấy mã chuyến tàu
-					System.out.println("Mã chuyến tàu: " + chuyenTau);
+//					System.out.println("Mã chuyến tàu: " + chuyenTau);
 
 					// Kiểm tra xem mã chuyến tàu đã được xử lý chưa
 					if (!processedChuyenTau.contains(chuyenTau)) {
 						// Cộng doanh thu vào chuyến tàu tương ứng
 						doanhThuTheoChuyenTau.put(chuyenTau, doanhThuTheoChuyenTau.getOrDefault(chuyenTau, 0f) + doanhThu);
 						processedChuyenTau.add(chuyenTau); // Đánh dấu là đã xử lý
-						System.out.println("Cập nhật doanh thu: " + doanhThuTheoChuyenTau);
+//						System.out.println("Cập nhật doanh thu: " + doanhThuTheoChuyenTau);
 					}
 				}
 			} else {
@@ -1311,7 +1305,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	        // Kiểm tra nếu tài khoản tồn tại
 	        if (tk != null) {
 	            // In ra giá trị phân quyền để kiểm tra
-	            System.out.println("Phân quyền: " + tk.getPhanQuyen());
+//	            System.out.println("Phân quyền: " + tk.getPhanQuyen());
 
 	            if (tk.getPhanQuyen() == 2) {
 	                tabbedPane.setSelectedIndex(0); // Chọn tab 0 nếu quyền là 2

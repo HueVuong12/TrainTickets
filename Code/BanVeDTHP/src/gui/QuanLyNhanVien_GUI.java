@@ -746,6 +746,7 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 				model.setRowCount(0);
 				// Load lại dữ liệu từ cơ sở dữ liệu vào bảng
 				datatoTable();
+				updateComboBoxTimTheoMaNV();
 				deleteField();
 			} catch (Exception e) {
 				// TODO: handle exception
