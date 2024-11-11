@@ -73,7 +73,6 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 //	private JButton btn_Tim;
 	private JPasswordField passwordField;
 	private int nextNumber;
-//>>>>>>> 8ff982ee4d230d22c7a504f966874d3ca16a3599
 
 	/**
 	 * Create the frame.
@@ -160,14 +159,6 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		textField_MaDN.setColumns(10);
 		focusTxtField(textField_MaDN, "Mã tài khoản");
 
-		
-		textField_MatKhau = new RoundedTextField(10);
-		textField_MatKhau.setText("Mật khẩu");
-		textField_MatKhau.setColumns(10);
-		textField_MatKhau.setBounds(20, 136, 291, 30);
-		focusTxtField(textField_MatKhau, "Mật khẩu");
-		jp_contentThongTin.add(textField_MatKhau);
-
 
 		textField_PhanQuyen = new RoundedTextField(10);
 		textField_PhanQuyen.setText("Phân quyền");
@@ -231,9 +222,8 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		btn_Tim.setBackground(new Color(51, 102, 153));
 
 		jp_contentThongTin.add(btn_Tim);
-		
 		passwordField = new JPasswordField();
-		passwordField.setBounds(160, 72, 190, 25);
+		passwordField.setBounds(20, 136, 291, 30);
 		jp_contentThongTin.add(passwordField);
 
 		//JPane header tiêu đề của thông tin tài khoản
