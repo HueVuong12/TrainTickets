@@ -73,6 +73,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 	private JTable table;
 	private JTable table_TTV;
 	private RoundedButton btn_DoiVe;
+	private RoundedButton btn_Tim;
 	private DefaultTableModel model;
 	private TableRowSorter<TableModel> sorter;
 	private JRadioButton cb_TTTrue;
@@ -82,6 +83,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 	private JDateChooser dateChooser_NgayDi;
 	private KhachHang_DAO dsKh = new KhachHang_DAO();
 	private Ga_DAO dsGa = new Ga_DAO();
+	private boolean isTableEventActive = false;
 	
 	public QuanLyVe_Gui(TrangChu_GUI trangChu) {
 		setBackground(SystemColor.window);
@@ -131,8 +133,8 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		jp_HeaderTTV.setLayout(null);
 		
 		JLabel lb_TTV = new JLabel("Thông tin vé");
+		lb_TTV.setBounds(0, 0, 255, 33);
 		lb_TTV.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lb_TTV.setBounds(0, 0, 356, 33);
 		jp_HeaderTTV.add(lb_TTV);
 		
 		JLabel lb_TenKH = new JLabel("Tên khách hàng:");
@@ -187,26 +189,22 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		
 		txt_TenKH = new RoundedTextField(10);
 		txt_TenKH.setFont(new Font("Tahoma", Font.PLAIN, 13));
-//		textField = new JTextField();
 		txt_TenKH.setBounds(130, 43, 216, 22);
 		jp_TTV.add(txt_TenKH);
 		txt_TenKH.setColumns(10);
 		
 		txt_GaDi = new RoundedTextField(10);
 		txt_GaDi.setFont(new Font("Tahoma", Font.PLAIN, 13));
-//		textField_1 = new JTextField();
 		txt_GaDi.setColumns(10);
 		txt_GaDi.setBounds(130, 75, 216, 22);
 		jp_TTV.add(txt_GaDi);
 		
 		txt_GaDen = new RoundedTextField(10);
 		txt_GaDen.setFont(new Font("Tahoma", Font.PLAIN, 13));
-//		textField_2 = new JTextField();
 		txt_GaDen.setColumns(10);
 		txt_GaDen.setBounds(130, 107, 216, 22);
 		jp_TTV.add(txt_GaDen);
 		
-		// Tạo JComboBox Ca trong JPanel thông tin vé
 		comboBox_Hang = new JComboBox<String>();
 		comboBox_Hang.setBounds(130, 139, 216, 22);
 		comboBox_Hang.addItem("Giường nằm");
@@ -225,38 +223,27 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		
 		txt_MaToa = new RoundedTextField(10);
 		txt_MaToa.setFont(new Font("Tahoma", Font.PLAIN, 13));
-//		textField_5 = new JTextField();
 		txt_MaToa.setColumns(10);
 		txt_MaToa.setBounds(130, 203, 216, 22);
 		jp_TTV.add(txt_MaToa);
 		
 		txt_MaGhe = new RoundedTextField(10);
 		txt_MaGhe.setFont(new Font("Tahoma", Font.PLAIN, 13));
-//		textField_6 = new JTextField();
 		txt_MaGhe.setColumns(10);
 		txt_MaGhe.setBounds(130, 235, 216, 22);
 		jp_TTV.add(txt_MaGhe);
 		
 		txt_MaVe = new RoundedTextField(10);
 		txt_MaVe.setFont(new Font("Tahoma", Font.PLAIN, 13));
-//		textField_7 = new JTextField();
 		txt_MaVe.setColumns(10);
 		txt_MaVe.setBounds(130, 267, 216, 22);
 		jp_TTV.add(txt_MaVe);
 		
 		txt_MaCT = new RoundedTextField(10);
 		txt_MaCT.setFont(new Font("Tahoma", Font.PLAIN, 13));
-//		textField_8 = new JTextField();
 		txt_MaCT.setColumns(10);
 		txt_MaCT.setBounds(130, 299, 216, 22);
 		jp_TTV.add(txt_MaCT);
-		
-//		txt_NgayDi = new RoundedTextField(10);
-//		txt_NgayDi.setFont(new Font("Tahoma", Font.PLAIN, 13));
-//		textField_9 = new JTextField();
-//		txt_NgayDi.setColumns(10);
-//		txt_NgayDi.setBounds(130, 331, 216, 22);
-//		jp_TTV.add(txt_NgayDi);
 		
 		dateChooser_NgayDi = new JDateChooser();
 		dateChooser_NgayDi.setBounds(130, 331, 216, 22);
@@ -295,12 +282,6 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		lblGi_1_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblGi_1_1.setBounds(10, 395, 97, 22);
 		jp_TTV.add(lblGi_1_1);
-		
-//		txt_TrangThai = new RoundedTextField(10);
-//		txt_TrangThai.setFont(new Font("Tahoma", Font.PLAIN, 13));
-//		txt_TrangThai.setColumns(10);
-//		txt_TrangThai.setBounds(130, 395, 216, 22);
-//		jp_TTV.add(txt_TrangThai);
 		
 		cb_TTTrue = new JRadioButton("Đã hoàn thành");
 		cb_TTTrue.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -391,31 +372,6 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 			}
 		});
 		
-		// Tạo JComboBox cho cột "Trạng Thái"
-		JComboBox<String> comboBoxTrangThai = new JComboBox<>();
-		comboBoxTrangThai.addItem("Đã hoàn thành");
-		comboBoxTrangThai.addItem("Chưa hoàn thành");
-
-		// Lấy cột "Trạng Thái" từ bảng
-		TableColumn trangThaiColumn = table.getColumnModel().getColumn(12);
-		// Thiết lập JComboBox làm editor cho cột "Trạng Thái"
-		trangThaiColumn.setCellEditor(new DefaultCellEditor(comboBoxTrangThai));
-		// Thiết lập renderer cho cột để hiển thị JComboBox
-		trangThaiColumn.setCellRenderer(new ComboBoxRenderer(comboBoxTrangThai));
-		
-//		// Tạo JComboBox cho cột "Hạng"
-//		JComboBox<String> comboBoxHang = new JComboBox<>();
-//		comboBoxHang.addItem("Giường mềm");
-//		comboBoxHang.addItem("Ghế nằm");
-//		comboBoxHang.addItem("VIP");
-//
-//		// Lấy cột "Hạng" từ bảng
-//		TableColumn hangColumn = table.getColumnModel().getColumn(4); // 4 là chỉ số của cột "Hạng"
-//		// Thiết lập JComboBox làm editor cho cột "Hạng"
-//		hangColumn.setCellEditor(new DefaultCellEditor(comboBoxHang));
-//		// Thiết lập renderer cho cột để hiển thị JComboBox
-//		hangColumn.setCellRenderer(new ComboBoxRenderer(comboBoxHang));
-		
 		btn_DoiVe = new RoundedButton("Đổi vé", 15);
 		btn_DoiVe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -427,37 +383,20 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 			}
 		});
 		btn_DoiVe.setForeground(new Color(255, 255, 255));
-//		JButton btnNewButton = new JButton("Đổi vé");
 		btn_DoiVe.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_DoiVe.setBackground(new Color(51, 102, 153));
 		btn_DoiVe.setBounds(141, 510, 85, 25);
 		panel.add(btn_DoiVe);
 
+		btn_Tim = new RoundedButton("Tìm", 15);
+		btn_Tim.setBounds(264, 5, 82, 23);
+		btn_Tim.setForeground(SystemColor.desktop);
+		btn_Tim.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btn_Tim.setBackground(SystemColor.activeCaptionBorder);
+		jp_HeaderTTV.add(btn_Tim);
 		
 		table.addMouseListener(this);
-		txt_TenKH.getDocument().addDocumentListener(new FilterListener());
-		txt_GaDi.getDocument().addDocumentListener(new FilterListener());
-		txt_GaDen.getDocument().addDocumentListener(new FilterListener());
-		txt_MaVe.getDocument().addDocumentListener(new FilterListener());
-		txt_MaToa.getDocument().addDocumentListener(new FilterListener());
-		txt_MaGhe.getDocument().addDocumentListener(new FilterListener());
-		txt_MaCT.getDocument().addDocumentListener(new FilterListener());
-		txt_NgayDi.getDocument().addDocumentListener(new FilterListener());
-		cb_TTTrue.addActionListener(this);
-		cb_TTFalse.addActionListener(this);
-		comboBox_Hang.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        filterRows(); // Gọi hàm lọc khi lựa chọn thay đổi
-		    }
-		});
-		
-		comboBox_KhuyenMai.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        filterRows(); // Gọi hàm lọc khi lựa chọn thay đổi
-		    }
-		});
+		btn_Tim.addActionListener(this);
 		datatoTable();
 	}
 
@@ -478,11 +417,13 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 			Ga gaDi = dsGa.getGaTheoMaGa(ve.getGaDi().getMaGa());
 			Ga gaDen = dsGa.getGaTheoMaGa(ve.getGaDen().getMaGa());
 	        String soGheString = String.valueOf(ve.getSoGhe().getSoGhe());
+	        
 			// Cập nhật thông tin vào các trường nhập
 			txt_MaVe.setText(ve.getMaVe());
 			txt_TenKH.setText(kh.getTenKH());
 			txt_GaDi.setText(gaDi.getTenGa());
 			txt_GaDen.setText(gaDen.getTenGa());
+			
 			// Cập nhật trạng thái cho radio button
 			cb_TTTrue.setSelected(!ve.isTrangThai());
 			cb_TTFalse.setSelected(ve.isTrangThai());
@@ -494,7 +435,8 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 			txt_MaToa.setText(ve.getToa().getMaToa());
 			txt_MaGhe.setText(soGheString);
 			txt_MaCT.setText(ve.getChuyenTau().getMaTau());
-
+			txt_ChiTiet.setText(ve.getChiTiet().getMaChiTiet());
+			
 			if(ve.getHang().equalsIgnoreCase("Giường nằm")) {
 				comboBox_Hang.setSelectedIndex(0);
 			}else if(ve.getHang().equalsIgnoreCase("Ghế mềm")) {
@@ -543,6 +485,9 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		
+		Object o = e.getSource();
+		
 		// Xóa các bộ lọc cũ trước khi áp dụng bộ lọc mới
 	    ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
 
@@ -562,7 +507,48 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 	    // Áp dụng các bộ lọc vào TableRowSorter của bảng
 	    TableRowSorter<?> sorter = (TableRowSorter<?>) table.getRowSorter();
 	    sorter.setRowFilter(RowFilter.andFilter(filters));
-	    
+	    if(o.equals(btn_Tim)) {
+	    	if (txt_TenKH.getText() != null) {
+				filterRows();
+			}
+	    	if (txt_GaDi.getText() != null) {
+				filterRows();
+			}
+	    	if (txt_GaDen.getText() != null) {
+				filterRows();
+			}
+	    	if (cb_TTFalse.isSelected()) {
+				filterRows();
+			}
+	    	if (cb_TTTrue.isSelected()) {
+				filterRows();
+			}
+	    	if (comboBox_Hang.getSelectedItem() != null) {
+				filterRows();
+			}
+	    	if (comboBox_KhuyenMai.getSelectedItem() != null) {
+				filterRows();
+			}
+	    	if (txt_MaToa.getText() != null) {
+				filterRows();
+			}
+	    	if (txt_MaGhe.getText() != null) {
+				filterRows();
+			}
+	    	if (txt_MaVe.getText() != null) {
+				filterRows();
+			}
+	    	if (txt_MaCT.getText() != null) {
+				filterRows();
+			}
+	    	String ngayDi = txt_NgayDi.getText().trim();
+	    	if(!ngayDi.isEmpty()) {
+	    		filterRows();
+	    	}
+	    	if(cb_TTFalse.isSelected() || cb_TTTrue.isSelected()) {
+	    		filterRows();
+	    	}
+	    }
 	}
 	//Hàm tải dữ liệu vào bảng
 	public void datatoTable() {
@@ -572,7 +558,6 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0); // Xóa tất cả hàng trong bảng
 		int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
-//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); // Định dạng cho giờ
 	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // Định dạng cho ngày
 	    
@@ -647,6 +632,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		String ngayDi = txt_NgayDi.getText().trim();
 		String hang = comboBox_Hang.getSelectedItem() != null ? comboBox_Hang.getSelectedItem().toString().trim() : "";
 		String khuyenMai = comboBox_KhuyenMai.getSelectedItem() != null ? comboBox_KhuyenMai.getSelectedItem().toString().trim() : "";
+		String maChiTiet = txt_ChiTiet.getText().trim();
 		
 		ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
 
@@ -686,25 +672,24 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 	        }
 	    }
 		
-		// Lọc theo hạng vé (comboBox_Hang)
-//	    String hangVe = comboBox_Hang.getSelectedItem().toString();
-//	    System.out.println("Lọc theo hạng vé: " + hangVe); // Debugging line
-//	    if (hangVe != null && !hangVe.isEmpty()) {
-//	        filters.add(RowFilter.regexFilter(hangVe, 4)); // Cột 4 cho hạng vé
-//	    }
 	    if (!hang.isEmpty()) {
 			filters.add(RowFilter.regexFilter(hang, 4));
 		}
-
-	    // Lọc theo khuyến mãi (comboBox_KhuyenMai)
-//	    String khuyenMai = comboBox_KhuyenMai.getSelectedItem().toString();
-//	    if (khuyenMai != null && !khuyenMai.isEmpty()) {
-//	        filters.add(RowFilter.regexFilter(khuyenMai, 5)); // Cột 5 cho khuyến mãi
-//	    }
+	    
 	    if (!khuyenMai.isEmpty()) {
 			filters.add(RowFilter.regexFilter(khuyenMai, 5));
 		}
-
+	    
+	    if (cb_TTTrue.isSelected()) {
+	        filters.add(RowFilter.regexFilter("Đã hoàn thành", 12)); // Giả sử cột 11 là cột trạng thái
+	    } else if (cb_TTFalse.isSelected()) {
+	        filters.add(RowFilter.regexFilter("Chưa hoàn thành", 12));
+	    }
+	    
+	    if (!maChiTiet.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + maChiTiet, 13));
+		}
+	    
 		if (filters.isEmpty()) {
 			sorter.setRowFilter(null); // Loại bỏ bộ lọc nếu không có điều kiện nào
 		} else {
