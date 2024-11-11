@@ -76,7 +76,7 @@ public class HoaDon_DAO {
 		int n = 0;
 		try {
 			stmt = con.prepareStatement(
-					"update HoaDon set ngayLapHoaDon = ?, nhanVien = ?, khachHang = ?, daHoanVe = ?, daHoanTien = ?, where maHoaDon = ?");
+					"update HoaDon set ngayLapHoaDon = ?, nhanVien = ?, khachHang = ?, daHoanVe = ?, daHoanTien = ? where maHoaDon = ?");
 			stmt.setString(6, HoaDon.getMaHoaDon());
 			stmt.setObject(1, HoaDon.getNgayLapHoaDon());
 			stmt.setString(2, HoaDon.getNhanVien().getMaNV());
