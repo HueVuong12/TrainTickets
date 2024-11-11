@@ -30,6 +30,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import components.ConTent_JPanel;
+import components.RoundedButton;
 import components.RoundedTextField;
 import dao.TaiKhoan_DAO;
 import entity.NhanVien;
@@ -62,9 +63,9 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	private TaiKhoan_DAO dstk = new TaiKhoan_DAO();;
 	private DefaultTableModel model;
 	private TableRowSorter<TableModel> sorter;
-	private JButton btnSua;
-	private JButton btnThem;
-	private JButton btn_Tim;
+	private RoundedButton btnSua;
+	private RoundedButton btnThem;
+	private RoundedButton btn_Tim;
 
 	/**
 	 * Create the frame.
@@ -128,7 +129,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		
 		//JPane thông tin tài khoản
 		jp_thongTinNV = new JPanel();
-		jp_thongTinNV.setBounds(10, 40, 380, 525);
+		jp_thongTinNV.setBounds(10, 40, 338, 525);
 		add(jp_thongTinNV);
 		jp_thongTinNV.setLayout(null);
 
@@ -137,7 +138,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		downIcon1.getImage().getScaledInstance(20 ,20, Image.SCALE_SMOOTH);
 
 		jp_contentThongTin = new JPanel();
-		jp_contentThongTin.setBounds(0, 31, 380, 494);
+		jp_contentThongTin.setBounds(0, 31, 337, 494);
 		jp_thongTinNV.add(jp_contentThongTin);
 		jp_contentThongTin.setLayout(null);
 
@@ -146,7 +147,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		textField_MaDN.setText("Mã tài khoản");
 //		textField_MaDN = new JTextField();
 		textField_MaDN.setEditable(false);
-		textField_MaDN.setBounds(160, 22, 190, 25);
+		textField_MaDN.setBounds(20, 57, 291, 30);
 		jp_contentThongTin.add(textField_MaDN);
 		textField_MaDN.setColumns(10);
 		focusTxtField(textField_MaDN, "Mã tài khoản");
@@ -154,21 +155,21 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		textField_MatKhau = new RoundedTextField(10);
 		textField_MatKhau.setText("Mật khẩu");
 		textField_MatKhau.setColumns(10);
-		textField_MatKhau.setBounds(160, 70, 190, 25);
+		textField_MatKhau.setBounds(20, 136, 291, 30);
 		focusTxtField(textField_MatKhau, "Mật khẩu");
 		jp_contentThongTin.add(textField_MatKhau);
 
 		textField_PhanQuyen = new RoundedTextField(10);
 		textField_PhanQuyen.setText("Phân quyền");
 		textField_PhanQuyen.setColumns(10);
-		textField_PhanQuyen.setBounds(160, 127, 190, 25);
+		textField_PhanQuyen.setBounds(20, 219, 291, 30);
 		jp_contentThongTin.add(textField_PhanQuyen);
 		focusTxtField(textField_PhanQuyen, "Phân quyền");
 
 		textField_MaNV = new RoundedTextField(10);
 		textField_MaNV.setText("Mã nhân viên");
 		textField_MaNV.setColumns(10);
-		textField_MaNV.setBounds(160, 183, 190, 25);
+		textField_MaNV.setBounds(20, 299, 291, 30);
 		jp_contentThongTin.add(textField_MaNV);
 		focusTxtField(textField_MaNV, "Mã nhân viên");
 
@@ -186,40 +187,44 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 //		jp_contentThongTin.add(btnSua);
 
 		lbl_MaDN = new JLabel("Mã tài khoản:");
-		lbl_MaDN.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lbl_MaDN.setBounds(10, 22, 109, 25);
+		lbl_MaDN.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lbl_MaDN.setBounds(20, 22, 109, 25);
 		jp_contentThongTin.add(lbl_MaDN);
 
 		lbl_MatKhau = new JLabel("Mật khẩu:");
-		lbl_MatKhau.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lbl_MatKhau.setBounds(10, 70, 101, 25);
+		lbl_MatKhau.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lbl_MatKhau.setBounds(20, 101, 101, 25);
 		jp_contentThongTin.add(lbl_MatKhau);
 
 		lbl_PhanQuyen = new JLabel("Phân quyền:");
-		lbl_PhanQuyen.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lbl_PhanQuyen.setBounds(10, 127, 101, 25);
+		lbl_PhanQuyen.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lbl_PhanQuyen.setBounds(20, 184, 101, 25);
 		jp_contentThongTin.add(lbl_PhanQuyen);
 
 		lbl_MaNV = new JLabel("Mã nhân viên:");
-		lbl_MaNV.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lbl_MaNV.setBounds(10, 183, 101, 25);
+		lbl_MaNV.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lbl_MaNV.setBounds(20, 264, 101, 25);
 		jp_contentThongTin.add(lbl_MaNV);
-		
-		btnThem = new JButton("Thêm");
-		btnThem.setBounds(22, 250, 85, 40);
+		btnThem = new RoundedButton("Thêm", 15);
+		btnThem.setForeground(new Color(255, 255, 255));
+		btnThem.setBackground(new Color(51, 102, 153));
+		btnThem.setBounds(20, 353, 85, 40);
 		jp_contentThongTin.add(btnThem);
-		
-		btnSua = new JButton("Sửa");
-		btnSua.setBounds(136, 250, 85, 40);
+		btnSua = new RoundedButton("Sửa", 15);
+		btnSua.setForeground(new Color(255, 255, 255));
+		btnSua.setBounds(125, 353, 85, 40);
 		jp_contentThongTin.add(btnSua);
-		
-		btn_Tim = new JButton("Tìm");
-		btn_Tim.setBounds(254, 250, 85, 40);
+		btnSua.setBackground(new Color(51, 102, 153));
+		btn_Tim = new RoundedButton("Tìm", 15);
+		btn_Tim.setForeground(new Color(255, 255, 255));
+		btn_Tim.setBounds(226, 353, 85, 40);
+		btn_Tim.setBackground(new Color(51, 102, 153));
+
 		jp_contentThongTin.add(btn_Tim);
 
 		//JPane header tiêu đề của thông tin tài khoản
 		jp_headerThongTin = new JPanel();
-		jp_headerThongTin.setBounds(0, 0, 393, 32);
+		jp_headerThongTin.setBounds(0, 0, 337, 32);
 		jp_thongTinNV.add(jp_headerThongTin);
 		jp_headerThongTin.setBackground(new Color(51, 102, 153));
 		jp_headerThongTin.setLayout(null);
@@ -228,12 +233,12 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		lbl_tieuDeTT.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_tieuDeTT.setForeground(new Color(255, 255, 255));
 		lbl_tieuDeTT.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lbl_tieuDeTT.setBounds(20, 0, 360, 32);
+		lbl_tieuDeTT.setBounds(20, 0, 318, 32);
 		jp_headerThongTin.add(lbl_tieuDeTT);
 
 		// Tạo JComboBox Hiển thị mã nhân viên 
 		comboBox_TimTheoMaTK = new JComboBox<String>();
-		comboBox_TimTheoMaTK.setBounds(407, 40, 170, 28);
+		comboBox_TimTheoMaTK.setBounds(372, 40, 170, 28);
 		add(comboBox_TimTheoMaTK);
 		// Tạo JComboBox Hiển thị mã nhân viên 
 		comboBox_TimTheoMaTK.addActionListener(new ActionListener() {
@@ -273,7 +278,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(407, 78, 1053, 487);
+		scrollPane.setBounds(372, 78, 1088, 487);
 		add(scrollPane);
 
 		table_TK = new JTable();
