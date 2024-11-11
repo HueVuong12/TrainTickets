@@ -11,12 +11,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import dao.HoaDon_DAO;
 import dao.ChiTietHoaDon_DAO;
 import dao.KhachHang_DAO;
 import dao.Ve_DAO;
 import entity.ChiTietHoaDon;
 import entity.KhachHang;
 import entity.Ve;
+import entity.HoaDon;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -30,6 +32,7 @@ import java.awt.event.ActionEvent;
 
 public class TraVe_GUI extends JPanel implements ActionListener{
 
+	 
 	private static final long serialVersionUID = 1L;
 	private JTable table_CTHD;
 	private JTable table_DSV;
@@ -65,6 +68,7 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	private JButton btnXacNhan;
 	private JButton btnHuy;
 	private ChiTietHoaDon_DAO dsCTHD = new ChiTietHoaDon_DAO();
+	private HoaDon_DAO dsHD = new HoaDon_DAO();
 	private DefaultTableModel model_CTHD;
 	private Ve_DAO dsVe = new Ve_DAO();
 	private KhachHang_DAO dsKH = new KhachHang_DAO();
@@ -74,7 +78,11 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	float tienTraLai=0;
 	private JButton btnXoa;
 	private float tongTienCoThue=0;
-
+	private JTextField textField_tienTra;
+	private boolean tapThe = false;
+	private float tongTienTra=0;
+	private float phiHoan;
+	private QuanLyHoaDon_GUI qlhd;
 	/**
 	 * Create the panel.
 	 */
@@ -161,47 +169,47 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 		scrollPane_1.setViewportView(table_DSV);
 
 		panel_3 = new JPanel();
-		panel_3.setBounds(25, 411, 541, 150);
+		panel_3.setBounds(450, 411, 541, 150);
 		add(panel_3);
 		panel_3.setLayout(null);
 
 		lblTienKhachDua = new JLabel("Tiền khách đưa");
 		lblTienKhachDua.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblTienKhachDua.setBounds(26, 10, 123, 19);
+		lblTienKhachDua.setBounds(10, 14, 123, 27);
 		panel_3.add(lblTienKhachDua);
 
 		textField_TienKhachDua = new JTextField("0 đ");
-		textField_TienKhachDua.setBounds(20, 36, 415, 30);
+		textField_TienKhachDua.setBounds(143, 11, 287, 30);
 		panel_3.add(textField_TienKhachDua);
 		textField_TienKhachDua.setColumns(10);
 		textField_TienKhachDua.setEditable(false);
 
 		lblNewLabel_3 = new JLabel("Gợi ý tiền mặt");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_3.setBounds(26, 75, 123, 24);
+		lblNewLabel_3.setBounds(10, 70, 123, 24);
 		panel_3.add(lblNewLabel_3);
 
 		btn33 = new JButton("33.000");
 		btn33.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn33.setBounds(26, 105, 142, 35);
+		btn33.setBounds(10, 105, 142, 35);
 		panel_3.add(btn33);
 
 		btn35 = new JButton("35.000");
 		btn35.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn35.setBounds(218, 105, 130, 35);
+		btn35.setBounds(202, 105, 130, 35);
 		panel_3.add(btn35);
 
 		btn44 = new JButton("40.000");
 		btn44.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn44.setBounds(394, 105, 137, 35);
 		panel_3.add(btn44);
-		
+
 		btnXoa = new JButton("Nhập lại");
-		btnXoa.setBounds(446, 36, 85, 30);
+		btnXoa.setBounds(446, 10, 85, 30);
 		panel_3.add(btnXoa);
 
 		panel_4 = new JPanel();
-		panel_4.setBounds(576, 411, 449, 150);
+		panel_4.setBounds(1001, 411, 449, 150);
 		add(panel_4);
 		panel_4.setLayout(null);
 
@@ -256,32 +264,6 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 		btn1.setBounds(310, 110, 107, 30);
 		panel_4.add(btn1);
 
-		panel_5 = new JPanel();
-		panel_5.setBounds(1035, 411, 415, 150);
-		add(panel_5);
-		panel_5.setLayout(null);
-
-		lblNewLabel_2 = new JLabel("Tiền khách trả lại");
-		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_2.setBounds(10, 10, 132, 20);
-		panel_5.add(lblNewLabel_2);
-
-		textField_TienTraLai = new JTextField("0 đ");
-		textField_TienTraLai.setBounds(10, 36, 395, 30);
-		panel_5.add(textField_TienTraLai);
-		textField_TienTraLai.setColumns(10);
-		textField_TienTraLai.setEditable(false);
-
-		btnXacNhan = new JButton("Xác nhận");
-		btnXacNhan.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnXacNhan.setBounds(10, 76, 97, 40);
-		panel_5.add(btnXacNhan);
-
-		btnHuy = new JButton("Hủy");
-		btnHuy.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnHuy.setBounds(131, 76, 97, 40);
-		panel_5.add(btnHuy);
-
 		//Sự kiện nút
 		btn1.addActionListener(this);
 		btn2.addActionListener(this);
@@ -292,23 +274,80 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 		btn100.addActionListener(this);
 		btn200.addActionListener(this);
 		btn500.addActionListener(this);
-		
+
 		btn33.addActionListener(this);
 		btn35.addActionListener(this);
 		btn44.addActionListener(this);
-		
+
 		btnXoa.addActionListener(this);
-		
+
+		panel_5 = new JPanel();
+		panel_5.setBounds(25, 411, 415, 150);
+		add(panel_5);
+		panel_5.setLayout(null);
+
+		lblNewLabel_2 = new JLabel("Tổng tiền trả");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_2.setBounds(10, 59, 132, 28);
+		panel_5.add(lblNewLabel_2);
+
+		textField_TienTraLai = new JTextField("0 đ");
+		textField_TienTraLai.setBounds(147, 57, 258, 30);
+		panel_5.add(textField_TienTraLai);
+		textField_TienTraLai.setColumns(10);
+		textField_TienTraLai.setEditable(false);
+
+		btnXacNhan = new JButton("Xác nhận");
+		btnXacNhan.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnXacNhan.setBounds(201, 97, 97, 43);
+		panel_5.add(btnXacNhan);
+
+		btnHuy = new JButton("Hủy");
+		btnHuy.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnHuy.setBounds(308, 97, 97, 43);
+		panel_5.add(btnHuy);
+
+		JLabel lblNewLabel_2_1 = new JLabel("Phí hoàn trả");
+		lblNewLabel_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_2_1.setBounds(10, 10, 132, 28);
+		panel_5.add(lblNewLabel_2_1);
+
+		textField_tienTra = new JTextField("0 đ");
+		textField_tienTra.setEditable(false);
+		textField_tienTra.setColumns(10);
+		textField_tienTra.setBounds(147, 8, 258, 30);
+		panel_5.add(textField_tienTra);
+
 		//Load dữ liệu vào bảng
 		datatoTable_CTHD(qlhd);
 		datatoTable_Ve(qlhd);
+		
+		btnXoa.addActionListener(this);
+		btnXacNhan.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if(tienTraLai < tienKhachDua) {
+					HoaDon hd = dsHD.getHoaDonTheoMaHoaDon(qlhd.hoaDonTraVe.getMaHoaDon());
+					hd.setDaHoanVe(true);
+					hd.setDaHoanTien(true);
+					dsHD.update(hd);
+				}else {
+					JOptionPane.showMessageDialog(null,
+							"Số tiền nhập không bằng số tiền trả lại", "Thông báo",
+							JOptionPane.WARNING_MESSAGE);
+				}
+			
+			}
+		});
 	}
 
 	public void datatoTable_CTHD(QuanLyHoaDon_GUI qlhd) {
 		dsCTHD.reset();
 		dsVe.reset();
 		dsKH.reset();
-		
+
 		ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(qlhd.hoaDonTraVe.getChiTiet().getMaChiTiet());
 		if(cthd != null) {
 			String thueFormat = String.format("%.0f%%", cthd.getThue() * 100);
@@ -339,62 +378,70 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	public void datatoTable_Ve(QuanLyHoaDon_GUI qlhd) {
 		dsVe.reset();
 		dsCTHD.reset();
-		ArrayList<Ve> list= dsVe.getDsVeTheoMaChiTiet(qlhd.hoaDonTraVe.getChiTiet().getMaChiTiet());
+		ArrayList<Ve> list = dsVe.getDsVeTheoMaChiTiet(qlhd.hoaDonTraVe.getChiTiet().getMaChiTiet());
+		boolean tapThe = list.size() > 1;
 		model_DSV = (DefaultTableModel) table_DSV.getModel();
 		int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
 		for (Ve ve : list) {
-			model_DSV.addRow(new Object[] { 
-					stt++, 
-					ve.getMaVe(),
-					ve.getHang(),
-					ve.getKhuyenMai(), 
-					dinhDangTienTe(ve.tinhGiaVe())
-					// Định dạng tổng tiền bao gồm thuế
-			});}
+			if (ve.hoanVe(tapThe)) {
+				phiHoan += ve.tinhPhiHoanVe(tapThe);
+				model_DSV.addRow(new Object[] {
+						stt++,
+						ve.getMaVe(),
+						ve.getHang(),
+						ve.getKhuyenMai(),
+						dinhDangTienTe(ve.tinhGiaVe())
+						// Hiển thị giá vé sau khi trừ phí hoàn
+				});
+			} 
+//			else {
+//				// Xử lý nếu vé không được hoàn
+//
+//			}
+		}
+		tienTraLai = tongTienCoThue - phiHoan;
+		textField_TienTraLai.setText(dinhDangTienTe(tienTraLai));
+		textField_tienTra.setText(dinhDangTienTe(phiHoan));
 	}
+
+
 	public String dinhDangTienTe(double soTien) {
 		NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 		return formatter.format(soTien);
 	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	    Object o = e.getSource();
-	    
-	    if (o.equals(btnXoa)) {
-	        tienKhachDua = 0;
-	        // Hiển thị số tiền đã định dạng
-	        tienTraLai = 0;
-		    textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua));
-		    textField_TienTraLai.setText(dinhDangTienTe(tienTraLai));
-	    } else {
-	        float soTienThem = 0;
-	        
-	        // Xác định số tiền cần thêm dựa trên nút bấm
-	        if (o.equals(btn1)) soTienThem = 1000;
-	        if (o.equals(btn2)) soTienThem = 2000;
-	        if (o.equals(btn5)) soTienThem = 5000;
-	        if (o.equals(btn10)) soTienThem = 10000;
-	        if (o.equals(btn20)) soTienThem = 20000;
-	        if (o.equals(btn50)) soTienThem = 50000;
-	        if (o.equals(btn100)) soTienThem = 100000;
-	        if (o.equals(btn200)) soTienThem = 200000;
-	        if (o.equals(btn500)) soTienThem = 500000;
-	        if (o.equals(btn33)) soTienThem = 33000;
-	        if (o.equals(btn35)) soTienThem = 35000;
-	        if (o.equals(btn44)) soTienThem = 44000;
-	        
-	        // Kiểm tra nếu text hiện tại là "0 đ" thì đặt `tienKhachDua` thành `soTienThem`
-	        if (textField_TienKhachDua.getText().equalsIgnoreCase("0 đ")) {
-	            tienKhachDua = soTienThem;
-	            textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua)); // Cập nhật textField
-	        } else {
-	            tienKhachDua += soTienThem;
-	            textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua));
-	        }
-	        tienTraLai = tienKhachDua - tongTienCoThue;
-	        textField_TienTraLai.setText(dinhDangTienTe(tienTraLai));
-	    }
-	    
+		Object o = e.getSource();
+		if (o.equals(btnXoa)) {
+			tienKhachDua = 0;
+			textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua));
+
+		} else {
+			float soTienThem = 0;
+
+			// Xác định số tiền cần thêm dựa trên nút bấm
+			if (o.equals(btn1)) soTienThem = 1000;
+			if (o.equals(btn2)) soTienThem = 2000;
+			if (o.equals(btn5)) soTienThem = 5000;
+			if (o.equals(btn10)) soTienThem = 10000;
+			if (o.equals(btn20)) soTienThem = 20000;
+			if (o.equals(btn50)) soTienThem = 50000;
+			if (o.equals(btn100)) soTienThem = 100000;
+			if (o.equals(btn200)) soTienThem = 200000;
+			if (o.equals(btn500)) soTienThem = 500000;
+			if (o.equals(btn33)) soTienThem = 33000;
+			if (o.equals(btn35)) soTienThem = 35000;
+			if (o.equals(btn44)) soTienThem = 44000;
+
+			// Kiểm tra nếu text hiện tại là "0 đ" thì đặt `tienKhachDua` thành `soTienThem`
+			if (textField_TienKhachDua.getText().equalsIgnoreCase("0 đ")) {
+				tienKhachDua = soTienThem;
+				textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua)); // Cập nhật textField
+			} else {
+				tienKhachDua += soTienThem;
+				textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua));
+			}
+		}
+
 	}
 }

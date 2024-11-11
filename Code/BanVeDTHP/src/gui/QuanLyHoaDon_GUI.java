@@ -59,7 +59,7 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
 	private JButton btnTraVe;
 	public HoaDon hoaDonTraVe;
-
+	public HoaDon hoaDonTXemCT;
 	@SuppressWarnings("serial")
 	public QuanLyHoaDon_GUI(TrangChu_GUI trangChu) {
 		setBackground(Color.white);
@@ -305,6 +305,27 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		        }
 		    }
 		});
+		btnXemChiTiet.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int row = table.getSelectedRow();
+				if (row != -1) { // Kiểm tra nếu có dòng nào được chọn
+		            hoaDonTXemCT = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
+		            System.out.println(hoaDonTXemCT);
+		            if (hoaDonTXemCT != null) {
+		                ChiTietHoaDon_GUI chiTietHoaDon_GUI = new ChiTietHoaDon_GUI(QuanLyHoaDon_GUI.this,trangChu);
+		                trangChu.content.removeAll();
+		                trangChu.content.add(chiTietHoaDon_GUI);
+		                trangChu.content.revalidate();
+		                trangChu.content.repaint();
+		            }
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn muốn xem chi tiết hóa đơn", "Thông báo", JOptionPane.WARNING_MESSAGE);
+		        }
+			}
+		});
 
 		datatoTable();
 	}
@@ -312,9 +333,6 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-		if (o.equals(btnXemChiTiet)) {
-
-		}
 		if (o.equals(btnXuatHoaDon)) {
 			int row = table.getSelectedRow();
 			HoaDon hoaDon = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());

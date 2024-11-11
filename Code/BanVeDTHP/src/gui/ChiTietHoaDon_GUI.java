@@ -80,7 +80,7 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 	private Color hoverLabelColor = new Color(0, 153, 255);
 	private JLabel lbl_quayLai;
 
-	public ChiTietHoaDon_GUI(TrangChu_GUI trangChu) {
+	public ChiTietHoaDon_GUI(QuanLyHoaDon_GUI quanLyHoaDon_GUI,TrangChu_GUI trangChu) {
 		setBackground(new Color(255, 255, 255));
 		setLayout(null);
 		panel = new JPanel();
@@ -322,24 +322,18 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 		txtTu.getDocument().addDocumentListener(new FilterListener());
 		txtDen.getDocument().addDocumentListener(new FilterListener());
 		comboBoxSL.addActionListener(this);
-		datatoTable_CTHD();
+		datatoTable_CTHD(quanLyHoaDon_GUI);
 
 	}
 	// Hàm tải dữ liệu vào bảng table_CTHD
-	public void datatoTable_CTHD() {
+	public void datatoTable_CTHD(QuanLyHoaDon_GUI qlhd) {
 		dsVe.reset();
 		dsCTHD.reset();
-		ArrayList<ChiTietHoaDon> list = dsCTHD.docTuBang();
-		ArrayList<Ve> danhSachVe = null;
-
-		model_CTHD = (DefaultTableModel) table_CTHD.getModel();
-		model_CTHD.setRowCount(0); // Xóa tất cả hàng trong bảng
-		int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
-
-		for (ChiTietHoaDon cthd : list) {
-			danhSachVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
+		if(qlhd.hoaDonTXemCT != null) {
+			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(qlhd.hoaDonTXemCT.getChiTiet().getMaChiTiet());
 			float tongTienVe = 0;
-			for(Ve ve: danhSachVe) {
+			int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
+			for(Ve ve: cthd.getDsVe()) {
 				tongTienVe+=ve.tinhGiaVe();
 			}
 			model_CTHD.addRow(new Object[] { 
@@ -351,8 +345,33 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 					cthd.getThue(), // Hiển thị thuế dưới dạng %
 					dinhDangTienTe(cthd.tinhTien()) // Định dạng tổng tiền bao gồm thuế
 			});
-			System.out.println(cthd);
-			System.out.println(cthd.getMaChiTiet());
+		}
+		else {
+			ArrayList<ChiTietHoaDon> list = dsCTHD.docTuBang();
+			ArrayList<Ve> danhSachVe = null;
+	
+			model_CTHD = (DefaultTableModel) table_CTHD.getModel();
+			model_CTHD.setRowCount(0); // Xóa tất cả hàng trong bảng
+			int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
+	
+			for (ChiTietHoaDon cthd : list) {
+				danhSachVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
+				float tongTienVe = 0;
+				for(Ve ve: danhSachVe) {
+					tongTienVe+=ve.tinhGiaVe();
+				}
+				model_CTHD.addRow(new Object[] { 
+						stt++, 
+						cthd.getMaChiTiet(),
+						cthd.getHoaDon().getMaHoaDon(),
+						cthd.getSoLuong(), 
+						dinhDangTienTe(tongTienVe),
+						cthd.getThue(), // Hiển thị thuế dưới dạng %
+						dinhDangTienTe(cthd.tinhTien()) // Định dạng tổng tiền bao gồm thuế
+				});
+	//			System.out.println(cthd);
+	//			System.out.println(cthd.getMaChiTiet());
+			}
 		}
 	}	
 	public String dinhDangTienTe(double soTien) {

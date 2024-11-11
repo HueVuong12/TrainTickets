@@ -35,12 +35,12 @@ import components.RoundedTextField;
 import dao.TaiKhoan_DAO;
 import entity.NhanVien;
 import entity.TaiKhoan;
+import javax.swing.JPasswordField;
 
 public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseListener{
 
 	private static final long serialVersionUID = 1L;
 	private JTextField textField_MaDN;
-	private JTextField textField_MatKhau;
 	private JTextField textField_PhanQuyen;
 	private JTextField textField_MaNV;
 	private JLabel lbl_MatKhau;
@@ -63,9 +63,17 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	private TaiKhoan_DAO dstk = new TaiKhoan_DAO();;
 	private DefaultTableModel model;
 	private TableRowSorter<TableModel> sorter;
+//<<<<<<< HEAD
 	private RoundedButton btnSua;
 	private RoundedButton btnThem;
 	private RoundedButton btn_Tim;
+//=======
+//	private JButton btnSua;
+//	private JButton btnThem;
+//	private JButton btn_Tim;
+	private JPasswordField passwordField;
+	private int nextNumber;
+//>>>>>>> 8ff982ee4d230d22c7a504f966874d3ca16a3599
 
 	/**
 	 * Create the frame.
@@ -151,6 +159,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		jp_contentThongTin.add(textField_MaDN);
 		textField_MaDN.setColumns(10);
 		focusTxtField(textField_MaDN, "Mã tài khoản");
+
 		
 		textField_MatKhau = new RoundedTextField(10);
 		textField_MatKhau.setText("Mật khẩu");
@@ -158,6 +167,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		textField_MatKhau.setBounds(20, 136, 291, 30);
 		focusTxtField(textField_MatKhau, "Mật khẩu");
 		jp_contentThongTin.add(textField_MatKhau);
+
 
 		textField_PhanQuyen = new RoundedTextField(10);
 		textField_PhanQuyen.setText("Phân quyền");
@@ -221,6 +231,10 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		btn_Tim.setBackground(new Color(51, 102, 153));
 
 		jp_contentThongTin.add(btn_Tim);
+		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(160, 72, 190, 25);
+		jp_contentThongTin.add(passwordField);
 
 		//JPane header tiêu đề của thông tin tài khoản
 		jp_headerThongTin = new JPanel();
@@ -263,7 +277,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		                if (rowIndex != -1) {
 		                    table_TK.setRowSelectionInterval(rowIndex, rowIndex);
 		                    textField_MaDN.setText(tk.getMaTaiKhoan());
-		                    textField_MatKhau.setText(tk.getMatKhau());
+		                    passwordField.setText(tk.getMatKhau());
 		                    textField_MaNV.setText(tk.getNhanVien().getMaNV());
 		                    textField_PhanQuyen.setText(String.valueOf(tk.getPhanQuyen()));
 		                }
@@ -311,7 +325,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 			TaiKhoan tk = dstk.getTaiKhoanTheoMaTK(table_TK.getModel().getValueAt(row, 1).toString());
 			textField_MaNV.setText(tk.getNhanVien().getMaNV());
 			textField_MaDN.setText(tk.getMaTaiKhoan());
-			textField_MatKhau.setText(tk.getMatKhau());
+			passwordField.setText(tk.getMatKhau());
 			textField_PhanQuyen.setText(String.valueOf(tk.getPhanQuyen()));
 		}
 	}
@@ -381,7 +395,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	
 	//Hàm kiểm tra regex
 		public boolean validData() {
-			if (textField_MatKhau.getText().equals("")) {
+			if (passwordField.getText().equals("")) {
 				JOptionPane.showMessageDialog(this, "Mật khẩu không được bỏ trống");
 				return false;
 			}
@@ -398,22 +412,33 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		}
 		//Hàm tạo mã tài khoản tự động
 		public String generateMaDN(int cv) {
-			dstk.reset();
-			ArrayList<TaiKhoan> listNV = dstk.getLisNV();
-			ArrayList<TaiKhoan> listQL = dstk.getListQL();
-			String maDN ="";
-			if(cv == 1) {
-				maDN = String.format("TKQL%03d", listQL.size() + 1);// Tạo mã với định dạng "TKQL" + 3 chữ số, ví dụ "TKQL001"
-			}
-			if(cv == 2) {
-				maDN = String.format("TKNV%03d",  listNV.size() + 1);// Tạo mã với định dạng "TKNV" + 3 chữ số, ví dụ "TKNV001"
-			}
-			return maDN;
+		    ArrayList<TaiKhoan> listNV = dstk.getLisNV();
+		    ArrayList<TaiKhoan> listQL = dstk.getListQL();
+		    String maDN = "";
+
+		    nextNumber = 1;
+
+		    if (cv == 1) {
+		        // Tìm số tiếp theo chưa dùng cho mã TKQL
+		        while (listQL.stream().anyMatch(tk -> tk.getMaTaiKhoan().equals(String.format("TKQL%03d", nextNumber)))) {
+		            nextNumber++;
+		        }
+		        maDN = String.format("TKQL%03d", nextNumber);
+		    } else if (cv == 2) {
+		        // Tìm số tiếp theo chưa dùng cho mã TKNV
+		        while (listNV.stream().anyMatch(tk -> tk.getMaTaiKhoan().equals(String.format("TKNV%03d", nextNumber)))) {
+		            nextNumber++;
+		        }
+		        maDN = String.format("TKNV%03d", nextNumber);
+		    }
+
+		    return maDN;
 		}
+
 		
 		//Hàm lấy dữ liệu từ JPane thông tin tài khoản
 		public TaiKhoan revertTK() {
-			String matKhau = textField_MatKhau.getText();
+			String matKhau = passwordField.getText();
 			int chucVu =  Integer.parseInt(textField_PhanQuyen.getText());
 			String maDN = generateMaDN(chucVu);
 			String maNV = textField_MaNV.getText();
@@ -424,7 +449,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		public void update() {
 			int index = table_TK.getSelectedRow();
 			if (index != -1) {
-				String matKhau = textField_MatKhau.getText();
+				String matKhau = passwordField.getText();
 				int chucVu =  Integer.parseInt(textField_PhanQuyen.getText());
 				String maDN = generateMaDN(chucVu);
 				String maNV = textField_MaNV.getText();
@@ -447,7 +472,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		private void filterRows() {
 			ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
 			String tk = textField_MaDN.getText().trim();
-			String mk = textField_MatKhau.getText().trim();
+			String mk = passwordField.getText().trim();
 			String nv = textField_MaNV.getText().trim();
 			String pq = textField_PhanQuyen.getText().trim();
 			// Lọc theo các điều kiện
@@ -455,7 +480,9 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 				filters.add(RowFilter.regexFilter("(?i)" + tk, 1));
 			}
 			if (!mk.isEmpty()) {
-				filters.add(RowFilter.regexFilter("(?i)" + mk, 2));
+				 // Chuyển mk thành chuỗi `*` tương ứng độ dài
+		        String hiddenPasswordFilter = "\\*{" + mk.length() + "}";
+		        filters.add(RowFilter.regexFilter(hiddenPasswordFilter, 2));
 			}
 			if (!pq.isEmpty()) {
 				filters.add(RowFilter.regexFilter("(?i)" + pq, 3));
@@ -483,10 +510,12 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		    int stt = 1;
 		    for (TaiKhoan tk : list) {
 		        comboBox_TimTheoMaTK.addItem(tk.getMaTaiKhoan());
+		        // Ẩn mật khẩu bằng cách thay thế bằng dấu *
+		        String hiddenPassword = "*".repeat(tk.getMatKhau().length());
 		        model.addRow(new Object[] { 
 		            stt++, 
 		            tk.getMaTaiKhoan(),
-		            tk.getMatKhau(),
+		            hiddenPassword,
 		            tk.getPhanQuyen(),
 		            tk.getNhanVien().getMaNV()
 		        });
@@ -498,9 +527,9 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		//Hàm xóa thông tin 
 		public void deleteField() {
 			textField_MaNV.setText("");
-			textField_MatKhau.setText("");
 			textField_MaDN.setText("");
 			textField_PhanQuyen.setText("");
+			passwordField.setText("");
 		}
 		private void updateComboBox() {
 		    comboBox_TimTheoMaTK.removeAllItems(); // Xóa tất cả các mục hiện có trong comboBox
