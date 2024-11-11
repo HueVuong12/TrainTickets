@@ -582,41 +582,36 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		}
 	}
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		int row = table_NV.getSelectedRow();
-		System.out.println(row);
-		if (row != -1) {	
-			NhanVien nv = dsnv.getNhanVienTheoMaNV(table_NV.getValueAt(row, 1).toString());
-			System.out.println(table_NV.getValueAt(row, 1).toString());
-			textField_MaNV.setText(nv.getMaNV());
-			textField_HoTen.setText(nv.getTenNV());
-			if (nv.isGioiTinh()) {
-				cb_nam.setSelected(false);
-				cb_nu.setSelected(true);
-			} else {
-				cb_nam.setSelected(true);
-				cb_nu.setSelected(false);
-			}
-			dateChooser_NgaySinh.setDate(Date.from(nv.getNgaySinh().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-			textField_CCCD.setText(nv.getCccd());
-			textField_SDT.setText(nv.getSdt());
-			textField_Email.setText(nv.getEmail());
-			comboBox_Ca.setSelectedItem(nv.getCa().getMaCa());
-			if (nv.isTrangThai()) {
-				cb_dangLam.setSelected(true);
-				cb_nghiLam.setSelected(false);
-			} else {
-				cb_dangLam.setSelected(false);
-				cb_nghiLam.setSelected(true);
-			}
-			if(nv.getChucVu() == 1) {
-				comboBox_ChucVu.setSelectedIndex(0);
-			}
-			else {
-				comboBox_ChucVu.setSelectedIndex(1);
-			}
-		}
+	public void mouseClicked(MouseEvent e) {     
+	    int row = table_NV.getSelectedRow();
+	    if (row != -1) { 
+	        // Lấy giá trị từ từng cột của bảng
+	        String maNV = table_NV.getValueAt(row, 1).toString();
+	        String hoTen = table_NV.getValueAt(row, 2).toString();
+	        boolean gioiTinh = table_NV.getValueAt(row, 4).toString().equals("Nữ") ? true: false;
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	        LocalDate ngaySinh = LocalDate.parse(table_NV.getValueAt(row, 3).toString(), formatter);
+	        String cccd = table_NV.getValueAt(row, 6).toString();
+	        String sdt = table_NV.getValueAt(row, 8).toString();
+	        String email = table_NV.getValueAt(row, 7).toString();
+	        String maCa = table_NV.getValueAt(row, 5).toString();
+	        boolean trangThai = table_NV.getValueAt(row, 9).toString().equals("Đang làm");
+	        int chucVu = table_NV.getValueAt(row, 10).toString().equals("Quản lý") ? 1 : 0;
+
+	        // Gán giá trị vào các trường trên giao diện
+	        textField_MaNV.setText(maNV);
+	        textField_HoTen.setText(hoTen);
+	        cb_nam.setSelected(!gioiTinh);
+	        cb_nu.setSelected(gioiTinh);
+	        dateChooser_NgaySinh.setDate(Date.from(ngaySinh.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+	        textField_CCCD.setText(cccd);
+	        textField_SDT.setText(sdt);
+	        textField_Email.setText(email);
+	        comboBox_Ca.setSelectedItem(maCa);
+	        cb_dangLam.setSelected(trangThai);
+	        cb_nghiLam.setSelected(!trangThai);
+	        comboBox_ChucVu.setSelectedIndex(chucVu == 1 ? 0 : 1);
+	    }
 	}
 
 	@Override
