@@ -414,14 +414,30 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 				}
 				
 				// Tạo danh sách vé
+				String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyy")); // Ngày lập vé
+
+				// Lấy số thứ tự vé trong ngày, bắt đầu từ 0001
+				int currentVeNumber = ve_DAO.getLastVeNumber(datePart); // Lấy số thứ tự vé cuối cùng từ cơ sở dữ liệu
+
 				for (Ve ve: banVe_GUI.dsVeDatTam) {
-					ve.setMaVe(ve_DAO.generateMaVe());
-					ve.setKhachHang(banVeNhapThongTin_GUI.map.get(banVe_GUI.dsVeDatTam.indexOf(ve)));
-					ve.setChiTiet(chiTietHoaDon);
-					ve_DAO.create(ve);
-					Ghe ghe = ve.getSoGhe();
-					ghe.setTrangThai(false);
-					ghe_DAO.update(ghe);
+				    // Tạo mã vé cho từng vé
+				    String maVe = "VE" + datePart + String.format("%04d", currentVeNumber + 1); // Tăng số thứ tự lên 1
+				    ve.setMaVe(maVe);
+
+				    // Cập nhật thông tin vé
+				    ve.setKhachHang(banVeNhapThongTin_GUI.map.get(banVe_GUI.dsVeDatTam.indexOf(ve)));
+				    ve.setChiTiet(chiTietHoaDon);
+				    
+				    // Gọi phương thức tạo vé
+				    ve_DAO.create(ve);
+
+				    // Cập nhật trạng thái ghế
+				    Ghe ghe = ve.getSoGhe();
+				    ghe.setTrangThai(false);
+				    ghe_DAO.update(ghe);
+
+				    // Tăng số thứ tự vé cho lần tạo tiếp theo
+				    currentVeNumber++;
 				}
 			}
 		});

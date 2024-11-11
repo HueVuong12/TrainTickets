@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
 import com.toedter.calendar.JDateChooser;
 
 import components.ChuyenTau_JPanel;
@@ -473,16 +472,16 @@ public class BanVe_GUI extends JPanel {
 
 		btnTiep.setVisible(false);
 		btnQuayLai.setVisible(false);
-
+		
 		// Thêm MouseListener vào contentPane
 		this.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// Mất focus của txtUser và txtPassword khi nhấp chuột ra ngoài
-				txt_GaDi.transferFocus();
-				txt_GaDen.transferFocus();
+				// Mất focus của txt_GaDi và txt_GaDen khi nhấp chuột ra ngoài
+				jp_TinhTrangGhe.requestFocusInWindow();
 			}
 		});
+
 	}
 
 	private void suKienBatDauChon(String gaDi, String gaDen) {
@@ -840,36 +839,6 @@ public class BanVe_GUI extends JPanel {
 	private void chonGa(JTextField txt_Ga) {
 		// Tạo JPopupMenu để hiển thị gợi ý
 		JPopupMenu suggestionMenu = new JPopupMenu();
-		
-		// Lắng nghe sự kiện focus vào JTextField để hiển thị 10 ga đầu tiên
-	    txt_Ga.addFocusListener(new FocusAdapter() {
-	        @Override
-	        public void focusGained(FocusEvent e) {
-	            suggestionMenu.removeAll(); // Xóa các gợi ý cũ
-
-	            // Hiển thị 10 ga đầu tiên từ dsGa
-	            int count = 0;
-	            for (Ga ga : dsGa) {
-	                if (count >= 10) break; // Dừng sau khi thêm đủ 10 ga
-	                JMenuItem item = new JMenuItem(ga.getDiaChi());
-	                item.addActionListener(new ActionListener() {
-	                    @Override
-	                    public void actionPerformed(ActionEvent e) {
-	                        txt_Ga.setText(item.getText());
-	                        suggestionMenu.setVisible(false); // Ẩn gợi ý sau khi chọn
-	                    }
-	                });
-	                suggestionMenu.add(item);
-	                count++;
-	            }
-
-	            // Hiển thị danh sách gợi ý
-	            if (suggestionMenu.getComponentCount() > 0) {
-	                suggestionMenu.show(txt_Ga, 0, txt_Ga.getHeight());
-	                txt_Ga.requestFocus(); // Đặt lại focus cho JTextField
-	            }
-	        }
-	    });
 
 		// Hàm cập nhật gợi ý khi người dùng nhập vào text field
 		txt_Ga.addKeyListener(new KeyAdapter() {
