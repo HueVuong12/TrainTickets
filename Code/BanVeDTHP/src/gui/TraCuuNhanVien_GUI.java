@@ -41,6 +41,7 @@ import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
 
 import components.ComboBoxRenderer;
+import components.RoundedButton;
 import dao.NhanVien_DAO;
 import entity.Ca;
 import entity.NhanVien;
@@ -174,12 +175,15 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 //		panel.add(dateChooser_NgaySinh);
 		dateChooser_NgaySinh.setDateFormatString("dd/MM/yyyy");
 		
-		btnTim = new JButton("Tìm");
+//		btnTim = new JButton("Tìm");
+		btnTim = new RoundedButton("Tìm", 15);
+		btnTim.setForeground(new Color(255, 255, 255));
+		btnTim.setBackground(new Color(51, 102, 153));
 		btnTim.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnTim.setBounds(138, 514, 118, 27);
+		btnTim.setBounds(93, 514, 90, 33);
 		panel.add(btnTim);
 		btnTim.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		

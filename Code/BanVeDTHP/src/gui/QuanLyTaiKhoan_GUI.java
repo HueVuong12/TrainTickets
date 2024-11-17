@@ -222,6 +222,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		btn_Tim.setBackground(new Color(51, 102, 153));
 
 		jp_contentThongTin.add(btn_Tim);
+
 		passwordField = new JPasswordField();
 		passwordField.setBounds(20, 136, 291, 30);
 		jp_contentThongTin.add(passwordField);

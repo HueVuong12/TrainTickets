@@ -133,7 +133,8 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		jp_HeaderTTV.setLayout(null);
 		
 		JLabel lb_TTV = new JLabel("Thông tin vé");
-		lb_TTV.setBounds(0, 0, 255, 33);
+		lb_TTV.setForeground(new Color(255, 255, 255));
+		lb_TTV.setBounds(10, 0, 255, 33);
 		lb_TTV.setFont(new Font("Tahoma", Font.BOLD, 16));
 		jp_HeaderTTV.add(lb_TTV);
 		
@@ -385,7 +386,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		btn_DoiVe.setForeground(new Color(255, 255, 255));
 		btn_DoiVe.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_DoiVe.setBackground(new Color(51, 102, 153));
-		btn_DoiVe.setBounds(141, 510, 85, 25);
+		btn_DoiVe.setBounds(148, 503, 110, 38);
 		panel.add(btn_DoiVe);
 
 		btn_Tim = new RoundedButton("Tìm", 15);

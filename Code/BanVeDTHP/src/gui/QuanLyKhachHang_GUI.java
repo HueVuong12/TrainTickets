@@ -72,6 +72,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		setLayout(null);
 
 		JPanel jp_QL = new JPanel();
+		jp_QL.setBackground(new Color(255, 255, 255));
 		jp_QL.setLayout(null);
 		jp_QL.setBounds(10, 10, 124, 28);
 		add(jp_QL);
@@ -116,9 +117,9 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		panel_1.add(lbTimKiem);
 
 		btnTim = new RoundedButton("Tìm", 15);
+		btnTim.setBackground(SystemColor.activeCaptionBorder);
 		btnTim.setForeground(SystemColor.desktop);
 		btnTim.setFont(new Font("Tahoma", Font.BOLD, 16));
-		btnTim.setBackground(SystemColor.activeCaptionBorder);
 		btnTim.setBounds(1283, 8, 85, 25);
 		panel_1.add(btnTim);
 
@@ -166,7 +167,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		txtTenKH = new RoundedTextField(15);
 		txtTenKH.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtTenKH.setColumns(10);
-		txtTenKH.setBounds(35, 134, 250, 30);
+		txtTenKH.setBounds(35, 143, 250, 27);
 		panelThongTinKhachHang.add(txtTenKH);
 
 		JLabel lblNewLabel_1 = new JLabel("Email:");
@@ -187,13 +188,13 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		txtEmail = new RoundedTextField(15);
 		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtEmail.setColumns(10);
-		txtEmail.setBounds(35, 193, 250, 30);
+		txtEmail.setBounds(35, 204, 250, 30);
 		panelThongTinKhachHang.add(txtEmail);
 
 		txtSDT = new RoundedTextField(15);
 		txtSDT.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtSDT.setColumns(10);
-		txtSDT.setBounds(35, 262, 250, 30);
+		txtSDT.setBounds(35, 268, 250, 30);
 		panelThongTinKhachHang.add(txtSDT);
 
 		txtCCCD = new RoundedTextField(15);
@@ -232,14 +233,14 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		btnThem.setForeground(Color.WHITE);
 		btnThem.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnThem.setBackground(new Color(51, 102, 153));
-		btnThem.setBounds(47, 372, 85, 25);
+		btnThem.setBounds(45, 361, 98, 36);
 		panelThongTinKhachHang.add(btnThem);
 
 		btnSua = new RoundedButton("Sửa", 15);
 		btnSua.setForeground(Color.WHITE);
 		btnSua.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnSua.setBackground(new Color(51, 102, 153));
-		btnSua.setBounds(189, 372, 85, 25);
+		btnSua.setBounds(174, 361, 98, 36);
 		panelThongTinKhachHang.add(btnSua);
 
 		JPanel panel_2 = new JPanel();

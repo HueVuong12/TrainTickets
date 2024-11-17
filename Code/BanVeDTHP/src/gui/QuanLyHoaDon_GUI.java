@@ -24,6 +24,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import com.toedter.calendar.JDateChooser;
+
+import components.RoundedButton;
 import dao.HoaDon_DAO;
 import dao.KhachHang_DAO;
 import entity.HoaDon;
@@ -50,8 +52,6 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 	private JCheckBox chckbxDaHoanTien;
 	private JCheckBox chckbxDaHoanVe;
 	private JCheckBox chckbxTatCa;
-	private JButton btnXemChiTiet;
-	private JButton btnXuatHoaDon;
 	private HoaDon_DAO dsHD;
 	private TableRowSorter<TableModel> sorter;
 	private JTextField txtTu;
@@ -60,6 +60,8 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 	private JButton btnTraVe;
 	public HoaDon hoaDonTraVe;
 	public HoaDon hoaDonTXemCT;
+	private RoundedButton btnXemChiTiet;
+	private RoundedButton btnXuatHoaDon;
 	@SuppressWarnings("serial")
 	public QuanLyHoaDon_GUI(TrangChu_GUI trangChu) {
 		setBackground(Color.white);
@@ -258,15 +260,19 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		table.setRowSorter(sorter);
 		table.setModel(model);
 		scrollPane.setViewportView(table);
-
-		btnXemChiTiet = new JButton("Xem chi tiết");
+		
+		btnXemChiTiet = new RoundedButton("Xem chi tiết", 15);
+		btnXemChiTiet.setBackground(new Color(51, 102, 153));
 		btnXemChiTiet.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnXemChiTiet.setBounds(10, 527, 100, 30);
+		btnXemChiTiet.setForeground(new Color(255, 255, 255));
 		add(btnXemChiTiet);
 
-		btnXuatHoaDon = new JButton("Xuất hóa đơn");
+		btnXuatHoaDon = new RoundedButton("Xuất hóa đơn", 15);
+		btnXuatHoaDon.setForeground(new Color(255, 255, 255));
 		btnXuatHoaDon.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnXuatHoaDon.setBounds(120, 527, 100, 30);
+		btnXuatHoaDon.setBackground(new Color(51, 102, 153));
 		add(btnXuatHoaDon);
 
 		btnXemChiTiet.addActionListener(this);
@@ -282,9 +288,12 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		chckbxDaHoanTien.addActionListener(this);
 		chckbxTatCa.addActionListener(this);
 		
-		btnTraVe = new JButton("Trả vé");
+		
+		btnTraVe = new RoundedButton("Trả vé", 15);
+		btnTraVe.setForeground(new Color(255, 255, 255));
 		btnTraVe.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnTraVe.setBounds(230, 527, 85, 30);
+		btnTraVe.setBackground(new Color(51, 102, 153));
 		add(btnTraVe);
 		btnTraVe.addActionListener(new ActionListener() {
 		    @Override

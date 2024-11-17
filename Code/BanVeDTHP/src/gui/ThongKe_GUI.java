@@ -34,6 +34,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import components.ConTent_JPanel;
+import components.RoundedButton;
 import dao.Ca_DAO;
 import dao.ChiTietHoaDon_DAO;
 import dao.ChuyenTau_DAO;
@@ -378,10 +379,15 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblNewLabel_2.setBounds(0, 0, 95, 35);
+		lblNewLabel_2.setBounds(10, 0, 95, 35);
 		jp_header.add(lblNewLabel_2);
 		
-		btnXem_TKDT = new JButton("Xem");
+		
+		
+		btnXem_TKDT = new RoundedButton("Xem", 15);
+		btnXem_TKDT.setBackground(SystemColor.activeCaptionBorder);
+		btnXem_TKDT.setForeground(SystemColor.desktop);
+//		btnXem_TKDT = new JButton("Xem");
 		btnXem_TKDT.setBounds(279, 10, 85, 21);
 		jp_header.add(btnXem_TKDT);
 
@@ -534,9 +540,8 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3.setForeground(new Color(255, 255, 255));
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblNewLabel_3.setBounds(0, 0, 95, 35);
+		lblNewLabel_3.setBounds(10, 0, 95, 35);
 		jp_header1.add(lblNewLabel_3);
-
 
 		//Icon xổ xuống
 		ImageIcon downIcon1 = new ImageIcon(getClass().getResource("/img/Polygon_20.png"));
@@ -544,7 +549,10 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		JLabel downIconLabel1 = new JLabel(new ImageIcon(scaledDown1));
 		jp_header1.add(downIconLabel1);
 		
-		btnXem_TKCT = new JButton("Xem");
+		btnXem_TKCT = new RoundedButton("Xem", 15);
+		btnXem_TKCT.setBackground(SystemColor.activeCaptionBorder);
+		btnXem_TKCT.setForeground(SystemColor.desktop);
+
 		btnXem_TKCT.setBounds(279, 10, 85, 21);
 		jp_header1.add(btnXem_TKCT);
 

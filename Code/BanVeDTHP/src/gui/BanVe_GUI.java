@@ -20,6 +20,7 @@ import javax.swing.SwingConstants;
 import com.toedter.calendar.JDateChooser;
 
 import components.ChuyenTau_JPanel;
+import components.RoundedButton;
 import components.Toa_JPanel;
 import components.Ve_JPanel;
 import dao.ChuyenTau_DAO;
@@ -94,6 +95,8 @@ public class BanVe_GUI extends JPanel {
 	Toa_DAO toa_DAO = new Toa_DAO();
 	Ve_DAO ve_DAO = new Ve_DAO();
 	Ghe_DAO ghe_DAO = new Ghe_DAO();
+	private RoundedButton btnTim;
+	private RoundedButton btnMua;
 
 	/**
 	 * Create the panel.
@@ -160,8 +163,10 @@ public class BanVe_GUI extends JPanel {
 		jp_Content_ThongTin.setBackground(SystemColor.controlHighlight);
 		jp_Content_ThongTin.setBounds(0, 32, 244, 319);
 		jp_timKiem.add(jp_Content_ThongTin);
+		btnTim = new RoundedButton("Tìm", 15);
+		btnTim.setForeground(new Color(255, 255, 255));
+		btnTim.setBackground(new Color(51, 102, 153));
 
-		JButton btnTim = new JButton("Tìm");
 		btnTim.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (isValidatedTxtField()) {
@@ -347,8 +352,11 @@ public class BanVe_GUI extends JPanel {
 		jp_Content_GioVe.setBackground(SystemColor.controlHighlight);
 		jp_Content_GioVe.setBounds(0, 31, 244, 160);
 		jp_GioVe.add(jp_Content_GioVe);
+		
+		btnMua = new RoundedButton("Mua", 15);
+		btnMua.setForeground(new Color(255, 255, 255));
+		btnMua.setBackground(new Color(51, 102, 153));
 
-		JButton btnMua = new JButton("Mua");
 		// Chuyển trang banVeNhapThongTIn_Gui bằng button Mua
 		btnMua.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -366,7 +374,7 @@ public class BanVe_GUI extends JPanel {
 		});
 
 		btnMua.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnMua.setBounds(149, 123, 85, 27);
+		btnMua.setBounds(78, 126, 85, 27);
 		jp_Content_GioVe.add(btnMua);
 
 		// Copy vào DoiVe_GUI . Lưu ý bỏ nút

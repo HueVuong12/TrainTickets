@@ -22,6 +22,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import components.ConTent_JPanel;
+import components.RoundedButton;
 import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
 import entity.KhachHang;
@@ -204,10 +205,14 @@ public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
 			}
 		});
 
-		btn_Tim = new JButton("Tìm");
-		btn_Tim.setBackground(Color.decode("#0091D4"));
+//		btn_Tim = new JButton("Tìm");
+		btn_Tim = new RoundedButton("Tìm", 15);
+		btn_Tim.setForeground(new Color(255, 255, 255));
+		btn_Tim.setBackground(new Color(51, 102, 153));
+
+//		btn_Tim.setBackground(Color.decode("#0091D4"));
 		btn_Tim.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btn_Tim.setBounds(209, 449, 100, 30);
+		btn_Tim.setBounds(122, 449, 100, 30);
 		panelThongTinKhachHang.add(btn_Tim);
 
 		btn_Tim.addActionListener(new ActionListener() {

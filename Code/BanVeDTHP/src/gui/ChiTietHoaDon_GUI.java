@@ -30,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import components.ConTent_JPanel;
+import components.RoundedButton;
 import dao.ChiTietHoaDon_DAO;
 import dao.Ve_DAO;
 import entity.ChiTietHoaDon;
@@ -311,7 +312,9 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 		table_DSV.setModel(model_DSV);
 		scrollPane_DSV.setViewportView(table_DSV);
 
-		btn_XuatHD = new JButton("Xuất hóa đơn");
+		btn_XuatHD = new RoundedButton("Xuất hóa đơn", 15);
+		btn_XuatHD.setForeground(new Color(255, 255, 255));
+		btn_XuatHD.setBackground(new Color(51, 102, 153));
 		btn_XuatHD.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_XuatHD.setBounds(95, 504, 151, 35);
 		add(btn_XuatHD);

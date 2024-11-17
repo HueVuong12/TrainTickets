@@ -44,6 +44,7 @@ import javax.swing.table.TableRowSorter;
 
 import components.ComboBoxRenderer;
 import components.ConTent_JPanel;
+import components.RoundedButton;
 
 import javax.swing.JRadioButton;
 
@@ -78,9 +79,7 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	private JTextField textField_CCCD;
 	private JTextField textField_SDT;
 	private JTextField textField_Email;
-	private JButton btnThem;
-	private JButton btnTim;
-	private JButton btnSua;
+
 	private JTable table_NV;
 	private JScrollPane scrollPane;
 	private JRadioButton cb_nam;
@@ -97,6 +96,9 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	private TableRowSorter<TableModel> sorter;
 	private ButtonGroup group;
 	private ButtonGroup group1;
+	private RoundedButton btnThem;
+	private RoundedButton btnSua;
+	private RoundedButton btnTim;
 
 	public QuanLyNhanVien_GUI(TrangChu_GUI trangChu) {
 		setBackground(SystemColor.text);
@@ -194,12 +196,16 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		textField_Email.setBounds(129, 290, 188, 25);
 		jp_contentThongTin.add(textField_Email);
 
-		btnThem = new JButton("Thêm");
+		btnThem = new RoundedButton("Thêm", 15);
+		btnThem.setForeground(new Color(255, 255, 255));
+		btnThem.setBackground(new Color(51, 102, 153));
 		btnThem.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnThem.setBounds(26, 458, 85, 27);
 		jp_contentThongTin.add(btnThem);
 
-		btnSua = new JButton("Sửa");
+		btnSua = new RoundedButton("Sửa", 15);
+		btnSua.setForeground(new Color(255, 255, 255));
+		btnSua.setBackground(new Color(51, 102, 153));
 		btnSua.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnSua.setBounds(126, 458, 85, 27);
 		jp_contentThongTin.add(btnSua);
@@ -287,8 +293,10 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		group1 = new ButtonGroup();
 		group1.add(cb_dangLam);
 		group1.add(cb_nghiLam);
-
-		btnTim = new JButton("Tìm");
+	
+		btnTim = new RoundedButton("Tìm", 15);
+		btnTim.setForeground(new Color(255, 255, 255));
+		btnTim.setBackground(new Color(51, 102, 153));
 		btnTim.setBounds(232, 458, 85, 27);
 		jp_contentThongTin.add(btnTim);
 		btnTim.setFont(new Font("Tahoma", Font.PLAIN, 15));
