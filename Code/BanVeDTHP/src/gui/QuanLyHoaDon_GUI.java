@@ -58,6 +58,7 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 	private JTextField txtDen;
 	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
 	private JButton btnTraVe;
+	private JButton btnTraVe_1;
 	public HoaDon hoaDonTraVe;
 	public HoaDon hoaDonTXemCT;
 	private RoundedButton btnXemChiTiet;
@@ -287,20 +288,21 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		chckbxDaHoanVe.addActionListener(this);
 		chckbxDaHoanTien.addActionListener(this);
 		chckbxTatCa.addActionListener(this);
-<<<<<<< HEAD
+//<<<<<<< HEAD
 		
 		
 		btnTraVe = new RoundedButton("Trả vé", 15);
 		btnTraVe.setForeground(new Color(255, 255, 255));
-=======
-
-		btnTraVe = new JButton("Trả vé");
->>>>>>> 9ad2620864ffe2999491c02ad49861913c76ec6d
-		btnTraVe.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		btnTraVe.setBounds(230, 527, 85, 30);
-		btnTraVe.setBackground(new Color(51, 102, 153));
-		add(btnTraVe);
-		btnTraVe.addActionListener(new ActionListener() {
+//=======
+		btnTraVe_1 = new RoundedButton("Trả vé", 15);
+		btnTraVe_1.setForeground(new Color(255, 255, 255));
+		btnTraVe_1.setForeground(new Color(255, 255, 255));
+//>>>>>>> 9ad2620864ffe2999491c02ad49861913c76ec6d
+		btnTraVe_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnTraVe_1.setBounds(230, 527, 85, 30);
+		btnTraVe_1.setBackground(new Color(51, 102, 153));
+		add(btnTraVe_1);
+		btnTraVe_1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();

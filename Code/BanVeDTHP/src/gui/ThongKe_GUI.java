@@ -530,7 +530,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		lbl_titleSLVB.setBounds(579, 61, 126, 20);
 		jp_ketQua.add(lbl_titleSLVB);
 		
-		btn_XuatFile_TheoDoanhThu = new JButton("Xuất File");
+		btn_XuatFile_TheoDoanhThu = new RoundedButton("Xuất File", 15);
+		btn_XuatFile_TheoDoanhThu.setForeground(new Color(255, 255, 255));
+		btn_XuatFile_TheoDoanhThu.setBackground(new Color(51, 102, 153));
 		btn_XuatFile_TheoDoanhThu.setBounds(809, 10, 96, 33);
 		jp_ketQua.add(btn_XuatFile_TheoDoanhThu);
 		btn_XuatFile_TheoDoanhThu.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -793,7 +795,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		lbl_titleSLVBCT.setBounds(598, 61, 114, 20);
 		jp_ketQuaCT.add(lbl_titleSLVBCT);
 		
-		btn_XuatFile_TheoChuyenTau = new JButton("Xuất File");
+		btn_XuatFile_TheoChuyenTau = new RoundedButton("Xuất File", 15);
+		btn_XuatFile_TheoChuyenTau.setBackground(new Color(51, 102, 153));
+		btn_XuatFile_TheoChuyenTau.setForeground(Color.WHITE);
 		btn_XuatFile_TheoChuyenTau.setBounds(822, 10, 96, 33);
 		jp_ketQuaCT.add(btn_XuatFile_TheoChuyenTau);
 		btn_XuatFile_TheoChuyenTau.setFont(new Font("Tahoma", Font.PLAIN, 15));

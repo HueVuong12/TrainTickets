@@ -1,10 +1,10 @@
 ﻿-- Tạo database DTHP
-CREATE DATABASE DTHP
+CREATE DATABASE DTHP1
 COLLATE Vietnamese_CI_AS;
 GO
 
 -- Sử dụng database DTHP
-USE DTHP;
+USE DTHP1;
 GO
 
 -- Tạo bảng Ga
