@@ -2,28 +2,45 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.SystemColor;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -37,18 +54,22 @@ import components.ConTent_JPanel;
 import dao.Ca_DAO;
 import dao.ChiTietHoaDon_DAO;
 import dao.ChuyenTau_DAO;
+import dao.Ga_DAO;
 import dao.HoaDon_DAO;
+import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
 import dao.TaiKhoan_DAO;
 import dao.Ve_DAO;
-import entity.Ca;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
+import entity.KhachHang;
 import entity.NhanVien;
 import entity.TaiKhoan;
 import entity.Ve;
 
 import javax.swing.JTabbedPane;
+
+import com.itextpdf.io.IOException;
 import com.toedter.calendar.JDateChooser;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -111,12 +132,17 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	private DangNhap_GUI dangNhap;
 	private TaiKhoan_DAO dsTK = new TaiKhoan_DAO();
 	private Ca_DAO dsCa = new Ca_DAO();
+	private KhachHang_DAO dsKH = new KhachHang_DAO();
+	private Ga_DAO dsGa= new Ga_DAO();
 	private JButton btnXem_TKDT;
 	private JButton btnXem_TKCT;
 	private JPanel jp_thongKeTheoKhuyenMai_TheoCa;
 	private JPanel jp_thongKeTheoHang_TheoCa;
 	private ChartPanel chartPanelTheoCa_Hang_SLKM;
 	private ChartPanel chartPanelTheoCa_Hang_TKDTH;
+	private JButton btn_XuatFile_TheoCa;
+	private JButton btn_XuatFile_TheoDoanhThu;
+	private JButton btn_XuatFile_TheoChuyenTau;
 	public ThongKe_GUI(TrangChu_GUI trangChu)  {
 		this.trangChu = trangChu;
 		setBackground(SystemColor.text);
@@ -408,7 +434,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				tkdt_ngayBatDau= dateFormat.format(selectedDate);
-//				System.out.println("Ngày bắt đầu"+tkdt_ngayBatDau);
 			} else {
 				tkdt_ngayBatDau = "";  // Đặt lại chữ gợi ý nếu không có ngày nào được chọn
 			}
@@ -425,7 +450,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				tkdt_ngayKetThuc= dateFormat.format(selectedDate);
-//				System.out.println("Ngày kết thúc"+ tkdt_ngayKetThuc);
 			} else {
 				tkdt_ngayBatDau = "";  // Đặt lại chữ gợi ý nếu không có ngày nào được chọn
 			}
@@ -499,8 +523,53 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		lbl_titleSLVB.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lbl_titleSLVB.setBounds(579, 61, 126, 20);
 		jp_ketQua.add(lbl_titleSLVB);
-//		System.out.println("đúng");
-
+		
+		btn_XuatFile_TheoDoanhThu = new JButton("Xuất File");
+		btn_XuatFile_TheoDoanhThu.setBounds(809, 10, 96, 33);
+		jp_ketQua.add(btn_XuatFile_TheoDoanhThu);
+		btn_XuatFile_TheoDoanhThu.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btn_XuatFile_TheoDoanhThu.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String formattedNgayBatDau = sqlDateFormat.format(dateChooser_TKDT_batDau.getDate());
+				String formattedNgayKetThuc = sqlDateFormat.format(dateChooser_TKDT_ketThuc.getDate());
+				NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
+				// Lấy danh sách hóa đơn cần xuất
+		        ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoNgayLapHD(formattedNgayBatDau, formattedNgayKetThuc);
+		        ArrayList<Ve> data_TheoDoanhThu = new ArrayList<Ve>();
+		        if (listHD == null) {
+					return;
+				}
+				// Duyệt qua từng hóa đơn và kiểm tra thời gian
+				for (HoaDon hd : listHD) {
+					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
+					if (cthd != null) {
+						ArrayList<Ve> dsVeTheoChiTiet = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
+				        if (dsVeTheoChiTiet != null) {
+				            data_TheoDoanhThu.addAll(dsVeTheoChiTiet);
+				        }	
+					} else {
+						System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
+					}
+				}
+		        if (data_TheoDoanhThu == null || data_TheoDoanhThu.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Không có dữ liệu để xuất Excel!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+				// Gọi phương thức xuất file Excel
+		        try {
+		            xuatExcelDoanhThu(data_TheoDoanhThu,nv,lbl_doanhThu,lbl_slvb,lbl_sltv);
+		            JOptionPane.showMessageDialog(null, "Xuất file Excel thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		        } catch (IOException | java.io.IOException ex) {
+		            JOptionPane.showMessageDialog(null, "Lỗi khi xuất file Excel: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+		            ex.printStackTrace();
+		        }
+			}
+		});
+		
 		//JPane chứa JFreeChat
 		jp_thongKe = new JPanel();
 		jp_thongKe.setBounds(28, 133, 1311, 308);
@@ -547,13 +616,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		btnXem_TKCT = new JButton("Xem");
 		btnXem_TKCT.setBounds(279, 10, 85, 21);
 		jp_header1.add(btnXem_TKCT);
-
-		//			ImageIcon downIcon = new ImageIcon(getClass().getResource("/img/510869_calendar_date_event_schedule_icon.png"));
-		//			System.out.println(downIcon);
-		//		    Image scaledDown = downIcon.getImage().getScaledInstance(20 ,20, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
-		//		    JLabel downIconLabel = new JLabel(new ImageIcon(scaledDown));
-		//		    downIconLabel.setBounds(242 ,0 , 29 ,35); // Cập nhật kích thước trên JLabel
-		//		    jp_header.add(downIconLabel);
 		
 		//JPane chứa content
 		jp_content1 = new JPanel();
@@ -571,7 +633,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				tkct_ngayBatDau= dateFormat.format(selectedDate);
-//				System.out.println("Ngày bắt đầu ct"+tkct_ngayBatDau);
 			} else {
 				tkct_ngayBatDau = "";  // Đặt lại chữ gợi ý nếu không có ngày nào được chọn
 			}
@@ -586,7 +647,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				tkct_ngayKetThuc= dateFormat.format(selectedDate);
-//				System.out.println("Ngày kết thúc ct"+tkct_ngayKetThuc);
 			} else {
 				tkct_ngayKetThuc = "";  // Đặt lại chữ gợi ý nếu không có ngày nào được chọn
 			}
@@ -602,6 +662,69 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		ImageIcon doanhThuCTIcon = new ImageIcon(getClass().getResource("/img/coin_1.png"));
 		Image scaledDoanhThuCT = doanhThuCTIcon.getImage().getScaledInstance(40,40, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 		jp_ketQuaTheoCa.setLayout(null);
+		
+		btn_XuatFile_TheoCa = new JButton("Xuất File");
+		btn_XuatFile_TheoCa.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btn_XuatFile_TheoCa.setBounds(1205, 10, 96, 33);
+		jp_ketQuaTheoCa.add(btn_XuatFile_TheoCa);
+		btn_XuatFile_TheoCa.addActionListener(new ActionListener() {
+			
+			private ArrayList<Ve> data_TheoCa;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				//////////////////////////////Kiểm tra VaoCa và ketCa có null hay không///////////////
+				LocalDateTime thoiGianBatDauCa;
+				if (trangChu.vaoCa != null) {
+					thoiGianBatDauCa = trangChu.vaoCa; // Gán đúng giá trị của `trangChu.vaoCa`
+				} else {
+					thoiGianBatDauCa = LocalDateTime.now();
+				}
+				LocalDateTime thoiGianKetThucCa;
+				if (trangChu.ketCa != null) {
+					thoiGianKetThucCa = trangChu.ketCa;
+				} else {
+					thoiGianKetThucCa = LocalDateTime.now();
+				}
+				/////////////////////////////
+				
+				NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
+				// Lấy danh sách hóa đơn cần xuất
+		        ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV()); // Thay thế `dsHD.getHoaDonTheoCa()` bằng cách lấy danh sách hóa đơn phù hợp
+		        if (listHD == null) {
+					return;
+				}
+				
+				// Duyệt qua từng hóa đơn và kiểm tra thời gian
+				for (HoaDon hd : listHD) {
+					LocalDateTime thoiGianHoaDon = hd.getNgayLapHoaDon();
+					if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
+						continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
+					}
+
+					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
+					if (cthd != null) {
+						data_TheoCa = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
+
+					} else {
+						System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
+					}
+				}
+		        if (data_TheoCa == null || data_TheoCa.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Không có dữ liệu để xuất Excel!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+				// Gọi phương thức xuất file Excel
+		        try {
+		            xuatExcelTheoCa(data_TheoCa,nv,thoiGianBatDauCa,thoiGianKetThucCa,lbl_doanhThuCT,lbl_slvbtc,lbl_sltvtc);
+		            JOptionPane.showMessageDialog(null, "Xuất file Excel thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		        } catch (IOException | java.io.IOException ex) {
+		            JOptionPane.showMessageDialog(null, "Lỗi khi xuất file Excel: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+		            ex.printStackTrace();
+		        }
+			}
+		});
 		jp_ketQuaCT.setLayout(null);
 		JLabel doanhThuCTIconLabel = new JLabel(new ImageIcon(scaledDoanhThuCT));
 		jp_ketQuaCT.add(doanhThuCTIconLabel);
@@ -626,19 +749,19 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		jp_ketQuaCT.setLayout(null);
 		JLabel sltvctIconLabel = new JLabel(new ImageIcon(scaledSLTVCT));
 		jp_ketQuaCT.add(sltvctIconLabel);
-		sltvctIconLabel.setBounds(334, 41, 40, 40);
+		sltvctIconLabel.setBounds(290, 41, 40, 40);
 
 		lbl_sltvct = new JLabel("");
 		lbl_sltvct.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lbl_sltvct.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_sltvct.setBounds(384, 41, 114, 20);
+		lbl_sltvct.setBounds(340, 41, 114, 20);
 		jp_ketQuaCT.add(lbl_sltvct);
 
 		JLabel lbl_titleSLTVCT = new JLabel("Số lượng trả vé");
 		lbl_titleSLTVCT.setBackground(SystemColor.windowBorder);
 		lbl_titleSLTVCT.setForeground(new Color(105, 105, 105));
 		lbl_titleSLTVCT.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lbl_titleSLTVCT.setBounds(406, 61, 103, 20);
+		lbl_titleSLTVCT.setBounds(351, 61, 103, 20);
 		jp_ketQuaCT.add(lbl_titleSLTVCT);
 
 		//Icon số lượng vé bán chuyến tàu
@@ -647,20 +770,66 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		jp_ketQuaCT.setLayout(null);
 		JLabel slvbctIconLabel = new JLabel(new ImageIcon(scaledSLVBCT));
 		jp_ketQuaCT.add(slvbctIconLabel);
-		slvbctIconLabel.setBounds(615, 41, 40, 40);
+		slvbctIconLabel.setBounds(538, 41, 40, 40);
 
 		lbl_slvbct = new JLabel("");
 		lbl_slvbct.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lbl_slvbct.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_slvbct.setBounds(665, 41, 114, 20);
+		lbl_slvbct.setBounds(588, 41, 114, 20);
 		jp_ketQuaCT.add(lbl_slvbct);
 
 		JLabel lbl_titleSLVBCT = new JLabel("Số lượng vé bán");
 		lbl_titleSLVBCT.setBackground(SystemColor.windowBorder);
 		lbl_titleSLVBCT.setForeground(new Color(105, 105, 105));
 		lbl_titleSLVBCT.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lbl_titleSLVBCT.setBounds(675, 61, 114, 20);
+		lbl_titleSLVBCT.setBounds(598, 61, 114, 20);
 		jp_ketQuaCT.add(lbl_titleSLVBCT);
+		
+		btn_XuatFile_TheoChuyenTau = new JButton("Xuất File");
+		btn_XuatFile_TheoChuyenTau.setBounds(822, 10, 96, 33);
+		jp_ketQuaCT.add(btn_XuatFile_TheoChuyenTau);
+		btn_XuatFile_TheoChuyenTau.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btn_XuatFile_TheoChuyenTau.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String formattedNgayBatDau = sqlDateFormat.format(dateChooser_TKCT_batDau.getDate());
+				String formattedNgayKetThuc = sqlDateFormat.format(dateChooser_TKCT_ketThuc.getDate());
+				NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
+				// Lấy danh sách hóa đơn cần xuất
+		        ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoNgayLapHD(formattedNgayBatDau, formattedNgayKetThuc);
+		        ArrayList<Ve> data_TheoChuyenTau = new ArrayList<Ve>();
+		        if (listHD == null) {
+					return;
+				}
+				// Duyệt qua từng hóa đơn và kiểm tra thời gian
+				for (HoaDon hd : listHD) {
+					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
+					if (cthd != null) {
+						ArrayList<Ve> dsVeTheoChiTiet = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
+				        if (dsVeTheoChiTiet != null) {
+				            data_TheoChuyenTau.addAll(dsVeTheoChiTiet);
+				        }	
+					} else {
+						System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
+					}
+				}
+		        if (data_TheoChuyenTau == null || data_TheoChuyenTau.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Không có dữ liệu để xuất Excel!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+				// Gọi phương thức xuất file Excel
+		        try {
+		            xuatExcelChuyenTau(data_TheoChuyenTau,nv,lbl_doanhThuCT,lbl_slvbct,lbl_sltvct);
+		            JOptionPane.showMessageDialog(null, "Xuất file Excel thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		        } catch (IOException | java.io.IOException ex) {
+		            JOptionPane.showMessageDialog(null, "Lỗi khi xuất file Excel: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+		            ex.printStackTrace();
+		        }
+			}
+		});
 
 		//JPane chứa thống kê theo chuyến tàu
 		jp_thongKeCT = new JPanel();
@@ -676,6 +845,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		//        tabbedPane.setBackgroundAt(2, Color.LIGHT_GRAY);
 		updateKetQuaThongKeTheoCa(trangChu);
 		kiemTraQuyen(trangChu);
+		
 	}
 
 	//Chọn 1 radio để thực hiện
@@ -708,29 +878,32 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Lấy thông tin nhân viên theo tên
 		NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
 		if (nv == null) {
-//			System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
 			return;
 		}
-
-		// Lấy thông tin ca làm
-		Ca ca = dsCa.getCaTheoMaCa(nv.getCa().getMaCa());
-		if (ca == null) {
-//			System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
-			return;
+		//////////////////////////////Kiểm tra VaoCa và ketCa có null hay không///////////////
+		LocalDateTime thoiGianBatDauCa;
+		if (trangChu.vaoCa != null) {
+		    thoiGianBatDauCa = trangChu.vaoCa; // Gán đúng giá trị của `trangChu.vaoCa`
+		} else {
+		    thoiGianBatDauCa = LocalDateTime.now();
 		}
-		LocalTime thoiGianBatDauCa = ca.getThoiGianBatDau();
-		LocalTime thoiGianKetThucCa = ca.getThoiGianKetThuc();
+		LocalDateTime thoiGianKetThucCa;
+		if (trangChu.ketCa != null) {
+		    thoiGianKetThucCa = trangChu.ketCa;
+		} else {
+		    thoiGianKetThucCa = LocalDateTime.now();
+		}
+		/////////////////////////////
 
 		// Lấy danh sách hóa đơn của nhân viên
 		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
 		if (listHD == null) {
-//			System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
 			return;
 		}
-
+		
 		// Duyệt qua từng hóa đơn và kiểm tra thời gian
 		for (HoaDon hd : listHD) {
-			LocalTime thoiGianHoaDon = hd.getNgayLapHoaDon().toLocalTime();
+			LocalDateTime thoiGianHoaDon = hd.getNgayLapHoaDon();
 			if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 				continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
 			}
@@ -738,13 +911,13 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 			if (cthd != null) {
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
-				doanhThu += cthd.tinhTien();
 
 				for (Ve ve : listVe) {
 					slvb++;
 					String khuyenMai = ve.getKhuyenMai();
 					doanhThuTheoKhuyenMai.put(khuyenMai,
 							doanhThuTheoKhuyenMai.getOrDefault(khuyenMai, 0f) + ve.tinhGiaVe());
+					doanhThu +=ve.tinhGiaVe();
 				}
 			} else {
 				System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
@@ -753,7 +926,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 
 		// Tính số lượng vé tồn tại chưa hoàn vé
 		for (HoaDon hd : listHD) {
-			LocalTime thoiGianHoaDon = hd.getNgayLapHoaDon().toLocalTime();
+			LocalDateTime thoiGianHoaDon = hd.getNgayLapHoaDon();
 			if (hd.getDaHoanVe() && !thoiGianHoaDon.isBefore(thoiGianBatDauCa) && !thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 				ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 				if (cthd != null) {
@@ -762,10 +935,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			}
 		}
 
-//		// Hiển thị kết quả doanh thu theo khuyến mãi
-//		for (Map.Entry<String, Float> entry : doanhThuTheoKhuyenMai.entrySet()) {
-//			System.out.println("Khuyến mãi: " + entry.getKey() + ", Doanh thu: " + entry.getValue());
-//		}
 
 		// Gán giá trị cho các label
 		lbl_ca.setText(nv.getCa().getMaCa());
@@ -795,13 +964,13 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				// Kiểm tra cthd có null hay không
 				if (cthd != null) {
 					ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
-					doanhThu += cthd.tinhTien();
 					for (Ve ve : listVe) {
 						slvb++;
 						String khuyenMai = ve.getKhuyenMai(); // Lấy mã khuyến mãi của vé
 						// Cộng doanh thu vào khuyến mãi tương ứng
 						doanhThuTheoKhuyenMai.put(khuyenMai, 
 								doanhThuTheoKhuyenMai.getOrDefault(khuyenMai, 0f) +ve.tinhGiaVe());
+						doanhThu +=ve.tinhGiaVe();
 					}
 				} else {
 					System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
@@ -814,11 +983,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				}
 			}
 
-//			// Hiển thị kết quả doanh thu theo khuyến mãi
-//			for (Map.Entry<String, Float> entry : doanhThuTheoKhuyenMai.entrySet()) {
-//				System.out.println("Khuyến mãi: " + entry.getKey() + ", Doanh thu: " + entry.getValue());
-//				//				doanhThu +=entry.getValue();
-//			}
 			lbl_doanhThu.setText(dinhDangTienTe(doanhThu));
 			lbl_slvb.setText(String.valueOf(slvb));
 			lbl_sltv.setText(String.valueOf(sltv));
@@ -848,16 +1012,12 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				// Kiểm tra cthd có null hay không
 				if (cthd != null) {
 					ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
-					doanhThu += cthd.tinhTien();
-//					System.out.println(doanhThu);
-					// Sử dụng một Set để theo dõi mã chuyến tàu đã được xử lý
 					Set<String> processedChuyenTau = new HashSet<>();
 
 					for (Ve ve : listVe) {
 						slvb++;
 						String chuyenTau = ve.getChuyenTau().getMaTau(); // Lấy mã chuyến tàu
-//						System.out.println("Mã chuyến tàu: " + chuyenTau);
-
+						doanhThu +=ve.tinhGiaVe();
 						// Kiểm tra xem mã chuyến tàu đã được xử lý chưa
 						if (!processedChuyenTau.contains(chuyenTau)) {
 							// Cộng doanh thu vào chuyến tàu tương ứng
@@ -964,15 +1124,21 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			return dataset;
 		}
 
-		// Lấy thông tin ca làm
-		Ca ca = dsCa.getCaTheoMaCa(nv.getCa().getMaCa());
-		if (ca == null) {
-//			System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
-			return dataset;
+		//////////////////////////////Kiểm tra VaoCa và ketCa có null hay không///////////////
+		LocalDateTime thoiGianBatDauCa;
+		if (trangChu.vaoCa != null) {
+			thoiGianBatDauCa = trangChu.vaoCa; // Gán đúng giá trị của `trangChu.vaoCa`
+		} else {
+			thoiGianBatDauCa = LocalDateTime.now();
 		}
-		LocalTime thoiGianBatDauCa = ca.getThoiGianBatDau();
-		LocalTime thoiGianKetThucCa = ca.getThoiGianKetThuc();
 
+		LocalDateTime thoiGianKetThucCa;
+		if (trangChu.ketCa != null) {
+			thoiGianKetThucCa = trangChu.ketCa;
+		} else {
+			thoiGianKetThucCa = LocalDateTime.now();
+		}
+		////////////////////////////////////////////
 		// Lấy danh sách hóa đơn của nhân viên
 		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
 		if (listHD == null) {
@@ -982,7 +1148,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 
 		// Duyệt qua từng hóa đơn và kiểm tra thời gian
 		for (HoaDon hd : listHD) {
-			LocalTime thoiGianHoaDon = hd.getNgayLapHoaDon().toLocalTime();
+			LocalDateTime thoiGianHoaDon = hd.getNgayLapHoaDon();
 			if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 				continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
 			}
@@ -1034,25 +1200,31 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			return dataset;
 		}
 
-		// Lấy thông tin ca làm
-		Ca ca = dsCa.getCaTheoMaCa(nv.getCa().getMaCa());
-		if (ca == null) {
-//			System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
-			return dataset;
+		//////////////////////////////Kiểm tra VaoCa và ketCa có null hay không///////////////
+		LocalDateTime thoiGianBatDauCa;
+		if (trangChu.vaoCa != null) {
+			thoiGianBatDauCa = trangChu.vaoCa; // Gán đúng giá trị của `trangChu.vaoCa`
+		} else {
+			thoiGianBatDauCa = LocalDateTime.now();
 		}
-		LocalTime thoiGianBatDauCa = ca.getThoiGianBatDau();
-		LocalTime thoiGianKetThucCa = ca.getThoiGianKetThuc();
+
+		LocalDateTime thoiGianKetThucCa;
+		if (trangChu.ketCa != null) {
+			thoiGianKetThucCa = trangChu.ketCa;
+		} else {
+			thoiGianKetThucCa = LocalDateTime.now();
+		}
+		////////////////////////////////////////////
 
 		// Lấy danh sách hóa đơn của nhân viên
 		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
 		if (listHD == null) {
-//			System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
 			return dataset ;
 		}
 
 		// Duyệt qua từng hóa đơn và kiểm tra thời gian
 		for (HoaDon hd : listHD) {
-			LocalTime thoiGianHoaDon = hd.getNgayLapHoaDon().toLocalTime();
+			LocalDateTime thoiGianHoaDon = hd.getNgayLapHoaDon();
 			if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 				continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
 			}
@@ -1069,7 +1241,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 						// Cộng doanh thu vào chuyến tàu tương ứng
 						doanhThuTheoHang.put(hang, doanhThuTheoHang.getOrDefault(hang, 0f) + ve.tinhGiaVe());
 						processedHang.add(hang); // Đánh dấu là đã xử lý
-//						System.out.println("Cập nhật doanh thu: " + doanhThuTheoHang);
 					}
 				}
 			} else {
@@ -1106,29 +1277,34 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	    // Lấy thông tin nhân viên theo tên
 	    NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
 	    if (nv == null) {
-//	        System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
 	        return dataset;
 	    }
 
-	    // Lấy thông tin ca làm
-	    Ca ca = dsCa.getCaTheoMaCa(nv.getCa().getMaCa());
-	    if (ca == null) {
-//	        System.out.println("Không tìm thấy ca với mã: " + nv.getCa().getMaCa());
-	        return dataset;
+	    //////////////////////////////Kiểm tra VaoCa và ketCa có null hay không///////////////
+	    LocalDateTime thoiGianBatDauCa;
+	    if (trangChu.vaoCa != null) {
+	    	thoiGianBatDauCa = trangChu.vaoCa; // Gán đúng giá trị của `trangChu.vaoCa`
+	    } else {
+	    	thoiGianBatDauCa = LocalDateTime.now();
 	    }
-	    LocalTime thoiGianBatDauCa = ca.getThoiGianBatDau();
-	    LocalTime thoiGianKetThucCa = ca.getThoiGianKetThuc();
+
+	    LocalDateTime thoiGianKetThucCa;
+	    if (trangChu.ketCa != null) {
+	    	thoiGianKetThucCa = trangChu.ketCa;
+	    } else {
+	    	thoiGianKetThucCa = LocalDateTime.now();
+	    }
+	    ////////////////////////////////////////////
 
 	    // Lấy danh sách hóa đơn của nhân viên
 	    ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
 	    if (listHD == null) {
-//	        System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
 	        return dataset;
 	    }
 
 	    // Duyệt qua từng hóa đơn và kiểm tra thời gian
 	    for (HoaDon hd : listHD) {
-	        LocalTime thoiGianHoaDon = hd.getNgayLapHoaDon().toLocalTime();
+	    	LocalDateTime thoiGianHoaDon = hd.getNgayLapHoaDon();
 	        if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 	            continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
 	        }
@@ -1144,7 +1320,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	                    // Cộng doanh thu vào chuyến tàu tương ứng
 	                    doanhThuTheoHang.put(hang, doanhThuTheoHang.getOrDefault(hang, 0f) + ve.tinhGiaVe());
 	                    processedHang.add(hang); // Đánh dấu là đã xử lý
-//	                    System.out.println("Cập nhật doanh thu: " + doanhThuTheoHang);
 	                }
 	            }
 	        } else {
@@ -1161,7 +1336,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	    }
 
 	    if (doanhThuTheoHang.isEmpty()) {
-//	        System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
 	        dataset.setValue("Rỗng", 0); // Thêm giá trị cho trường hợp không có dữ liệu
 	    }
 
@@ -1228,7 +1402,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			// Kiểm tra cthd có null hay không
 			if (cthd != null) {
 				float doanhThu = cthd.tinhTien(); // Tính doanh thu từ cthd
-//				System.out.println("Doanh thu từ cthd: " + doanhThu);
 
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 
@@ -1237,14 +1410,12 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 
 				for (Ve ve : listVe) {
 					String chuyenTau = ve.getChuyenTau().getMaTau(); // Lấy mã chuyến tàu
-//					System.out.println("Mã chuyến tàu: " + chuyenTau);
 
 					// Kiểm tra xem mã chuyến tàu đã được xử lý chưa
 					if (!processedChuyenTau.contains(chuyenTau)) {
 						// Cộng doanh thu vào chuyến tàu tương ứng
 						doanhThuTheoChuyenTau.put(chuyenTau, doanhThuTheoChuyenTau.getOrDefault(chuyenTau, 0f) + doanhThu);
 						processedChuyenTau.add(chuyenTau); // Đánh dấu là đã xử lý
-//						System.out.println("Cập nhật doanh thu: " + doanhThuTheoChuyenTau);
 					}
 				}
 			} else {
@@ -1304,9 +1475,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 
 	        // Kiểm tra nếu tài khoản tồn tại
 	        if (tk != null) {
-	            // In ra giá trị phân quyền để kiểm tra
-//	            System.out.println("Phân quyền: " + tk.getPhanQuyen());
-
 	            if (tk.getPhanQuyen() == 2) {
 	                tabbedPane.setSelectedIndex(0); // Chọn tab 0 nếu quyền là 2
 	                tabbedPane.setEnabledAt(1, false); // Vô hiệu hóa tab 1
@@ -1322,6 +1490,463 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	    } else {
 	        System.out.println("Nhân viên không tồn tại.");
 	    }
+	}
+	
+	/////////////////XUẤT FILE EXCEL THỐNG KÊ THEO CA//////////////////////
+	public void xuatExcelTheoCa(ArrayList<Ve> data, NhanVien nv, LocalDateTime thoiGianBatDauCa,LocalDateTime thoiGianKetThucCa,JLabel label1,JLabel label2, JLabel label3) throws FileNotFoundException, java.io.IOException {
+
+		XSSFWorkbook workbook = new XSSFWorkbook();
+	    Sheet sheet = workbook.createSheet("VÉ TÀU");
+
+	    // ===== Tạo bảng thông tin nhân viên =====
+	    String[] headerData_ThongTinNV = {"Mã nhân viên", "Họ Tên", "Ca làm", "Thời gian vào ca", "Thời gian kết thúc ca"};
+	    CellStyle headerStyle_ThongTinNV = workbook.createCellStyle();
+	    org.apache.poi.ss.usermodel.Font headerFont_ThongTinNV = workbook.createFont();
+	    headerFont_ThongTinNV.setBold(true);
+	    headerFont_ThongTinNV.setColor(IndexedColors.WHITE.getIndex());
+	    headerStyle_ThongTinNV.setFont(headerFont_ThongTinNV);
+	    headerStyle_ThongTinNV.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+	    headerStyle_ThongTinNV.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+	    // Tiêu đề bảng nhân viên
+	    Row headerRow_ThongTinNV = sheet.createRow(0);
+	    for (int i = 0; i < headerData_ThongTinNV.length; i++) {
+	        Cell cell = headerRow_ThongTinNV.createCell(i);
+	        cell.setCellValue(headerData_ThongTinNV[i]);
+	        cell.setCellStyle(headerStyle_ThongTinNV);
+	    }
+
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+	    // Dữ liệu bảng nhân viên
+	    Row dataRow = sheet.createRow(1);
+	    dataRow.createCell(0).setCellValue(nv.getMaNV());
+	    dataRow.createCell(1).setCellValue(nv.getTenNV());
+	    dataRow.createCell(2).setCellValue(nv.getCa().getMaCa());
+	    dataRow.createCell(3).setCellValue(thoiGianBatDauCa.format(formatter));
+	    dataRow.createCell(4).setCellValue(thoiGianKetThucCa.format(formatter));
+
+	    // Tự động điều chỉnh kích thước cột
+	    for (int i = 0; i < headerData_ThongTinNV.length; i++) {
+	        sheet.autoSizeColumn(i);
+	    }
+
+	    // ===== Tạo bảng danh sách vé =====
+	    int startRow = 3; // Dòng bắt đầu cho bảng vé (sau bảng nhân viên)
+	    String[] headerData = {"STT", "Tên khách hàng", "Ga đi", "Ga đến", "Hạng", "Khuyến mãi", "Toa", "Ghế", "Mã vé", "Mã chuyến tàu", "Ngày đi", "Giờ đi", "Trạng thái", "Chi tiết"};
+	    CellStyle headerStyle = workbook.createCellStyle();
+	    org.apache.poi.ss.usermodel.Font headerFont = workbook.createFont();
+	    headerFont.setBold(true);
+	    headerFont.setColor(IndexedColors.WHITE.getIndex());
+	    headerStyle.setFont(headerFont);
+	    headerStyle.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+	    headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+	    Row headerRow = sheet.createRow(startRow);
+	    for (int i = 0; i < headerData.length; i++) {
+	        Cell cell = headerRow.createCell(i);
+	        cell.setCellValue(headerData[i]);
+	        cell.setCellStyle(headerStyle);
+	    }
+
+	    // Dữ liệu bảng vé
+	    int stt = 1;
+	    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    for (int i = 0; i < data.size(); i++) {
+	        Ve ve = data.get(i);
+	        Row row = sheet.createRow(startRow + 1 + i); // Dòng tiếp theo
+	        KhachHang kh = dsKH.getKhachHangTheoMaKH(ve.getKhachHang().getMaKH());
+	        String[] cellData = {
+	            String.valueOf(stt++),
+	            kh.getTenKH(),
+	            ve.getGaDi().getTenGa(),
+	            ve.getGaDen().getTenGa(),
+	            ve.getHang(),
+	            ve.getKhuyenMai(),
+	            ve.getToa().getMaToa(),
+	            String.valueOf(ve.getSoGhe().getSoGhe()),
+	            ve.getMaVe(),
+	            ve.getChuyenTau().getMaTau(),
+	            ve.getNgayDi().format(dateFormatter),
+	            ve.getGioDi().format(timeFormatter),
+	            ve.isTrangThai() ? "Đã hoàn thành" : "Chưa hoàn thành",
+	            ve.getChiTiet().getMaChiTiet()
+	        };
+
+	        for (int j = 0; j < cellData.length; j++) {
+	            row.createCell(j).setCellValue(cellData[j]);
+	        }
+	    }
+
+	    // Tự động điều chỉnh kích thước cột
+	    for (int i = 0; i < headerData.length; i++) {
+	        sheet.autoSizeColumn(i);
+	    }
+	    
+	    ////========= Tổng hợp thống kê==========///
+	    int tongHopRow = sheet.getLastRowNum() + 2; // Bắt đầu từ dòng trống sau cùng
+	    String[] headerData_tongHop = {"Tổng doanh thu","Số lượng vé bán","Số lượng vé trả"};
+	    CellStyle headerStyle_tongHop = workbook.createCellStyle();
+	    org.apache.poi.ss.usermodel.Font headerFont_tongHop = workbook.createFont();
+	    headerFont_tongHop.setBold(true);
+	    headerFont_tongHop.setColor(IndexedColors.WHITE.getIndex());
+	    headerStyle_tongHop.setFont(headerFont_tongHop);
+	    headerStyle_tongHop.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+	    headerStyle_tongHop.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+	    // Tiêu đề bảng nhân viên
+	    Row headerRow_tongHop = sheet.createRow(tongHopRow);
+	    for (int i = 0; i < headerData_tongHop.length; i++) {
+	        Cell cell = headerRow_tongHop.createCell(i);
+	        cell.setCellValue(headerData_tongHop[i]);
+	        cell.setCellStyle(headerStyle_tongHop);
+	    }
+	    // Dữ liệu bảng nhân viên
+	    Row dataRow_tongHop = sheet.createRow(tongHopRow+1);
+	    dataRow_tongHop.createCell(0).setCellValue(label1.getText().toString());
+	    dataRow_tongHop.createCell(1).setCellValue(label2.getText().toString());
+	    dataRow_tongHop.createCell(2).setCellValue(label3.getText().toString());
+	    // Tự động điều chỉnh kích thước cột
+	    for (int i = 0; i < headerData_tongHop.length; i++) {
+	        sheet.autoSizeColumn(i);
+	    }
+	    
+	    
+	    // Ghi và mở file
+	    String fileName = "excel/" + UUID.randomUUID().toString() + ".xlsx";
+	    try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
+	        workbook.write(fileOut);
+	        System.out.println("File Excel đã được lưu tại: " + fileName);
+	    } catch (IOException e) {
+	        System.err.println("Lỗi khi ghi file Excel:");
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            workbook.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    try {
+	        File file = new File(fileName);
+	        if (file.exists() && Desktop.isDesktopSupported()) {
+	            Desktop.getDesktop().open(file);
+	        }
+	    } catch (IOException e) {
+	        System.err.println("Lỗi khi mở file Excel:");
+	        e.printStackTrace();
+	    }
+	}	
+
+	/////////////////XUẤT FILE EXCEL THỐNG KÊ THEO DOANH THU//////////////////////
+	public void xuatExcelDoanhThu(ArrayList<Ve> data, NhanVien nv,JLabel label1,JLabel label2, JLabel label3) throws FileNotFoundException, java.io.IOException {
+		
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("Thống kê doanh thu");
+		Set<String> maVeTrung = new HashSet<>();
+		// ===== Tạo bảng thông tin nhân viên =====
+		String[] headerData_ThongTinNV = {"Mã nhân viên", "Họ Tên", "Thời gian bắt đầu", "Thời gian kết thúc"};
+		CellStyle headerStyle_ThongTinNV = workbook.createCellStyle();
+		org.apache.poi.ss.usermodel.Font headerFont_ThongTinNV = workbook.createFont();
+		headerFont_ThongTinNV.setBold(true);
+		headerFont_ThongTinNV.setColor(IndexedColors.WHITE.getIndex());
+		headerStyle_ThongTinNV.setFont(headerFont_ThongTinNV);
+		headerStyle_ThongTinNV.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+		headerStyle_ThongTinNV.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		// Tiêu đề bảng nhân viên
+		Row headerRow_ThongTinNV = sheet.createRow(0);
+		for (int i = 0; i < headerData_ThongTinNV.length; i++) {
+			Cell cell = headerRow_ThongTinNV.createCell(i);
+			cell.setCellValue(headerData_ThongTinNV[i]);
+			cell.setCellStyle(headerStyle_ThongTinNV);
+		}
+
+		// Dữ liệu bảng nhân viên
+		Row dataRow = sheet.createRow(1);
+		dataRow.createCell(0).setCellValue(nv.getMaNV());
+		dataRow.createCell(1).setCellValue(nv.getTenNV());
+		dataRow.createCell(2).setCellValue(tkdt_ngayBatDau);
+		dataRow.createCell(3).setCellValue(tkdt_ngayKetThuc);
+
+		// Tự động điều chỉnh kích thước cột
+		for (int i = 0; i < headerData_ThongTinNV.length; i++) {
+			sheet.autoSizeColumn(i);
+		}
+
+		// ===== Tạo bảng danh sách vé =====
+		int startRow = 3; // Dòng bắt đầu cho bảng vé (sau bảng nhân viên)
+		String[] headerData = {"STT", "Tên khách hàng", "Ga đi", "Ga đến", "Hạng", "Khuyến mãi", "Toa", "Ghế", "Mã vé", "Mã chuyến tàu", "Ngày đi", "Giờ đi", "Trạng thái", "Chi tiết"};
+		CellStyle headerStyle = workbook.createCellStyle();
+		org.apache.poi.ss.usermodel.Font headerFont = workbook.createFont();
+		headerFont.setBold(true);
+		headerFont.setColor(IndexedColors.WHITE.getIndex());
+		headerStyle.setFont(headerFont);
+		headerStyle.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+		headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		Row headerRow = sheet.createRow(startRow);
+		for (int i = 0; i < headerData.length; i++) {
+			Cell cell = headerRow.createCell(i);
+			cell.setCellValue(headerData[i]);
+			cell.setCellStyle(headerStyle);
+		}
+
+		// Dữ liệu bảng vé
+		int stt = 1;
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		for (int i = 0; i < data.size(); i++) {
+			Ve ve = data.get(i);
+			// Kiểm tra nếu mã vé đã tồn tại trong Set
+		    if (maVeTrung.contains(ve.getMaVe())) {
+		        continue; // Bỏ qua nếu trùng mã vé
+		    }
+		    
+		    // Thêm mã vé vào Set
+		    maVeTrung.add(ve.getMaVe());
+		    
+			Row row = sheet.createRow(startRow + 1 + i); // Dòng tiếp theo
+			KhachHang kh = dsKH.getKhachHangTheoMaKH(ve.getKhachHang().getMaKH());
+			String[] cellData = {
+					String.valueOf(stt++),
+					kh.getTenKH(),
+					ve.getGaDi().getTenGa(),
+					ve.getGaDen().getTenGa(),
+					ve.getHang(),
+					ve.getKhuyenMai(),
+					ve.getToa().getMaToa(),
+					String.valueOf(ve.getSoGhe().getSoGhe()),
+					ve.getMaVe(),
+					ve.getChuyenTau().getMaTau(),
+					ve.getNgayDi().format(dateFormatter),
+					ve.getGioDi().format(timeFormatter),
+					ve.isTrangThai() ? "Đã hoàn thành" : "Chưa hoàn thành",
+					ve.getChiTiet().getMaChiTiet()
+			};
+
+			for (int j = 0; j < cellData.length; j++) {
+				row.createCell(j).setCellValue(cellData[j]);
+			}
+		}
+
+		// Tự động điều chỉnh kích thước cột
+		for (int i = 0; i < headerData.length; i++) {
+			sheet.autoSizeColumn(i);
+		}
+
+		////========= Tổng hợp thống kê==========///
+		int tongHopRow = sheet.getLastRowNum() + 2; // Bắt đầu từ dòng trống sau cùng
+		String[] headerData_tongHop = {"Tổng doanh thu","Số lượng vé bán","Số lượng vé trả"};
+		CellStyle headerStyle_tongHop = workbook.createCellStyle();
+		org.apache.poi.ss.usermodel.Font headerFont_tongHop = workbook.createFont();
+		headerFont_tongHop.setBold(true);
+		headerFont_tongHop.setColor(IndexedColors.WHITE.getIndex());
+		headerStyle_tongHop.setFont(headerFont_tongHop);
+		headerStyle_tongHop.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+		headerStyle_tongHop.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		// Tiêu đề bảng nhân viên
+		Row headerRow_tongHop = sheet.createRow(tongHopRow);
+		for (int i = 0; i < headerData_tongHop.length; i++) {
+			Cell cell = headerRow_tongHop.createCell(i);
+			cell.setCellValue(headerData_tongHop[i]);
+			cell.setCellStyle(headerStyle_tongHop);
+		}
+		// Dữ liệu bảng nhân viên
+		Row dataRow_tongHop = sheet.createRow(tongHopRow+1);
+		dataRow_tongHop.createCell(0).setCellValue(label1.getText().toString());
+		dataRow_tongHop.createCell(1).setCellValue(label2.getText().toString());
+		dataRow_tongHop.createCell(2).setCellValue(label3.getText().toString());
+		// Tự động điều chỉnh kích thước cột
+		for (int i = 0; i < headerData_tongHop.length; i++) {
+			sheet.autoSizeColumn(i);
+		}
+
+
+		// Ghi và mở file
+		String fileName = "excel/" + UUID.randomUUID().toString() + ".xlsx";
+		try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
+			workbook.write(fileOut);
+			System.out.println("File Excel đã được lưu tại: " + fileName);
+		} catch (IOException e) {
+			System.err.println("Lỗi khi ghi file Excel:");
+			e.printStackTrace();
+		} finally {
+			try {
+				workbook.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		try {
+			File file = new File(fileName);
+			if (file.exists() && Desktop.isDesktopSupported()) {
+				Desktop.getDesktop().open(file);
+			}
+		} catch (IOException e) {
+			System.err.println("Lỗi khi mở file Excel:");
+			e.printStackTrace();
+		}
+	}
+	
+	/////////////////XUẤT FILE EXCEL THỐNG KÊ THEO CHUYẾN TÀU//////////////////////
+	public void xuatExcelChuyenTau(ArrayList<Ve> data, NhanVien nv,JLabel label1,JLabel label2, JLabel label3) throws FileNotFoundException, java.io.IOException {
+
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("Thống kê chuyến tàu có doanh thu cao nhất");
+		Set<String> maTauTrung = new HashSet<>();
+		Map<String, Float> doanhThuTheoTau = new HashMap<>();
+		// ===== Tạo bảng thông tin nhân viên =====
+		String[] headerData_ThongTinNV = {"Mã nhân viên", "Họ Tên", "Thời gian bắt đầu", "Thời gian kết thúc"};
+		CellStyle headerStyle_ThongTinNV = workbook.createCellStyle();
+		org.apache.poi.ss.usermodel.Font headerFont_ThongTinNV = workbook.createFont();
+		headerFont_ThongTinNV.setBold(true);
+		headerFont_ThongTinNV.setColor(IndexedColors.WHITE.getIndex());
+		headerStyle_ThongTinNV.setFont(headerFont_ThongTinNV);
+		headerStyle_ThongTinNV.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+		headerStyle_ThongTinNV.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		// Tiêu đề bảng nhân viên
+		Row headerRow_ThongTinNV = sheet.createRow(0);
+		for (int i = 0; i < headerData_ThongTinNV.length; i++) {
+			Cell cell = headerRow_ThongTinNV.createCell(i);
+			cell.setCellValue(headerData_ThongTinNV[i]);
+			cell.setCellStyle(headerStyle_ThongTinNV);
+		}
+
+		// Dữ liệu bảng nhân viên
+		Row dataRow = sheet.createRow(1);
+		dataRow.createCell(0).setCellValue(nv.getMaNV());
+		dataRow.createCell(1).setCellValue(nv.getTenNV());
+		dataRow.createCell(2).setCellValue(tkct_ngayBatDau);
+		dataRow.createCell(3).setCellValue(tkct_ngayKetThuc);
+
+		// Tự động điều chỉnh kích thước cột
+		for (int i = 0; i < headerData_ThongTinNV.length; i++) {
+			sheet.autoSizeColumn(i);
+		}
+
+		// ===== Tạo bảng danh sách vé =====
+		int startRow = 3; // Dòng bắt đầu cho bảng vé (sau bảng nhân viên)
+		String[] headerData = {"STT", "Mã tàu","Doanh thu"};
+		CellStyle headerStyle = workbook.createCellStyle();
+		org.apache.poi.ss.usermodel.Font headerFont = workbook.createFont();
+		headerFont.setBold(true);
+		headerFont.setColor(IndexedColors.WHITE.getIndex());
+		headerStyle.setFont(headerFont);
+		headerStyle.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+		headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		Row headerRow = sheet.createRow(startRow);
+		for (int i = 0; i < headerData.length; i++) {
+			Cell cell = headerRow.createCell(i);
+			cell.setCellValue(headerData[i]);
+			cell.setCellStyle(headerStyle);
+		}
+		
+		// Dữ liệu bảng vé
+		int stt = 1;
+		for (Ve ve : data) {
+		    String maTau = ve.getChuyenTau().getMaTau();
+		    if (maTauTrung.contains(ve.getMaVe())) {
+		        continue; // Bỏ qua nếu trùng mã vé
+		    }
+		    
+		    // Thêm mã vé vào Set
+		    maTauTrung.add(ve.getMaVe());
+		    doanhThuTheoTau.put(maTau, doanhThuTheoTau.getOrDefault(maTau, 0f) + ve.tinhGiaVe());
+		}
+		// Sắp xếp doanh thu giảm dần
+		Map<String, Float> sortedDoanhThuTheoTau = doanhThuTheoTau.entrySet()
+				.stream()
+				.sorted(Map.Entry.<String, Float>comparingByValue().reversed()) //So sánh gặp theo cặp key-value(so sánh doanh thu). reversed() Đảo ngược thứ tự sắp xếp (tăng -> giảm) 
+				.collect(Collectors.toMap(
+						Map.Entry::getKey,   // Lấy key từ mỗi entry (mã tàu)
+						Map.Entry::getValue, // Lấy value từ mỗi entry (doanh thu)
+						(e1, e2) -> e1,      // Xử lý xung đột (nếu xảy ra). Ở đây, chỉ giữ entry đầu tiên. Nếu có hai giá trị trùng key (không xảy ra trong trường hợp này), nó sẽ giữ lại giá trị đầu tiên.
+						LinkedHashMap::new// Tạo một LinkedHashMap để duy trì thứ tự sắp xếp
+						));
+		
+		//
+		for (Map.Entry<String, Float> entry : sortedDoanhThuTheoTau.entrySet()) {
+			String maTau = entry.getKey();
+			float doanhThu = entry.getValue();
+
+			Row row = sheet.createRow(startRow + stt);
+			String[] cellData = {
+					String.valueOf(stt++),
+					maTau,
+					String.valueOf(dinhDangTienTe(doanhThu))
+			};
+
+			for (int j = 0; j < cellData.length; j++) {
+				row.createCell(j).setCellValue(cellData[j]);
+			}
+		}
+
+		// Tự động điều chỉnh kích thước cột
+		for (int i = 0; i < headerData.length; i++) {
+			sheet.autoSizeColumn(i);
+		}
+
+		////========= Tổng hợp thống kê==========///
+		int tongHopRow = sheet.getLastRowNum() + 2; // Bắt đầu từ dòng trống sau cùng
+		String[] headerData_tongHop = {"Tổng doanh thu","Số lượng vé bán","Số lượng vé trả"};
+		CellStyle headerStyle_tongHop = workbook.createCellStyle();
+		org.apache.poi.ss.usermodel.Font headerFont_tongHop = workbook.createFont();
+		headerFont_tongHop.setBold(true);
+		headerFont_tongHop.setColor(IndexedColors.WHITE.getIndex());
+		headerStyle_tongHop.setFont(headerFont_tongHop);
+		headerStyle_tongHop.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+		headerStyle_tongHop.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		// Tiêu đề bảng nhân viên
+		Row headerRow_tongHop = sheet.createRow(tongHopRow);
+		for (int i = 0; i < headerData_tongHop.length; i++) {
+			Cell cell = headerRow_tongHop.createCell(i);
+			cell.setCellValue(headerData_tongHop[i]);
+			cell.setCellStyle(headerStyle_tongHop);
+		}
+		// Dữ liệu bảng nhân viên
+		Row dataRow_tongHop = sheet.createRow(tongHopRow+1);
+		dataRow_tongHop.createCell(0).setCellValue(label1.getText().toString());
+		dataRow_tongHop.createCell(1).setCellValue(label2.getText().toString());
+		dataRow_tongHop.createCell(2).setCellValue(label3.getText().toString());
+		// Tự động điều chỉnh kích thước cột
+		for (int i = 0; i < headerData_tongHop.length; i++) {
+			sheet.autoSizeColumn(i);
+		}
+
+
+		// Ghi và mở file
+		String fileName = "excel/" + UUID.randomUUID().toString() + ".xlsx";
+		try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
+			workbook.write(fileOut);
+			System.out.println("File Excel đã được lưu tại: " + fileName);
+		} catch (IOException e) {
+			System.err.println("Lỗi khi ghi file Excel:");
+			e.printStackTrace();
+		} finally {
+			try {
+				workbook.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		try {
+			File file = new File(fileName);
+			if (file.exists() && Desktop.isDesktopSupported()) {
+				Desktop.getDesktop().open(file);
+			}
+		} catch (IOException e) {
+			System.err.println("Lỗi khi mở file Excel:");
+			e.printStackTrace();
+		}
 	}
 
 	//Hàm chỉ định tabbedPane

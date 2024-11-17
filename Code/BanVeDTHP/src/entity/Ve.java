@@ -1,9 +1,37 @@
 package entity;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.UnitValue;
+
+import dao.ChiTietHoaDon_DAO;
+import dao.ChuyenTau_DAO;
+import dao.Ga_DAO;
+import dao.Ghe_DAO;
+import dao.KhachHang_DAO;
+import dao.Toa_DAO;
+import dao.Ve_DAO;
 
 public class Ve {
 	private String maVe;
@@ -21,6 +49,12 @@ public class Ve {
 	private String khuyenMai;
 	private boolean trangThai;
 	private ChiTietHoaDon chiTiet;
+	
+	private KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	DateTimeFormatter timeFormater = DateTimeFormatter.ofPattern("HH:mm");
+	DecimalFormat df = new DecimalFormat("##,###");
 	
 	public Ve(String maVe, ChuyenTau chuyenTau, Toa toa, Ghe soGhe, KhachHang khachHang, LocalDate ngayDi, LocalTime gioDi,
 			LocalDate ngayDen, LocalTime gioDen,Ga gaDi,Ga gaDen, String hang, String khuyenMai,boolean trangThai, ChiTietHoaDon chiTiet) {
@@ -280,4 +314,128 @@ public class Ve {
 
         return (float) (phiHoan * tinhGiaVe()); // Tính phí hoàn dựa trên giá vé
     }
+	
+	
+	public void xuatVe(String pdfPath) {
+		try {
+			// Tạo file PDF
+			PdfWriter writer = new PdfWriter(new FileOutputStream(pdfPath));
+			PdfDocument pdfDoc = new PdfDocument(writer);
+			Document document = new Document(pdfDoc);
+
+			document.setMargins(10, 40, 30, 10);
+
+			// Tải font Unicode hỗ trợ tiếng Việt
+			String fontPathRegular = "font/TIMES.TTF"; // Đường dẫn đến font thường
+			String fontPathBold = "font/TIMESBD.TTF"; // Đường dẫn đến font in đậm
+			String fontPathItalic = "font/TIMESI.TTF"; // Đường dẫn đến font in nghiêng
+
+			PdfFont fontRegular = PdfFontFactory.createFont(fontPathRegular, PdfEncodings.IDENTITY_H, true);
+			PdfFont fontBold = PdfFontFactory.createFont(fontPathBold, PdfEncodings.IDENTITY_H, true);
+			PdfFont fontItalic = PdfFontFactory.createFont(fontPathItalic, PdfEncodings.IDENTITY_H, true);
+
+			// Thêm hình ảnh vào đầu tài liệu
+			String imagePath = getClass().getResource("/img/LogoDepHonDen.png").getPath(); // Đường dẫn đến hình ảnh
+			Image img = new Image(ImageDataFactory.create(imagePath));
+			img.setWidth(120); // Đặt chiều rộng cho hình ảnh
+
+			// Thêm thông tin khách hàng và địa chỉ
+			UnitValue[] columnWidths = { UnitValue.createPercentValue(3), UnitValue.createPercentValue(5),
+					UnitValue.createPercentValue(3) };
+
+			// Tạo bảng tiêu đề chiếm toàn bộ chiều rộng của trang
+			Table headerTable = new Table(columnWidths);
+			headerTable.setWidth(580); // Chiều rộng cụ thể của bảng tiêu đề
+
+			// Thêm các ô vào bảng mà không có border
+			headerTable.addCell(new Cell(2, 1).add(img).setBorder(Border.NO_BORDER));
+			headerTable.addCell(new Cell(1, 1).add(
+					new Paragraph("VÉ LÊN TÀU").setFont(fontBold).setFontSize(20).setTextAlignment(TextAlignment.CENTER))
+					.setBorder(Border.NO_BORDER));
+			// Thêm bảng vào tài liệu
+			document.add(headerTable);
+
+			// Thêm thông tin khách hàng và địa chỉ
+			UnitValue[] columnWidths1 = { UnitValue.createPercentValue(20), UnitValue.createPercentValue(30),
+					UnitValue.createPercentValue(20), UnitValue.createPercentValue(30) };
+
+			Table tableKH = new Table(columnWidths1);
+			tableKH.setWidth(580);
+			
+			
+			tableKH.addCell(
+					new Cell(1,4).add(new Paragraph("Mã vé/TicketID: "+" "+ maVe).setFont(fontRegular).setTextAlignment(TextAlignment.CENTER)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Ga đi: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell().add(new Paragraph(gaDi.getDiaChi()).setFont(fontRegular))
+					.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Ga đến: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell().add(new Paragraph(gaDen.getDiaChi()).setFont(fontRegular))
+					.setBorder(Border.NO_BORDER));
+			
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Tàu/Train: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell(1, 3).add(new Paragraph(chuyenTau.getMaTau()).setFont(fontRegular))
+				.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Ngày đi/Date: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell().add(new Paragraph(ngayDi.format(formatter)).setFont(fontRegular))
+				.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Ngày đến/Date: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell().add(new Paragraph(ngayDen.format(formatter)).setFont(fontRegular))
+				.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Giờ đi/Time: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell().add(new Paragraph(gioDi.format(timeFormater)).setFont(fontRegular))
+				.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Giờ đến/Time: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell().add(new Paragraph(gioDen.format(timeFormater)).setFont(fontRegular))
+				.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Toa/Coach: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell().add(new Paragraph(toa.getMaToa()).setFont(fontRegular))
+				.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Chỗ/Ghế:: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell().add(new Paragraph(String.valueOf(soGhe.getSoGhe())).setFont(fontRegular))
+				.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Hạng ghế/Class: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell(1,3).add(new Paragraph(hang).setFont(fontRegular))
+				.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Đối tượng khuyến mãi: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell(1,3).add(new Paragraph(khuyenMai).setFont(fontRegular))
+				.setBorder(Border.NO_BORDER));
+			
+			KhachHang khachHangNew = khachHang_DAO.getKhachHangTheoMaKH(khachHang.getMaKH());
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Tên khách hàng: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell(1,3).add(new Paragraph(khachHangNew.getTenKH()).setFont(fontRegular))
+					.setBorder(Border.NO_BORDER));
+			tableKH.addCell(
+					new Cell().add(new Paragraph("Giấy tờ/Passport: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+			tableKH.addCell(new Cell(1,3).add(new Paragraph(khachHangNew.getCccd()).setFont(fontRegular))
+					.setBorder(Border.NO_BORDER));
+
+			document.add(tableKH);
+
+			Table table = new Table(7);
+			table.setWidth(580);
+
+			document.add(new Paragraph("\n\n\n\n\n"));
+
+			document.add(new Paragraph("*Kiểm tra thông tin vé trước khi nhận vé và sau khi nhận vé").setFont(fontItalic)
+					.setFontSize(10).setTextAlignment(TextAlignment.LEFT));
+			// Đóng tài nguyên
+	        document.close();
+			System.out.println("Đã tạo vé và lưu vào file PDF: " + pdfPath);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
 }

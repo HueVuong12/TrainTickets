@@ -16,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -667,31 +669,61 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 			return groupText.toString().trim();
 		}
 		
+//		public static String generateMaHD(ArrayList<HoaDon> danhSachHD, String maNhanVien) {
+//	        // 1. Lấy ngày hiện tại và định dạng theo "ddMMyy"
+//	        LocalDate today = LocalDate.now();
+//	        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyy");
+//	        String datePart = today.format(dateFormatter);
+//
+//	        // 2. Đảm bảo mã nhân viên có dạng "NVXXX"
+//	        String formattedMaNV = formatMaNhanVien(maNhanVien);
+//
+//	        // 3. Lấy mã hóa đơn cuối cùng từ danh sách
+//	        HoaDon lastHD = danhSachHD.isEmpty() ? null : danhSachHD.get(danhSachHD.size() - 1);
+//	        String lastMaHD = lastHD.getMaHoaDon();
+//
+//	        // 4. Xử lý dãy số tự tăng
+//	        int newCounter = 1; // Nếu danh sách rỗng, bắt đầu từ 1
+//	        if (lastMaHD != null && lastMaHD.startsWith(datePart + formattedMaNV)) {
+//	            String lastCounterStr = lastMaHD.substring(lastMaHD.length() - 5);
+//	            newCounter = Integer.parseInt(lastCounterStr) + 1;
+//	        }
+//
+//	        String counterPart = String.format("%05d", newCounter); // Định dạng thành 5 chữ số
+//
+//	        // 5. Tạo mã hóa đơn mới
+//	        return datePart + formattedMaNV + counterPart;
+//	    }
 		public static String generateMaHD(ArrayList<HoaDon> danhSachHD, String maNhanVien) {
-	        // 1. Lấy ngày hiện tại và định dạng theo "ddMMyy"
-	        LocalDate today = LocalDate.now();
-	        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyy");
-	        String datePart = today.format(dateFormatter);
+		    // 1. Lấy ngày hiện tại và định dạng theo "ddMMyy"
+		    LocalDate today = LocalDate.now();
+		    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyy");
+		    String datePart = today.format(dateFormatter);
 
-	        // 2. Đảm bảo mã nhân viên có dạng "NVXXX"
-	        String formattedMaNV = formatMaNhanVien(maNhanVien);
+		    // 2. Đảm bảo mã nhân viên có dạng "NVXXX"
+		    String formattedMaNV = formatMaNhanVien(maNhanVien);
 
-	        // 3. Lấy mã hóa đơn cuối cùng từ danh sách
-	        HoaDon lastHD = danhSachHD.isEmpty() ? null : danhSachHD.get(danhSachHD.size() - 1);
-	        String lastMaHD = lastHD.getMaHoaDon();
+		    // 3. Lọc danh sách hóa đơn theo ngày và mã nhân viên
+		    ArrayList<HoaDon> filteredHD = (ArrayList<HoaDon>) danhSachHD.stream()
+		        .filter(hd -> hd.getMaHoaDon().startsWith(datePart + formattedMaNV))
+		        .collect(Collectors.toList());
 
-	        // 4. Xử lý dãy số tự tăng
-	        int newCounter = 1; // Nếu danh sách rỗng, bắt đầu từ 1
-	        if (lastMaHD != null && lastMaHD.startsWith(datePart + formattedMaNV)) {
-	            String lastCounterStr = lastMaHD.substring(lastMaHD.length() - 5);
-	            newCounter = Integer.parseInt(lastCounterStr) + 1;
-	        }
+		    // 4. Lấy hóa đơn cuối cùng từ danh sách đã lọc
+		    HoaDon lastHD = filteredHD.isEmpty() ? null : filteredHD.get(filteredHD.size() - 1);
 
-	        String counterPart = String.format("%05d", newCounter); // Định dạng thành 5 chữ số
+		    // 5. Xử lý dãy số tự tăng
+		    int newCounter = 1;
+		    if (lastHD != null) {
+		        String lastCounterStr = lastHD.getMaHoaDon().substring(lastHD.getMaHoaDon().length() - 5);
+		        newCounter = Integer.parseInt(lastCounterStr) + 1;
+		    }
 
-	        // 5. Tạo mã hóa đơn mới
-	        return datePart + formattedMaNV + counterPart;
-	    }
+		    String counterPart = String.format("%05d", newCounter);
+
+		    // 6. Tạo mã hóa đơn mới
+		    return datePart + formattedMaNV + counterPart;
+		}
+
 
 	    // Phương thức định dạng mã nhân viên
 	    private static String formatMaNhanVien(String maNhanVien) {
