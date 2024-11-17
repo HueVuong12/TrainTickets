@@ -138,22 +138,22 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		dateChooserTu.setBounds(10, 44, 266, 27);
 		panel_2.add(dateChooserTu);
 		dateChooserTu.setLayout(null);
-		
+
 		txtTu = new JTextField();
 		txtTu.setBounds(0, 0, 245, 27);
 		dateChooserTu.add(txtTu);
 		txtTu.setColumns(10);
-		
+
 		// Thêm sự kiện PropertyChangeListener cho dateChooserTu
-        dateChooserTu.getDateEditor().addPropertyChangeListener("date", evt -> {
-            Date selectedDate = dateChooserTu.getDate();
-            if (selectedDate != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                txtTu.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
-            } else {
-                txtTu.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
-            }
-        });
+		dateChooserTu.getDateEditor().addPropertyChangeListener("date", evt -> {
+			Date selectedDate = dateChooserTu.getDate();
+			if (selectedDate != null) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				txtTu.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
+			} else {
+				txtTu.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
+			}
+		});
 
 		dateChooserDen = new JDateChooser();
 		dateChooserDen.getCalendarButton().setBounds(245, 0, 21, 27);
@@ -161,22 +161,22 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		dateChooserDen.setBounds(10, 81, 266, 27);
 		panel_2.add(dateChooserDen);
 		dateChooserDen.setLayout(null);
-		
+
 		txtDen = new JTextField();
 		txtDen.setBounds(0, 0, 245, 27);
 		dateChooserDen.add(txtDen);
 		txtDen.setColumns(10);
-		
+
 		// Thêm sự kiện PropertyChangeListener cho dateChooserDen
-        dateChooserDen.getDateEditor().addPropertyChangeListener("date", evt -> {
-            Date selectedDate = dateChooserDen.getDate();
-            if (selectedDate != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                txtDen.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
-            } else {
-                txtDen.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
-            }
-        });
+		dateChooserDen.getDateEditor().addPropertyChangeListener("date", evt -> {
+			Date selectedDate = dateChooserDen.getDate();
+			if (selectedDate != null) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				txtDen.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
+			} else {
+				txtDen.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
+			}
+		});
 
 		JPanel panel_2_1 = new JPanel();
 		panel_2_1.setLayout(null);
@@ -287,52 +287,57 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		chckbxDaHoanVe.addActionListener(this);
 		chckbxDaHoanTien.addActionListener(this);
 		chckbxTatCa.addActionListener(this);
+<<<<<<< HEAD
 		
 		
 		btnTraVe = new RoundedButton("Trả vé", 15);
 		btnTraVe.setForeground(new Color(255, 255, 255));
+=======
+
+		btnTraVe = new JButton("Trả vé");
+>>>>>>> 9ad2620864ffe2999491c02ad49861913c76ec6d
 		btnTraVe.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnTraVe.setBounds(230, 527, 85, 30);
 		btnTraVe.setBackground(new Color(51, 102, 153));
 		add(btnTraVe);
 		btnTraVe.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        int row = table.getSelectedRow();
-		        if (row != -1) { // Kiểm tra nếu có dòng nào được chọn
-		            hoaDonTraVe = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
-		            System.out.println(hoaDonTraVe);
-		            if (hoaDonTraVe != null) {
-		                TraVe_GUI traVe_GUI = new TraVe_GUI(QuanLyHoaDon_GUI.this, trangChu);
-		                trangChu.content.removeAll();
-		                trangChu.content.add(traVe_GUI);
-		                trangChu.content.revalidate();
-		                trangChu.content.repaint();
-		            }
-		        } else {
-		            JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn muốn trả", "Thông báo", JOptionPane.WARNING_MESSAGE);
-		        }
-		    }
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				if (row != -1) { // Kiểm tra nếu có dòng nào được chọn
+					hoaDonTraVe = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
+					System.out.println(hoaDonTraVe);
+					if (hoaDonTraVe != null) {
+						TraVe_GUI traVe_GUI = new TraVe_GUI(QuanLyHoaDon_GUI.this, trangChu);
+						trangChu.content.removeAll();
+						trangChu.content.add(traVe_GUI);
+						trangChu.content.revalidate();
+						trangChu.content.repaint();
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn muốn trả", "Thông báo", JOptionPane.WARNING_MESSAGE);
+				}
+			}
 		});
 		btnXemChiTiet.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				int row = table.getSelectedRow();
 				if (row != -1) { // Kiểm tra nếu có dòng nào được chọn
-		            hoaDonTXemCT = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
-		            System.out.println(hoaDonTXemCT);
-		            if (hoaDonTXemCT != null) {
-		                ChiTietHoaDon_GUI chiTietHoaDon_GUI = new ChiTietHoaDon_GUI(QuanLyHoaDon_GUI.this,trangChu);
-		                trangChu.content.removeAll();
-		                trangChu.content.add(chiTietHoaDon_GUI);
-		                trangChu.content.revalidate();
-		                trangChu.content.repaint();
-		            }
-		        } else {
-		            JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn muốn xem chi tiết hóa đơn", "Thông báo", JOptionPane.WARNING_MESSAGE);
-		        }
+					hoaDonTXemCT = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
+					System.out.println(hoaDonTXemCT);
+					if (hoaDonTXemCT != null) {
+						ChiTietHoaDon_GUI chiTietHoaDon_GUI = new ChiTietHoaDon_GUI(QuanLyHoaDon_GUI.this,trangChu);
+						trangChu.content.removeAll();
+						trangChu.content.add(chiTietHoaDon_GUI);
+						trangChu.content.revalidate();
+						trangChu.content.repaint();
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn muốn xem chi tiết hóa đơn", "Thông báo", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 
@@ -349,35 +354,35 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 			hoaDon.xuatHoaDon(pdfPath);
 
 			// Kiểm tra xem Desktop có được hỗ trợ không
-	        if (Desktop.isDesktopSupported()) {
-	            Desktop desktop = Desktop.getDesktop();
-	            try {
-	                File pdfFile = new File(pdfPath);  // Tạo đối tượng File từ đường dẫn
-	                desktop.open(pdfFile);  // Mở file bằng ứng dụng mặc định
+			if (Desktop.isDesktopSupported()) {
+				Desktop desktop = Desktop.getDesktop();
+				try {
+					File pdfFile = new File(pdfPath);  // Tạo đối tượng File từ đường dẫn
+					desktop.open(pdfFile);  // Mở file bằng ứng dụng mặc định
 
-	                // Hiển thị hộp thoại xác nhận sau khi mở file
-	                int confirm = JOptionPane.showConfirmDialog(
-	                    null, 
-	                    "Bạn có muốn xóa file hóa đơn vừa tạo không?", 
-	                    "Xác nhận xóa file", 
-	                    JOptionPane.YES_NO_OPTION
-	                );
+					// Hiển thị hộp thoại xác nhận sau khi mở file
+					int confirm = JOptionPane.showConfirmDialog(
+							null, 
+							"Bạn có muốn xóa file hóa đơn vừa tạo không?", 
+							"Xác nhận xóa file", 
+							JOptionPane.YES_NO_OPTION
+							);
 
-	                // Xóa file nếu người dùng chọn "Yes"
-	                if (confirm == JOptionPane.YES_OPTION) {
-	                    if (pdfFile.delete()) {
-	                        System.out.println("File PDF đã được xóa: " + pdfPath);
-	                    } else {
-	                        System.out.println("Không thể xóa file PDF.");
-	                    }
-	                }
+					// Xóa file nếu người dùng chọn "Yes"
+					if (confirm == JOptionPane.YES_OPTION) {
+						if (pdfFile.delete()) {
+							System.out.println("File PDF đã được xóa: " + pdfPath);
+						} else {
+							System.out.println("Không thể xóa file PDF.");
+						}
+					}
 
-	            } catch (IOException e1) {
-	                e1.printStackTrace();
-	            }
-	        } else {
-	            System.out.println("Mở file không được hỗ trợ trên hệ thống này.");
-	        }
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			} else {
+				System.out.println("Mở file không được hỗ trợ trên hệ thống này.");
+			}
 		}
 		if (o.equals(chckbxTatCa)) {
 			chckbxDaHoanTien.setSelected(false);
@@ -427,117 +432,117 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 			filterRows();
 		}
 	}
-	
+
 	// Hàm để thực hiện lọc
-			private void filterRows() {
-				String textMaHD = txtMaHD.getText().trim();
-				String textNhanVien = txtNhanVien.getText().trim();
-				String textKH = txtKH.getText().trim();
-				String textTu = txtTu.getText().trim();
-				String textDen = txtDen.getText().trim();
+	private void filterRows() {
+		String textMaHD = txtMaHD.getText().trim();
+		String textNhanVien = txtNhanVien.getText().trim();
+		String textKH = txtKH.getText().trim();
+		String textTu = txtTu.getText().trim();
+		String textDen = txtDen.getText().trim();
 
-				ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
+		ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
 
-				// Thêm bộ lọc nếu các ô không trống
-				if (!textMaHD.isEmpty()) {
-					filters.add(RowFilter.regexFilter("(?i)" + textMaHD, 1)); // Lọc theo cột "Mã HD"
-				}
-				if (!textNhanVien.isEmpty()) {
-					filters.add(RowFilter.regexFilter("(?i)" + textNhanVien, 3)); // Lọc theo cột "Mã NV"
-				}
-				if (!textKH.isEmpty()) {
-					filters.add(RowFilter.regexFilter("(?i)" + textKH, 4)); // Lọc theo cột "Tên KH"
-				}
-				// Lọc theo ngày từ
-			    if (!textTu.isEmpty()) {
-			        Date dateTu = parseDate(textTu);
-			        if (dateTu != null) {
-			            filters.add(new RowFilter<Object, Object>() {
-			                @Override
-			                public boolean include(Entry<? extends Object, ? extends Object> entry) {
-			                    Date entryDate = parseDate(entry.getStringValue(2).substring(8)); // Giả sử cột 2 là cột ngày
-			                    return entryDate != null && !entryDate.before(dateTu);
-			                }
-			            });
-			        }
-			    }
-
-			    // Lọc theo ngày đến
-			    if (!textDen.isEmpty()) {
-			        Date dateDen = parseDate(textDen);
-			        if (dateDen != null) {
-			            filters.add(new RowFilter<Object, Object>() {
-			                @Override
-			                public boolean include(Entry<? extends Object, ? extends Object> entry) {
-			                    Date entryDate = parseDate(entry.getStringValue(2).substring(8)); // Giả sử cột 2 là cột ngày
-			                    return entryDate != null && !entryDate.after(dateDen);
-			                }
-			            });
-			        }
-			    }
-			    
-			 // Lọc theo checkbox "Đã hoàn vé" và "Đã hoàn tiền"
-			    if (chckbxDaHoanVe.isSelected() && chckbxDaHoanTien.isSelected()) {
-			        // Khi cả hai checkbox đều được chọn
-			        filters.add(new RowFilter<Object, Object>() {
-			            @Override
-			            public boolean include(Entry<? extends Object, ? extends Object> entry) {
-			                boolean daHoanVe = Boolean.parseBoolean(entry.getStringValue(5)); // Cột 5 là checkbox "Đã hoàn vé"
-			                boolean daHoanTien = Boolean.parseBoolean(entry.getStringValue(6)); // Cột 6 là checkbox "Đã hoàn tiền"
-			                return daHoanVe && daHoanTien; // Hiển thị khi cả hai đều true
-			            }
-			        });
-			    } else if (chckbxDaHoanVe.isSelected()) {
-			        // Khi chỉ checkbox "Đã hoàn vé" được chọn
-			        filters.add(new RowFilter<Object, Object>() {
-			            @Override
-			            public boolean include(Entry<? extends Object, ? extends Object> entry) {
-			                return Boolean.parseBoolean(entry.getStringValue(5)); // Cột 5 là checkbox "Đã hoàn vé"
-			            }
-			        });
-			    } else if (chckbxDaHoanTien.isSelected()) {
-			        // Khi chỉ checkbox "Đã hoàn tiền" được chọn
-			        filters.add(new RowFilter<Object, Object>() {
-			            @Override
-			            public boolean include(Entry<? extends Object, ? extends Object> entry) {
-			                return Boolean.parseBoolean(entry.getStringValue(6)); // Cột 6 là checkbox "Đã hoàn tiền"
-			            }
-			        });
-			    }
-			    
-			 // Nếu không có checkbox nào được chọn
-			    if (!chckbxDaHoanVe.isSelected() && !chckbxDaHoanTien.isSelected() && !chckbxTatCa.isSelected()) {
-			        filters.add(new RowFilter<Object, Object>() {
-			            @Override
-			            public boolean include(Entry<? extends Object, ? extends Object> entry) {
-			                boolean daHoanVe = Boolean.parseBoolean(entry.getStringValue(5)); // Cột 5 là checkbox "Đã hoàn vé"
-			                boolean daHoanTien = Boolean.parseBoolean(entry.getStringValue(6)); // Cột 6 là checkbox "Đã hoàn tiền"
-			                return !daHoanVe && !daHoanTien; // Hiển thị khi cả hai đều false
-			            }
-			        });
-			    }
-
-			    // Nếu checkbox "Tất cả" được chọn
-			    if (chckbxTatCa.isSelected()) {
-			    	sorter.setRowFilter(null);
-			    }
-
-				if (filters.isEmpty()) {
-					sorter.setRowFilter(null); // Loại bỏ bộ lọc nếu không có điều kiện nào
-				} else {
-					sorter.setRowFilter(RowFilter.andFilter(filters)); // Kết hợp các bộ lọc
-				}
+		// Thêm bộ lọc nếu các ô không trống
+		if (!textMaHD.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + textMaHD, 1)); // Lọc theo cột "Mã HD"
+		}
+		if (!textNhanVien.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + textNhanVien, 3)); // Lọc theo cột "Mã NV"
+		}
+		if (!textKH.isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + textKH, 4)); // Lọc theo cột "Tên KH"
+		}
+		// Lọc theo ngày từ
+		if (!textTu.isEmpty()) {
+			Date dateTu = parseDate(textTu);
+			if (dateTu != null) {
+				filters.add(new RowFilter<Object, Object>() {
+					@Override
+					public boolean include(Entry<? extends Object, ? extends Object> entry) {
+						Date entryDate = parseDate(entry.getStringValue(2).substring(8)); // Giả sử cột 2 là cột ngày
+						return entryDate != null && !entryDate.before(dateTu);
+					}
+				});
 			}
-	
+		}
+
+		// Lọc theo ngày đến
+		if (!textDen.isEmpty()) {
+			Date dateDen = parseDate(textDen);
+			if (dateDen != null) {
+				filters.add(new RowFilter<Object, Object>() {
+					@Override
+					public boolean include(Entry<? extends Object, ? extends Object> entry) {
+						Date entryDate = parseDate(entry.getStringValue(2).substring(8)); // Giả sử cột 2 là cột ngày
+						return entryDate != null && !entryDate.after(dateDen);
+					}
+				});
+			}
+		}
+
+		// Lọc theo checkbox "Đã hoàn vé" và "Đã hoàn tiền"
+		if (chckbxDaHoanVe.isSelected() && chckbxDaHoanTien.isSelected()) {
+			// Khi cả hai checkbox đều được chọn
+			filters.add(new RowFilter<Object, Object>() {
+				@Override
+				public boolean include(Entry<? extends Object, ? extends Object> entry) {
+					boolean daHoanVe = Boolean.parseBoolean(entry.getStringValue(5)); // Cột 5 là checkbox "Đã hoàn vé"
+					boolean daHoanTien = Boolean.parseBoolean(entry.getStringValue(6)); // Cột 6 là checkbox "Đã hoàn tiền"
+					return daHoanVe && daHoanTien; // Hiển thị khi cả hai đều true
+				}
+			});
+		} else if (chckbxDaHoanVe.isSelected()) {
+			// Khi chỉ checkbox "Đã hoàn vé" được chọn
+			filters.add(new RowFilter<Object, Object>() {
+				@Override
+				public boolean include(Entry<? extends Object, ? extends Object> entry) {
+					return Boolean.parseBoolean(entry.getStringValue(5)); // Cột 5 là checkbox "Đã hoàn vé"
+				}
+			});
+		} else if (chckbxDaHoanTien.isSelected()) {
+			// Khi chỉ checkbox "Đã hoàn tiền" được chọn
+			filters.add(new RowFilter<Object, Object>() {
+				@Override
+				public boolean include(Entry<? extends Object, ? extends Object> entry) {
+					return Boolean.parseBoolean(entry.getStringValue(6)); // Cột 6 là checkbox "Đã hoàn tiền"
+				}
+			});
+		}
+
+		// Nếu không có checkbox nào được chọn
+		if (!chckbxDaHoanVe.isSelected() && !chckbxDaHoanTien.isSelected() && !chckbxTatCa.isSelected()) {
+			filters.add(new RowFilter<Object, Object>() {
+				@Override
+				public boolean include(Entry<? extends Object, ? extends Object> entry) {
+					boolean daHoanVe = Boolean.parseBoolean(entry.getStringValue(5)); // Cột 5 là checkbox "Đã hoàn vé"
+					boolean daHoanTien = Boolean.parseBoolean(entry.getStringValue(6)); // Cột 6 là checkbox "Đã hoàn tiền"
+					return !daHoanVe && !daHoanTien; // Hiển thị khi cả hai đều false
+				}
+			});
+		}
+
+		// Nếu checkbox "Tất cả" được chọn
+		if (chckbxTatCa.isSelected()) {
+			sorter.setRowFilter(null);
+		}
+
+		if (filters.isEmpty()) {
+			sorter.setRowFilter(null); // Loại bỏ bộ lọc nếu không có điều kiện nào
+		} else {
+			sorter.setRowFilter(RowFilter.andFilter(filters)); // Kết hợp các bộ lọc
+		}
+	}
+
 	private Date parseDate(String dateStr) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            // Chuyển đổi chuỗi thành đối tượng Date
-            Date date = dateFormat.parse(dateStr);
-            return date;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			// Chuyển đổi chuỗi thành đối tượng Date
+			Date date = dateFormat.parse(dateStr);
+			return date;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

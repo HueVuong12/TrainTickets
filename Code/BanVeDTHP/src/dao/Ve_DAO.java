@@ -244,23 +244,44 @@ public class Ve_DAO {
 	
 	public String generateMaVe() {
 	    LocalDate currentDate = LocalDate.now();
-	    String datePart = String.format("%02d%02d%02d", currentDate.getDayOfMonth(), 
-	                                       currentDate.getMonthValue(), 
+	    String datePart = String.format("%02d%02d%02d", currentDate.getDayOfMonth(),
+	                                       currentDate.getMonthValue(),
 	                                       currentDate.getYear() % 100); // Hai số cuối của năm
 
 	    // Lấy số thứ tự lập vé
-	    int lastVeNumber = getLastVeNumber();
+	    int lastVeNumber = getLastVeNumber(currentDate);
 	    String sequencePart = String.format("%04d", lastVeNumber + 1); // Tăng số thứ tự lên 1 và định dạng với 4 chữ số
 
 	    return "VE" + datePart + sequencePart;
 	}
 
-	// Phương thức này để lấy số thứ tự lập vé cuối cùng trong bảng Ve
-	private int getLastVeNumber() {
+	// Phương thức này để lấy số thứ tự lập vé cuối cùng trong ngày từ bảng Ve
+	private int getLastVeNumber(LocalDate currentDate) {
 	    int lastNumber = 0;
 	    try {
 	        Connection con = ConnectDB.getInstance().getConnection();
-	        String sql = "SELECT TOP 1 maVe FROM Ve WHERE maVe LIKE 'VE%' ORDER BY maVe DESC"; // Lấy mã vé mới nhất
+	        String sql = "SELECT TOP 1 maVe FROM Ve WHERE maVe LIKE 'VE%' AND CAST(SUBSTRING(maVe, 3, 6) AS DATE) = ? ORDER BY maVe DESC"; 
+	        // Lọc theo ngày trong mã vé (phần ngày, tháng, năm trong mã vé)
+	        PreparedStatement stmt = con.prepareStatement(sql);
+	        stmt.setDate(1, java.sql.Date.valueOf(currentDate));
+	        ResultSet rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            String lastMaVe = rs.getString("maVe");
+	            lastNumber = Integer.parseInt(lastMaVe.substring(8)); // Lấy phần số từ mã vé
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return lastNumber;
+	}
+	
+	// Phương thức lấy số thứ tự vé cuối cùng trong cùng ngày
+	public int getLastVeNumber(String datePart) {
+	    int lastNumber = 0;
+	    try {
+	        Connection con = ConnectDB.getInstance().getConnection();
+	        String sql = "SELECT TOP 1 maVe FROM Ve WHERE maVe LIKE 'VE" + datePart + "%' ORDER BY maVe DESC"; // Lọc theo ngày
 	        PreparedStatement stmt = con.prepareStatement(sql);
 	        ResultSet rs = stmt.executeQuery();
 

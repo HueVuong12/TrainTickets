@@ -9,8 +9,11 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import components.ConTent_JPanel;
+import dao.Ca_DAO;
 import dao.NhanVien_DAO;
 import dao.TaiKhoan_DAO;
+import entity.Ca;
+import entity.NhanVien;
 import entity.TaiKhoan;
 
 import java.awt.Font;
@@ -27,6 +30,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import java.awt.SystemColor;
@@ -40,7 +44,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import javax.swing.JButton;
 
 public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener{
 
@@ -80,8 +86,13 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
 	private TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();
+	private Ca_DAO ca_DAO= new Ca_DAO();
 	private JMenu mnTrGip;
 	private TaiKhoan_DAO dsTK;
+	private JButton btn_VaoCa;
+	private JButton btn_KetCa;
+	public LocalDateTime vaoCa;
+	public LocalDateTime ketCa;
 	
 	/**
 	 * Launch the application.
@@ -283,7 +294,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    Image scaledUser = userIcon.getImage().getScaledInstance(73 ,56, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    jp_nhanVien.setLayout(null);
 	    userIconLabel = new JLabel(new ImageIcon(scaledUser));
-	    userIconLabel.setBounds(100 ,10 , 73 ,56); // Cập nhật kích thước trên JLabel
+	    userIconLabel.setBounds(40 ,10 , 73 ,56); // Cập nhật kích thước trên JLabel
 	    jp_nhanVien.add(userIconLabel);
 	    
 	    lbl_ThongTinNV = new JLabel();
@@ -305,6 +316,77 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    exitIconLabel = new JLabel(new ImageIcon(scaledExit));
 	    exitIconLabel.setBounds(111 ,153 , 40 ,37); // Cập nhật kích thước trên JLabel
 	    jp_nhanVien.add(exitIconLabel);
+	    
+	    btn_VaoCa = new JButton("Vào ca");
+	    btn_VaoCa.setBounds(145, 10, 85, 25);
+	    jp_nhanVien.add(btn_VaoCa);
+	    btn_VaoCa.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				// Hiển thị hộp thoại xác nhận sau khi mở file
+				LocalDateTime currentTime = LocalDateTime.now();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				String time= currentTime.format(formatter);
+                int confirm = JOptionPane.showConfirmDialog(
+                    null, 
+                    "Bắt đầu ca làm :" + time, 
+                    "Xác nhận", 
+                    JOptionPane.YES_NO_OPTION
+                );
+
+                // Xóa file nếu người dùng chọn "Yes"
+                if (confirm == JOptionPane.YES_OPTION) {
+                    if (kiemTraVaoCaLam(lbl_ThongTinNV, currentTime)) {
+                        vaoCa= LocalDateTime.now();
+                        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        				String thoiGianVaoCa = vaoCa.format(formatter1);
+        				System.out.println(thoiGianVaoCa);
+        				
+                    } else {
+                    	JOptionPane.showMessageDialog(null, "Chưa thới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    }
+                }else {
+                	return;
+                }
+			}
+		});
+	    
+	    btn_KetCa = new JButton("Kết ca");
+	    btn_KetCa.setBounds(145, 45, 85, 25);
+	    btn_KetCa.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				LocalDateTime currentTime = LocalDateTime.now();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				String time= currentTime.format(formatter);
+                int confirm = JOptionPane.showConfirmDialog(
+                    null, 
+                    "Kết thúc ca làm :" + time, 
+                    "Xác nhận", 
+                    JOptionPane.YES_NO_OPTION
+                );
+
+                // Xóa file nếu người dùng chọn "Yes"
+                if (confirm == JOptionPane.YES_OPTION) {
+                    if (kiemTraKetCaLam(lbl_ThongTinNV, currentTime)) {
+                    	ketCa= LocalDateTime.now();
+                        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                        String thoiGianKetCa = ketCa.format(formatter1);
+        				System.out.println(thoiGianKetCa);
+        				
+                    } else {
+                    	JOptionPane.showMessageDialog(null, "Chưa thới thời gian kết thúc ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE); 
+                    }
+                }else {
+                	return;
+                }
+			}
+		});
+	    jp_nhanVien.add(btn_KetCa);
 	    exitIconLabel.addMouseListener(new MouseAdapter() {
 	    	public void mouseClicked(MouseEvent e) {
 	    		DangNhap_GUI dn= new DangNhap_GUI();
@@ -557,6 +639,18 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 			}
 		});
 		timer.start();
+		
+//		 // Thông báo sau khi giao diện được hiển thị
+//	    SwingUtilities.invokeLater(() -> {
+//	        if (vaoCa == null) { // Kiểm tra trạng thái vào ca
+//	            JOptionPane.showMessageDialog(
+//	                this,
+//	                "Vui lòng nhấn 'Vào ca' để bắt đầu làm việc!",
+//	                "Thông báo",
+//	                JOptionPane.WARNING_MESSAGE
+//	            );
+//	        }
+//	    });
 	}
 	
 	//Hàm lấy thời gian thực
@@ -601,6 +695,78 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	public boolean kiemTraVaoCaLam(JLabel tenNV, LocalDateTime currentTime) {
+	    nhanVien_DAO.reset();
+	    ca_DAO.reset();
+
+	    // Lấy phần thời gian (giờ, phút, giây) từ LocalDateTime
+	    LocalTime time = currentTime.toLocalTime();
+	    String ten = tenNV.getText();
+
+	    // Lấy nhân viên theo tên
+	    NhanVien nhanVien = nhanVien_DAO.getNhanVienTheoTenNV(ten);
+	    if (nhanVien == null || nhanVien.getCa() == null) {
+	        return false; // Nhân viên không tồn tại hoặc không có ca làm
+	    }
+
+	    // Lấy thông tin ca làm
+	    Ca ca = ca_DAO.getCaTheoMaCa(nhanVien.getCa().getMaCa());
+	    if (ca == null) {
+	        return false; // Ca làm không tồn tại
+	    }
+
+	    // Lấy thời gian bắt đầu và kết thúc của ca
+	    LocalTime thoiGianBatDau = ca.getThoiGianBatDau();
+	    LocalTime thoiGianKetThuc = ca.getThoiGianKetThuc();
+
+	    // Kiểm tra ca làm qua ngày hay không
+	    if (thoiGianKetThuc.isBefore(thoiGianBatDau)) {
+	        // Ca làm qua ngày
+	        boolean isValid = (time.isAfter(thoiGianBatDau.minusMinutes(5)) && time.isBefore(LocalTime.MAX)) // Trước 23:59:59
+	                || (time.isAfter(LocalTime.MIN) && time.isBefore(thoiGianKetThuc.plusMinutes(0))); // Sau 00:00:00
+	        return isValid;
+	    } else {
+	        // Ca làm không qua ngày
+	        return time.isAfter(thoiGianBatDau.minusMinutes(5)) && time.isBefore(thoiGianKetThuc.plusMinutes(0));
+	    }
+	}
+
+	
+	public boolean kiemTraKetCaLam(JLabel tenNV, LocalDateTime currentTime) {
+	    nhanVien_DAO.reset();
+	    ca_DAO.reset();
+
+	    // Lấy phần thời gian (giờ, phút, giây) từ LocalDateTime
+	    LocalTime time = currentTime.toLocalTime();
+	    String ten = tenNV.getText();
+
+	    // Lấy nhân viên theo tên
+	    NhanVien nhanVien = nhanVien_DAO.getNhanVienTheoTenNV(ten);
+	    if (nhanVien == null || nhanVien.getCa() == null) {
+	        return false; // Nhân viên không tồn tại hoặc không có ca làm
+	    }
+
+	    // Lấy thông tin ca làm
+	    Ca ca = ca_DAO.getCaTheoMaCa(nhanVien.getCa().getMaCa());
+	    if (ca == null) {
+	        return false; // Ca làm không tồn tại
+	    }
+
+	    // Lấy thời gian bắt đầu và kết thúc của ca
+	    LocalTime thoiGianBatDau = ca.getThoiGianBatDau();
+	    LocalTime thoiGianKetThuc = ca.getThoiGianKetThuc();
+
+	    // Kiểm tra ca làm qua ngày hay không
+	    if (thoiGianKetThuc.isBefore(thoiGianBatDau)) {
+	        // Ca làm qua ngày
+	        boolean isValid = (time.isAfter(LocalTime.MIN) && time.isBefore(thoiGianKetThuc.plusMinutes(5))) // Sau 00:00
+	                || (time.isAfter(thoiGianBatDau.minusMinutes(0)) && time.isBefore(LocalTime.MAX)); // Trước 23:59
+	        return isValid;
+	    } else {
+	        // Ca làm không qua ngày
+	        return time.isAfter(thoiGianKetThuc.minusMinutes(5)) && time.isBefore(thoiGianKetThuc.plusMinutes(5));
+	    }
 	}
 
 	public DangNhap_GUI getDangNhap() {

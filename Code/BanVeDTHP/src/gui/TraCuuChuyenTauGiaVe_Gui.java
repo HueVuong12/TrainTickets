@@ -56,6 +56,7 @@ import entity.Toa;
 import entity.Ve;
 
 import java.awt.BorderLayout;
+import javax.swing.JComboBox;
 
 public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,DocumentListener{
 	/**
@@ -91,7 +92,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 	private JLabel lbl_GioDen;
 	private DefaultTableModel model;
 	private JLabel lblNewLabel_3_2_1;
-	private RoundedTextField txtTau;
+	private JComboBox<String> comboBox_Tau;
 	public TraCuuChuyenTauGiaVe_Gui(TrangChu_GUI trangChu) {
 		setBackground(new Color(255, 255, 255));
 		setBounds(0, 170, 1460, 570);
@@ -169,7 +170,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 			}
 		});
 		chonGa(txtGaDi);
-		
+
 		lblNewLabel_3_2_1 = new JLabel("Ga đi");
 		lblNewLabel_3_2_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -243,7 +244,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 				}
 				textField_NgayChon.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
 				// Gọi chonChuyenTau mỗi khi ngày được cập nhật
-				chonChuyenTau(txtTau, tenGaDi, tenGaDen, textField_NgayChon.getText());		
+				chonChuyenTau(comboBox_Tau ,tenGaDi, tenGaDen, textField_NgayChon.getText());		
 			} else {
 				textField_NgayChon.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
 			}
@@ -252,6 +253,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 
 		textField_NgayChon = new RoundedTextField(15);
 		textField_NgayChon.setBounds(0, 0, 324, 38);
+		textField_NgayChon.setEditable(false);
 		dateChooser_Ngay.add(textField_NgayChon);
 
 
@@ -267,29 +269,10 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		lblTau.setBounds(0, 0, 85, 38);
 		panel_2_1_1.add(lblTau);
 
-		txtTau = new RoundedTextField(15);
-		txtTau.setColumns(10);
-		txtTau.setBounds(85, 0, 366, 38);
-		panel_2_1_1.add(txtTau);
-		txtTau.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				// Cập nhật giá trị mỗi khi trường có focus
-				tauChon = txtTau.getText();
-				System.out.println("tau chon: " + tauChon); // In ra để kiểm tra
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				// Cập nhật giá trị nếu cần thiết khi trường mất focus
-				tauChon = txtTau.getText(); // Lưu giá trị vào biến khi mất focus
-				System.out.println("Giá trị Ga đi khi mất focus: " + tauChon); // In ra để kiểm tra
-				updateLaBel(tauChon);
-				dataToTableGa(tauChon);
-				dataToTableVe(tauChon);
-			}
-		});
-
+		comboBox_Tau = new JComboBox<>();
+		comboBox_Tau.setBounds(84, 0, 367, 38);
+		panel_2_1_1.add(comboBox_Tau);
+		chonChuyenTau(comboBox_Tau, tenGaDi, tenGaDen, tauChon);
 		JPanel panel_ThongTinTau = 	new JPanel();
 		panel_ThongTinTau.setBackground(new Color(159, 214, 239));
 		panel_ThongTinTau.setBounds(56, 168, 1347, 144);
@@ -451,69 +434,58 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 					ct.getGioDen().format(timeFormatter)});
 		}
 	}
-	
-//	public void dataToTableVe(String maTau) {
-//		dsCT.reset();
-//		dsVe.reset();
-//		dsToa.reset();
-//		ChuyenTau ct = dsCT.getChuyenTauTheoMaTau(maTau);
-//		ArrayList<Toa> toa = dsToa.getDsToaTheoMaTau(maTau);
-//		model = (DefaultTableModel) table_GiaVe.getModel();
-//		model.setRowCount(0); // Xóa tất cả hàng trong bảng
-//		
-//	}
 	public void dataToTableVe(String maTau) {
-	    dsCT.reset();
-	    dsVe.reset();
-	    dsToa.reset();
-	    
-	    // Lấy thông tin chuyến tàu theo mã tàu
-	    ChuyenTau ct = dsCT.getChuyenTauTheoMaTau(maTau);
-	    
-	    // Lấy danh sách toa theo mã tàu
-	    ArrayList<Toa> toaList = dsToa.getDsToaTheoMaTau(maTau);
-	    
-	    // Lấy mô hình của bảng
-	    model = (DefaultTableModel) table_GiaVe.getModel();
-	    model.setRowCount(0); // Xóa tất cả hàng trong bảng
-	    
-	    // Danh sách khuyến mãi
-	    String[] khuyenMais = {"Người lớn", "Sinh viên", "Người lớn tuổi", "Trẻ em dưới 6 tuổi", "Trẻ em từ 6 đến 10 tuổi"};
-	    
-	    // Duyệt qua từng toa để tạo vé ảo
-	    for (Toa toa : toaList) {
-	        // Duyệt qua các loại khuyến mãi
-	        for (String khuyenMai : khuyenMais) {
-	            // Tạo mã vé
-	            String maVe = generateMaVe();
-	            // Giả sử loại ghế được xác định theo loại toa
-	            String hang = toa.getLoaiToa();
-	            // Tạo vé ảo
-	            Ve ve = new Ve(maVe, ct, toa, null, null, 
-	                            LocalDate.now(), LocalTime.now(), 
-	                            LocalDate.now(), LocalTime.now(), 
-	                            ct.getGaDi(), ct.getGaDen(), 
-	                            hang, khuyenMai, true, null);
-	            
-	            // Tính giá vé
-	            float giaVe = ve.tinhGiaVe();
-	            
-	            // Thêm dữ liệu vào bảng
-	            model.addRow(new Object[]{
-	                model.getRowCount() + 1, // Số thứ tự
-	                toa.getMaToa(),          // Mã toa
-	                hang,                    // Hạng
-	                khuyenMai,               // Khuyến mãi
-	                dinhDangTienTe(giaVe)                   // Giá vé
-	            });
-	        }
-	    }
+		dsCT.reset();
+		dsVe.reset();
+		dsToa.reset();
+
+		// Lấy thông tin chuyến tàu theo mã tàu
+		ChuyenTau ct = dsCT.getChuyenTauTheoMaTau(maTau);
+
+		// Lấy danh sách toa theo mã tàu
+		ArrayList<Toa> toaList = dsToa.getDsToaTheoMaTau(maTau);
+
+		// Lấy mô hình của bảng
+		model = (DefaultTableModel) table_GiaVe.getModel();
+		model.setRowCount(0); // Xóa tất cả hàng trong bảng
+
+		// Danh sách khuyến mãi
+		String[] khuyenMais = {"Người lớn", "Sinh viên", "Người lớn tuổi", "Trẻ em dưới 6 tuổi", "Trẻ em từ 6 đến 10 tuổi"};
+
+		// Duyệt qua từng toa để tạo vé ảo
+		for (Toa toa : toaList) {
+			// Duyệt qua các loại khuyến mãi
+			for (String khuyenMai : khuyenMais) {
+				// Tạo mã vé
+				String maVe = generateMaVe();
+				// Giả sử loại ghế được xác định theo loại toa
+				String hang = toa.getLoaiToa();
+				// Tạo vé ảo
+				Ve ve = new Ve(maVe, ct, toa, null, null, 
+						LocalDate.now(), LocalTime.now(), 
+						LocalDate.now(), LocalTime.now(), 
+						ct.getGaDi(), ct.getGaDen(), 
+						hang, khuyenMai, true, null);
+
+				// Tính giá vé
+				float giaVe = ve.tinhGiaVe();
+
+				// Thêm dữ liệu vào bảng
+				model.addRow(new Object[]{
+						model.getRowCount() + 1, // Số thứ tự
+						toa.getMaToa(),          // Mã toa
+						hang,                    // Hạng
+						khuyenMai,               // Khuyến mãi
+						dinhDangTienTe(giaVe)                   // Giá vé
+				});
+			}
+		}
 	}
 
 	// Phương thức giả lập để sinh mã vé
 	private String generateMaVe() {
-	    // Sinh mã vé theo định dạng bạn muốn
-	    return "VE" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")) + String.format("%04d", new Random().nextInt(10000));
+		// Sinh mã vé theo định dạng bạn muốn
+		return "VE" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")) + String.format("%04d", new Random().nextInt(10000));
 	}
 	private void chonGa(JTextField txt_Ga) {
 		// Tạo JPopupMenu để hiển thị gợi ý
@@ -558,61 +530,53 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 			}
 		});
 	}
-	private void chonChuyenTau(JTextField txt_ChuyenTau, String diaChiGaDi, String diaChiGaDen, String ngayChon) {
-		JPopupMenu suggestionMenu = new JPopupMenu();
+	private void chonChuyenTau(JComboBox<String> comboBox_Tau, String diaChiGaDi, String diaChiGaDen, String ngayChon) {
+		comboBox_Tau.removeAllItems();
+		if(diaChiGaDi == null || diaChiGaDen == null || ngayChon == null) {
+			comboBox_Tau.setSelectedItem(null);
+			return; 
+		}else {
+			// Tìm các ga theo địa chỉ ga đi và ga đến
+            Ga gaDi = dsGa.getGaTheoDiaChi(diaChiGaDi);      
+            Ga gaDen = dsGa.getGaTheoDiaChi(diaChiGaDen);
+            ArrayList<ChuyenTau> danhSachChuyenTau = dsCT.getChuyenTauTheoGaVaNgayDi(gaDi.getMaGa(), gaDen.getMaGa(), ngayChon);
+            // Sử dụng Set để kiểm tra trùng lặp
+            Set<String> uniqueChuyenTau = new HashSet<>();
 
-		// Xóa tất cả các KeyListener cũ trước khi thêm mới
-		for (KeyListener listener : txt_ChuyenTau.getKeyListeners()) {
-			txt_ChuyenTau.removeKeyListener(listener);
+            // Duyệt qua các chuyến tàu và thêm vào ComboBox nếu mã tàu khớp với input
+            if (danhSachChuyenTau != null && !danhSachChuyenTau.isEmpty()) {
+                // Thêm các item mới vào ComboBox nếu mã tàu khớp với input
+                for (ChuyenTau chuyenTau : danhSachChuyenTau) {
+                    String maTau = chuyenTau.getMaTau();
+                    // Kiểm tra xem mã tàu đã tồn tại trong Set chưa và có bắt đầu bằng input
+                    if (uniqueChuyenTau.add(maTau)) {
+                        // Thêm mã tàu vào ComboBox nếu chưa có
+                        if (!contains(comboBox_Tau, maTau)) {
+                            comboBox_Tau.addItem(maTau); // Thêm mã tàu vào ComboBox
+                        }
+                    }
+                }
+             // Thêm ActionListener để tự động cập nhật label khi chọn item
+                comboBox_Tau.addActionListener(e -> {
+                    String selectedMaTau = (String) comboBox_Tau.getSelectedItem();
+                    if (selectedMaTau != null) {
+                        updateLaBel(selectedMaTau);  // Gọi updateLabel với mã tàu được chọn
+                        dataToTableGa(selectedMaTau);
+                        dataToTableVe(selectedMaTau);
+                    }
+                });   
+            }
 		}
+	}
 
-		txt_ChuyenTau.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				String input = txt_ChuyenTau.getText().trim(); // Loại bỏ khoảng trắng
-				suggestionMenu.removeAll(); // Xóa các gợi ý cũ
-
-				if (!input.isEmpty()) {
-					int count = 0;
-					Ga gaDi = dsGa.getGaTheoDiaChi(diaChiGaDi);      
-					Ga gaDen = dsGa.getGaTheoDiaChi(diaChiGaDen);
-					ArrayList<ChuyenTau> danhSachChuyenTau = dsCT.getChuyenTauTheoGaVaNgayDi(gaDi.getMaGa(), gaDen.getMaGa(), ngayChon);
-					// Sử dụng Set để kiểm tra trùng lặp
-					Set<String> uniqueChuyenTau = new HashSet<>();
-
-					if (danhSachChuyenTau != null && !danhSachChuyenTau.isEmpty()) {
-						for (ChuyenTau chuyenTau : danhSachChuyenTau) {
-							String maTau = chuyenTau.getMaTau().toLowerCase();
-							// Kiểm tra xem mã tàu đã tồn tại trong Set chưa
-							if (uniqueChuyenTau.add(maTau) && maTau.startsWith(input.toLowerCase())) {
-								JMenuItem item = new JMenuItem(chuyenTau.getMaTau());
-								item.addActionListener(new ActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent e) {
-										txt_ChuyenTau.setText(item.getText());
-										suggestionMenu.setVisible(false); // Ẩn gợi ý sau khi chọn
-									}
-								});
-								suggestionMenu.add(item);
-								count++;
-
-								if (count >= 5) { // Kiểm tra nếu đã có 5 gợi ý
-									break; // Thoát vòng lặp nếu đã đủ 5 gợi ý
-								}
-							}
-
-						}
-					}
-				}
-
-				if (suggestionMenu.getComponentCount() > 0) {
-					suggestionMenu.show(txt_ChuyenTau, 0, txt_ChuyenTau.getHeight());
-					txt_ChuyenTau.requestFocus(); // Đặt lại focus cho JTextField
-				} else {
-					suggestionMenu.setVisible(false); // Ẩn nếu không có gợi ý
-				}
-			}
-		});
+	// Kiểm tra xem ComboBox có chứa item cần thêm không
+	private boolean contains(JComboBox<String> comboBox_Tau, String item) {
+	    for (int i = 0; i < comboBox_Tau.getItemCount(); i++) {
+	        if (comboBox_Tau.getItemAt(i).equalsIgnoreCase(item)) {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 
 	private void updateLaBel(String maTau) {
