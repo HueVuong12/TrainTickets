@@ -1,10 +1,10 @@
 ﻿-- Tạo database DTHP
-CREATE DATABASE DTHP1
+CREATE DATABASE DTHP
 COLLATE Vietnamese_CI_AS;
 GO
 
 -- Sử dụng database DTHP
-USE DTHP1;
+USE DTHP;
 GO
 
 -- Tạo bảng Ga
@@ -325,3 +325,41 @@ INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen
 ('VE2609240004', 'TA003', 'TA003_01', 1, 'KH0001', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn tuổi', 1, 'CT220924NV00200001'),
 ('VE2609240005', 'TA003', 'TA003_01', 2, 'KH0002', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Sinh viên', 1, 'CT220924NV00200001'),
 ('VE2609240006', 'TA003', 'TA003_01', 3, 'KH0003', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 1, 'CT220924NV00200001');
+
+
+INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen) 
+VALUES ('TA004', 'GA035', 'GA001', '2024-11-28', '06:00:00', '2024-11-28', '20:00:00');
+INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen) 
+VALUES 
+('TA004', 'GA020', '2024-11-28', '10:00:00', '2024-11-28', '10:30:00'), -- Ga Huế
+('TA004', 'GA019', '2024-11-28', '13:00:00', '2024-11-28', '13:30:00'); -- Ga Đà Nẵng
+INSERT INTO Toa (maToa, loaiToa, maTau) 
+VALUES 
+('TA004_01', N'Giường nằm', 'TA004'),
+('TA004_02', N'Giường nằm', 'TA004'),
+('TA004_03', N'Ghế mềm', 'TA004'),
+('TA004_04', N'Ghế mềm', 'TA004'),
+('TA004_05', N'VIP', 'TA004');
+-- Thêm ghế cho toa giường nằm
+DECLARE @i INT;
+SET @i = 1;
+WHILE @i <= 32 BEGIN
+    INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA004_01', 1);
+    INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA004_02', 1);
+    SET @i = @i + 1;
+END;
+
+-- Thêm ghế cho toa ghế mềm
+SET @i = 1;
+WHILE @i <= 64 BEGIN
+    INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA004_03', 1);
+    INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA004_04', 1);
+    SET @i = @i + 1;
+END;
+
+-- Thêm ghế cho toa VIP
+SET @i = 1;
+WHILE @i <= 20 BEGIN
+    INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA004_05', 1);
+    SET @i = @i + 1;
+END;
