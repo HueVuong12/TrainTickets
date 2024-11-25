@@ -43,7 +43,7 @@ public class KhachHang {
 		if(tenKH.matches(regexTenKH))
 			this.tenKH = tenKH;
 		else
-			throw new IllegalArgumentException("Tên khách hàng không hợp lê!");
+			throw new IllegalArgumentException("Tên khách hàng không hợp lệ!");
 	}
 
 	public String getEmail() {

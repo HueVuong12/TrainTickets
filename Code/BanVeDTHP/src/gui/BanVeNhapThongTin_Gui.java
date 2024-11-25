@@ -76,6 +76,9 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 	public BanVe_GUI banVe_GUI;
 	public DoiVe_GUI doiVe_GUI;
 	
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public BanVeNhapThongTin_Gui(BanVe_GUI banVe_GUI, TrangChu_GUI trangChu) {
 		setBackground(SystemColor.window);
 		setForeground(new Color(255, 255, 255));
@@ -265,20 +268,22 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) {
-                    DefaultTableModel model = (DefaultTableModel) table.getModel();
-    				KhachHang khachHangExist = list.stream().filter(kh -> textField_SDT_KHSDV.getText().equals(kh.getSdt())).findFirst().orElse(null);
-    				if (khachHangExist!=null) {
-    					map.put(selectedRow, khachHangExist);
-    				} else {    					
-    					KhachHang khachHang = new KhachHang("KH0000", textField_Ten_KHSDV.getText(), textField_Email_KHSDV.getText(), textField_SDT_KHSDV.getText(), textField_CCCD_KHSDV.getText());
-    					map.put(selectedRow, khachHang);
-    				}
-    				banVe_GUI.dsVeDatTam.get(selectedRow).setKhuyenMai(table.getValueAt(selectedRow, 2).toString());
-                    model.setValueAt(textField_Ten_KHSDV.getText(), selectedRow, 1);
-                    textField_Ten_KHSDV.setText("");
-					textField_SDT_KHSDV.setText("");
-					textField_Email_KHSDV.setText("");
-					textField_CCCD_KHSDV.setText("");
+                	if (isValidTxt()) {
+                		DefaultTableModel model = (DefaultTableModel) table.getModel();
+                		KhachHang khachHangExist = list.stream().filter(kh -> textField_SDT_KHSDV.getText().equals(kh.getSdt())).findFirst().orElse(null);
+                		if (khachHangExist!=null) {
+                			map.put(selectedRow, khachHangExist);
+                		} else {    					
+                			KhachHang khachHang = new KhachHang("KH0000", textField_Ten_KHSDV.getText(), textField_Email_KHSDV.getText(), textField_SDT_KHSDV.getText(), textField_CCCD_KHSDV.getText());
+                			map.put(selectedRow, khachHang);
+                		}
+                		banVe_GUI.dsVeDatTam.get(selectedRow).setKhuyenMai(table.getValueAt(selectedRow, 2).toString());
+                		model.setValueAt(textField_Ten_KHSDV.getText(), selectedRow, 1);
+                		textField_Ten_KHSDV.setText("");
+                		textField_SDT_KHSDV.setText("");
+                		textField_Email_KHSDV.setText("");
+                		textField_CCCD_KHSDV.setText("");                		
+                	}
                 }
 			}
 		});
@@ -604,20 +609,22 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) {
-                    DefaultTableModel model = (DefaultTableModel) table.getModel();
-    				KhachHang khachHangExist = list.stream().filter(kh -> textField_SDT_KHSDV.getText().equals(kh.getSdt())).findFirst().orElse(null);
-    				if (khachHangExist!=null) {
-    					map.put(selectedRow, khachHangExist);
-    				} else {    					
-    					KhachHang khachHang = new KhachHang("KH0000", textField_Ten_KHSDV.getText(), textField_Email_KHSDV.getText(), textField_SDT_KHSDV.getText(), textField_CCCD_KHSDV.getText());
-    					map.put(selectedRow, khachHang);
-    				}
-    				doiVe_GUI.dsVeDatTam.get(selectedRow).setKhuyenMai(table.getValueAt(selectedRow, 2).toString());
-                    model.setValueAt(textField_Ten_KHSDV.getText(), selectedRow, 1);
-                    textField_Ten_KHSDV.setText("");
-					textField_SDT_KHSDV.setText("");
-					textField_Email_KHSDV.setText("");
-					textField_CCCD_KHSDV.setText("");
+                	if (isValidTxt()) {
+                		DefaultTableModel model = (DefaultTableModel) table.getModel();
+                		KhachHang khachHangExist = list.stream().filter(kh -> textField_SDT_KHSDV.getText().equals(kh.getSdt())).findFirst().orElse(null);
+                		if (khachHangExist!=null) {
+                			map.put(selectedRow, khachHangExist);
+                		} else {    					
+                			KhachHang khachHang = new KhachHang("KH0000", textField_Ten_KHSDV.getText(), textField_Email_KHSDV.getText(), textField_SDT_KHSDV.getText(), textField_CCCD_KHSDV.getText());
+                			map.put(selectedRow, khachHang);
+                		}
+                		doiVe_GUI.dsVeDatTam.get(selectedRow).setKhuyenMai(table.getValueAt(selectedRow, 2).toString());
+                		model.setValueAt(textField_Ten_KHSDV.getText(), selectedRow, 1);
+                		textField_Ten_KHSDV.setText("");
+                		textField_SDT_KHSDV.setText("");
+                		textField_Email_KHSDV.setText("");
+                		textField_CCCD_KHSDV.setText("");                		
+                	}
                 }
 			}
 		});
@@ -644,7 +651,7 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 				
 				KhachHang khachHang = list.stream().filter(kh -> textField_SDT_KHMV.getText().equals(kh.getSdt())).findFirst().orElse(null);
 				BanVeNhapThongTin_Gui.this.khachHangMua = new KhachHang(khachHang != null?khachHang.getMaKH():generateMaKH(), textField_Ten_KHMV.getText(), textField_Email_KHMV.getText(), textField_SDT_KHMV.getText(), textField_CCCD_KHMV.getText());
-				BanVeThanhToan_GUI banVeThanToan_GUI= new BanVeThanhToan_GUI(BanVeNhapThongTin_Gui.this, trangChu, banVe_GUI);
+				BanVeThanhToan_GUI banVeThanToan_GUI= new BanVeThanhToan_GUI(BanVeNhapThongTin_Gui.this, trangChu, doiVe_GUI);
 				
 				//Gán giá trị khuyễn mãi cho các Ve trong ds đặt tạm
 				
@@ -751,6 +758,30 @@ public class BanVeNhapThongTin_Gui extends JPanel{
         chonSdt(textField_SDT_KHSDV,textField_Ten_KHSDV,textField_Email_KHSDV, textField_CCCD_KHSDV);
 
         loadThongTin(doiVe_GUI.dsVeDatTam);
+	}
+	
+	private boolean isValidTxt() {
+		String regexTenKH="^[A-Z][a-z\\p{L}]*([ ]+[A-Z][a-z\\p{L}]*)*$";
+		String regexEmail = "^[a-zA-Z0-9.]+@gmail\\.com$";
+		String regexSdt = "^(03|05|07|08|09)\\d{8}$";
+		String regexCccd = "^0[0-9]{2}[0-3]\\d{2}\\d{6}$";
+		if(!textField_Ten_KHSDV.getText().matches(regexTenKH)) {
+			JOptionPane.showMessageDialog(null,"Tên khách hàng không hợp lệ!");
+			return false;			
+		}
+		if(!textField_Email_KHSDV.getText().matches(regexEmail)) {
+			JOptionPane.showMessageDialog(null,"Email không hợp lệ!");
+			return false;			
+		}
+	    if(!textField_SDT_KHSDV.getText().matches(regexSdt)) {
+			JOptionPane.showMessageDialog(null,"Số điện thoại không hợp lệ!");
+			return false;
+		}
+		if(!textField_CCCD_KHSDV.getText().matches(regexCccd)) {
+			JOptionPane.showMessageDialog(null,"Căn cước công dân hoặc số hộ chiếu không hợp lệ!");
+			return false;			
+		}
+		return true;
 	}
 
 	public void loadThongTin(ArrayList<Ve> dsVeDatTam) {

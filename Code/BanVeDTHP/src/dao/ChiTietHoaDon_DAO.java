@@ -89,7 +89,25 @@ public class ChiTietHoaDon_DAO {
 		} 
 		
 		return cthd; 
-	} 
+	}
+	
+	// Phương thức cập nhật thông tin số lượng của chi tiết
+	public boolean updateSoLuongVe(ChiTietHoaDon chiTiet) {
+		Connection con = ConnectDB.getInstance().getConnection();
+		PreparedStatement stmt = null;
+		int n = 0;
+		try {
+			stmt = con.prepareStatement(
+					"UPDATE ChiTietHoaDon SET soLuong = ? WHERE maChiTiet = ?");
+			stmt.setString(2, chiTiet.getMaChiTiet());
+			stmt.setString(1, chiTiet.getSoLuong()+"");
+			
+			n = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n > 0;
+	}
     
 	public void reset() {
         dsCTHD.removeAll(dsCTHD);

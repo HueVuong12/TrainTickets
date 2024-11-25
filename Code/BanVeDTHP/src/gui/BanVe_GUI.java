@@ -85,6 +85,7 @@ public class BanVe_GUI extends JPanel {
 	protected Rectangle boundsPanel;
 	public Rectangle boundsPanelToa;
 	private ChuyenTau_JPanel chuyenTauTruocDo = null;
+	private int soVeChieuDi = 0;
 
 	// Khai bao DAO
 	Ga_DAO ga_dao = new Ga_DAO();
@@ -173,6 +174,7 @@ public class BanVe_GUI extends JPanel {
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 					lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
 					lbl_Ga_1.setText(txt_GaDi.getText() + " - " + txt_GaDen.getText());
+					LocalDate ngayDi = chooserNgayDi.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
 					jp_TinhTrangToa.removeAll();
 					jp_TinhTrangToa.revalidate();
@@ -182,7 +184,7 @@ public class BanVe_GUI extends JPanel {
 					jp_TinhTrangGhe.revalidate();
 					jp_TinhTrangGhe.repaint();
 
-					suKienBatDauChon(txt_GaDi.getText(), txt_GaDen.getText());
+					suKienBatDauChon(txt_GaDi.getText(), txt_GaDen.getText(), ngayDi);
 				}
 			}
 		});
@@ -427,10 +429,11 @@ public class BanVe_GUI extends JPanel {
 		add(btnTiep);
 		btnTiep.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				lbl_Chieu_1.setText("Chiều đi: ");
+				lbl_Chieu_1.setText("Chiều về: ");
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
 				lbl_Ga_1.setText(txt_GaDen.getText() + " - " + txt_GaDi.getText());
+				LocalDate ngayDi = chooserNgayVe.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
 				jp_TinhTrangToa.removeAll();
 				jp_TinhTrangToa.revalidate();
@@ -440,7 +443,7 @@ public class BanVe_GUI extends JPanel {
 				jp_TinhTrangGhe.revalidate();
 				jp_TinhTrangGhe.repaint();
 
-				suKienBatDauChon(txt_GaDen.getText(), txt_GaDi.getText());
+				suKienBatDauChon(txt_GaDen.getText(), txt_GaDi.getText(),ngayDi);
 			}
 		});
 
@@ -453,6 +456,7 @@ public class BanVe_GUI extends JPanel {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
 				lbl_Ga_1.setText(txt_GaDi.getText() + " - " + txt_GaDen.getText());
+				LocalDate ngayDi = chooserNgayDi.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
 				if (chuyenTauCu != null) {
 					ChuyenTau_JPanel pChuyenTau = new ChuyenTau_JPanel(chuyenTauCu);
@@ -474,7 +478,7 @@ public class BanVe_GUI extends JPanel {
 					}
 				}
 
-				suKienBatDauChon(txt_GaDi.getText(), txt_GaDen.getText());
+				suKienBatDauChon(txt_GaDi.getText(), txt_GaDen.getText(), ngayDi);
 			}
 		});
 
@@ -492,12 +496,11 @@ public class BanVe_GUI extends JPanel {
 
 	}
 
-	private void suKienBatDauChon(String gaDi, String gaDen) {
+	private void suKienBatDauChon(String gaDi, String gaDen, LocalDate ngayDi) {
 
 		lblMaToa.setText("");
 		jp_ThongTinChuyenTau.removeAll();
 		boolean isKhuHoi = rdbtn_KhuHoi.isSelected();
-		LocalDate ngayDi = chooserNgayDi.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		if (isKhuHoi) {
 			chooserNgayVe.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		}
@@ -744,6 +747,10 @@ public class BanVe_GUI extends JPanel {
 					ImageIcon newIcon;
 					if (ktDaDatTam(ghe)) {
 						newIcon = new ImageIcon(getClass().getResource("/img/Ghe_1.png"));
+						// Xóa đánh dấu
+						if (lbl_Chieu_1.getText().equals("Chiều đi: ")) {
+							soVeChieuDi--;
+						}
 						// Nếu đang chuyển về trạng thái chưa đặt ghế, hãy loại bỏ vé vừa thêm
 						dsVeDatTam.removeIf(v -> (v.getSoGhe().getSoGhe() == ghe.getSoGhe())
 								&& v.getToa().getMaToa().equals(ghe.getToa().getMaToa()));
@@ -752,6 +759,13 @@ public class BanVe_GUI extends JPanel {
 							JOptionPane.showMessageDialog(null,"Đã đạt tối đa số lượng vé có thể đặt trong một hóa đơn!");
 							return;
 						}
+						if (lbl_Chieu_1.getText().equals("Chiều đi: ")) {
+							if (rdbtn_KhuHoi.isSelected() && soVeChieuDi >= 2) {
+								JOptionPane.showMessageDialog(null,"Đã đạt tối đa số lượng vé chiều đi có thể đặt trong một hóa đơn có khứ hồi!");
+								return;
+							}
+							soVeChieuDi++;
+						}			
 						newIcon = new ImageIcon(getClass().getResource("/img/Ghe_2.png"));
 						// Tạo vé mới
 						String maVe = ve_DAO.generateMaVe();
@@ -802,25 +816,37 @@ public class BanVe_GUI extends JPanel {
 	}
 
 	private boolean isValidatedTxtField() {
-		if ((txt_GaDi.getText() != null)
-				&& (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDi.getText()))))) {
-			if ((txt_GaDen.getText() != null)
-					&& (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDen.getText()))))) {
-				if (rdbtn_KhuHoi.isSelected()) {
-					if (chooserNgayVe.getDate() != null) {
-						return true;
-					} else {
-						JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày về!", "Thông báo",
-								JOptionPane.ERROR_MESSAGE);
+		if (!txt_GaDi.getText().equals("Nhập ga đi")) {
+			if (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDi.getText())))) {
+				if (!txt_GaDen.getText().equals("Nhập ga đến")) {
+					if (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDen.getText())))) {
+						if (!txt_GaDi.getText().equals(txt_GaDen.getText())) {
+							if (chooserNgayDi.getDate() != null) {
+								if (rdbtn_KhuHoi.isSelected()) {
+									if (chooserNgayVe.getDate() != null) {
+										return true;
+									}
+									JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày về!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+									return false;
+								}
+								return true;
+							}
+							JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+							return false;							
+						}
+						JOptionPane.showMessageDialog(null, "Ga đi và ga đến không được trùng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
 						return false;
 					}
+					JOptionPane.showMessageDialog(null, "Ga đến không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+					return false;					
 				}
-				return true;
+				JOptionPane.showMessageDialog(null, "Vui lòng nhập ga đến!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				return false;
 			}
-			JOptionPane.showMessageDialog(null, "Ga đến không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Ga đi không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		JOptionPane.showMessageDialog(null, "Ga đi không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Vui lòng nhập ga đi!", "Thông báo", JOptionPane.ERROR_MESSAGE);
 		return false;
 	}
 

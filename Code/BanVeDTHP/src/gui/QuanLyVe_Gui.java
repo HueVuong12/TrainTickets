@@ -381,17 +381,20 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 
 		btn_DoiVe = new RoundedButton("Đổi vé", 15);
 		btn_DoiVe.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
 				if(row != -1) {
 					veDoi = dsVe.getVeTheoMaVe(table.getValueAt(row, 8).toString());
+//					if (!veDoi.doiVe() || !veDoi.isTrangThai()) {
+//						JOptionPane.showMessageDialog(null, "Vé quá hạn đổi hoặc không còn khả dụng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+//						return;
+//					}
 					DoiVe_GUI doiVe = new DoiVe_GUI(QuanLyVe_Gui.this,trangChu);
 					trangChu.content.removeAll();
 					trangChu.content.add(doiVe);
 					trangChu.content.revalidate();
 					trangChu.content.repaint();
-				}else {
+				} else {
 					JOptionPane.showMessageDialog(null, "Vui lòng chọn vé muốn đổi", "Thông báo", JOptionPane.WARNING_MESSAGE);
 				}
 			}	

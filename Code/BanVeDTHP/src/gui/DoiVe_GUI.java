@@ -43,7 +43,6 @@ import javax.swing.SwingConstants;
 import com.toedter.calendar.JDateChooser;
 
 import components.ChuyenTau_JPanel;
-import components.RoundedButton;
 import components.Toa_JPanel;
 import components.Ve_JPanel;
 import dao.ChuyenTau_DAO;
@@ -56,7 +55,6 @@ import entity.Ga;
 import entity.Ghe;
 import entity.Toa;
 import entity.Ve;
-import java.awt.Component;
 import javax.swing.ScrollPaneConstants;
 
 public class DoiVe_GUI extends JPanel {
@@ -75,15 +73,7 @@ public class DoiVe_GUI extends JPanel {
 	private JPanel jp_TinhTrangToa;
 	private JPanel jp_TinhTrangGhe;
 	public ArrayList<Ve> dsVeDatTam = new ArrayList<Ve>();
-	ArrayList<Ve> dsVeCu = new ArrayList<Ve>();
-	private RoundedButton btnTim;
-	private RoundedButton btnXacNhan;
 	private JDateChooser chooserNgayDi;
-	private JDateChooser chooserNgayVe;
-	private JButton btnTiep;
-	private JButton btnQuayLai;
-	private JRadioButton rdbtn_MotChieu;
-	private JRadioButton rdbtn_KhuHoi;
 	private JLabel lbl_Chieu;
 	public JPanel jp_VeMua;
 	protected ChuyenTau chuyenTauCu;
@@ -106,9 +96,7 @@ public class DoiVe_GUI extends JPanel {
 	private JLabel lbl_tieuDeTK_VeCu;
 	private JPanel jp_VeMuaCu;
 	private Ve_JPanel pVeCu;
-
-
-
+	public Ve veCu;
 
 	/**
 	 * Create the panel.
@@ -167,13 +155,13 @@ public class DoiVe_GUI extends JPanel {
 		JPanel jp_timKiem = new JPanel();
 		jp_timKiem.setLayout(null);
 		jp_timKiem.setBackground(Color.WHITE);
-		jp_timKiem.setBounds(10, 10, 244, 309);
+		jp_timKiem.setBounds(10, 10, 244, 250);
 		add(jp_timKiem);
 
 		JPanel jp_Content_ThongTin = new JPanel();
 		jp_Content_ThongTin.setLayout(null);
 		jp_Content_ThongTin.setBackground(SystemColor.controlHighlight);
-		jp_Content_ThongTin.setBounds(0, 32, 244, 276);
+		jp_Content_ThongTin.setBounds(0, 32, 244, 218);
 		jp_timKiem.add(jp_Content_ThongTin);
 
 		JButton btnTim = new JButton("Tìm");
@@ -198,7 +186,7 @@ public class DoiVe_GUI extends JPanel {
 			}
 		});
 		btnTim.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnTim.setBounds(73, 240, 85, 27);
+		btnTim.setBounds(73, 181, 85, 27);
 		jp_Content_ThongTin.add(btnTim);
 
 		txt_GaDi = new JTextField();
@@ -218,46 +206,13 @@ public class DoiVe_GUI extends JPanel {
 		txt_GaDen.setForeground(SystemColor.textInactiveText);
 		txt_GaDen.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		txt_GaDen.setColumns(10);
-		txt_GaDen.setBounds(21, 70, 202, 27);
+		txt_GaDen.setBounds(21, 84, 202, 27);
 		jp_Content_ThongTin.add(txt_GaDen);
 		chonGa(txt_GaDen);
 		focusTxtField(txt_GaDen, "Nhập ga đến");
 
-		rdbtn_MotChieu = new JRadioButton("Một Chiều");
-		buttonGroup.add(rdbtn_MotChieu);
-		rdbtn_MotChieu.setBounds(19, 119, 85, 21);
-		jp_Content_ThongTin.add(rdbtn_MotChieu);
-
-		rdbtn_KhuHoi = new JRadioButton("Khứ Hồi");
-		buttonGroup.add(rdbtn_KhuHoi);
-		rdbtn_KhuHoi.setBounds(106, 119, 85, 21);
-		jp_Content_ThongTin.add(rdbtn_KhuHoi);
-
-		rdbtn_MotChieu.setSelected(true);
-
-		// Thêm listener để thay đổi trạng thái của chooser ngày về
-		rdbtn_KhuHoi.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				chooserNgayVe.setEnabled(true); // Kích hoạt chooser ngày về khi chọn Khứ Hồi
-				btnTiep.setVisible(true);
-				btnQuayLai.setVisible(true);
-
-			}
-		});
-
-		rdbtn_MotChieu.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				chooserNgayVe.setEnabled(false); // Vô hiệu hóa chooser ngày về khi chọn Một Chiều
-				chooserNgayVe.setDate(null); // Xóa ngày đã chọn
-				btnTiep.setVisible(false);
-				btnQuayLai.setVisible(false);
-			}
-		});
-
 		chooserNgayDi = new JDateChooser();
-		chooserNgayDi.setBounds(21, 163, 202, 27);
+		chooserNgayDi.setBounds(21, 144, 202, 27);
 		chooserNgayDi.setDateFormatString("dd/MM/yyyy");
 		jp_Content_ThongTin.add(chooserNgayDi);
 		((JTextField) chooserNgayDi.getDateEditor().getUiComponent()).setEditable(false);
@@ -282,57 +237,17 @@ public class DoiVe_GUI extends JPanel {
 			}
 		});
 
-		chooserNgayVe = new JDateChooser();
-		chooserNgayVe.setBounds(21, 209, 202, 27);
-		chooserNgayVe.setDateFormatString("dd/MM/yyyy");
-		chooserNgayVe.setEnabled(false);
-		jp_Content_ThongTin.add(chooserNgayVe);
-		((JTextField) chooserNgayVe.getDateEditor().getUiComponent()).setEditable(false);
-
-		// Thêm listener để kiểm tra ngày chọn về
-		chooserNgayVe.getDateEditor().addPropertyChangeListener("date", new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				Date ngayDi = chooserNgayDi.getDate();
-
-				// Kiểm tra nếu chọn ngày về khi khứ hồi được chọn
-				if (chooserNgayVe.getDate() != null) {
-					// Kiểm tra nếu ngày đi đã được chọn
-					if (ngayDi == null) {
-						JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi trước khi chọn ngày về.",
-								"Thông báo", JOptionPane.WARNING_MESSAGE);
-						chooserNgayVe.setDate(null); // Xóa ngày đã chọn
-						return; // Thoát khỏi phương thức
-					}
-
-					// Kiểm tra nếu ngày về trước ngày đi
-					if (chooserNgayVe.getDate().before(ngayDi)) {
-						JOptionPane.showMessageDialog(null, "Ngày không hợp lệ! Vui lòng chọn ngày sau ngày đi.",
-								"Thông báo", JOptionPane.WARNING_MESSAGE);
-						chooserNgayVe.setDate(null); // Xóa ngày đã chọn
-					}
-				}
-			}
-		});
-
 		JLabel lbl_GaDi = new JLabel("Ga Đi");
 		lbl_GaDi.setBounds(24, 10, 45, 13);
 		jp_Content_ThongTin.add(lbl_GaDi);
 
 		JLabel lbl_GaDen = new JLabel("Ga Đến");
-		lbl_GaDen.setBounds(21, 55, 45, 13);
+		lbl_GaDen.setBounds(21, 67, 45, 13);
 		jp_Content_ThongTin.add(lbl_GaDen);
 
-		JLabel lbl_LuaChon = new JLabel("Lựa chọn");
-		lbl_LuaChon.setBounds(22, 100, 58, 13);
-		jp_Content_ThongTin.add(lbl_LuaChon);
-
 		JLabel lbl_ChonNgayDi = new JLabel("Ngày đi");
-		lbl_ChonNgayDi.setBounds(21, 146, 45, 13);
+		lbl_ChonNgayDi.setBounds(21, 127, 45, 13);
 		jp_Content_ThongTin.add(lbl_ChonNgayDi);
-
-		JLabel lbl_ChonNgayVe = new JLabel("Ngày về");
-		lbl_ChonNgayVe.setBounds(21, 194, 48, 13);
-		jp_Content_ThongTin.add(lbl_ChonNgayVe);
 
 		JPanel jp_Header_ThongTin = new JPanel();
 		jp_Header_ThongTin.setLayout(null);
@@ -354,13 +269,13 @@ public class DoiVe_GUI extends JPanel {
 		JPanel jp_GioVe = new JPanel();
 		jp_GioVe.setLayout(null);
 		jp_GioVe.setBackground(Color.WHITE);
-		jp_GioVe.setBounds(10, 431, 244, 129);
+		jp_GioVe.setBounds(10, 392, 244, 168);
 		add(jp_GioVe);
 
 		JPanel jp_Content_GioVe = new JPanel();
 		jp_Content_GioVe.setLayout(null);
 		jp_Content_GioVe.setBackground(SystemColor.controlHighlight);
-		jp_Content_GioVe.setBounds(0, 31, 244, 99);
+		jp_Content_GioVe.setBounds(0, 31, 244, 137);
 		jp_GioVe.add(jp_Content_GioVe);
 
 		JButton btnMua = new JButton("Xác nhận");
@@ -380,13 +295,13 @@ public class DoiVe_GUI extends JPanel {
 		});
 
 		btnMua.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		btnMua.setBounds(84, 65, 95, 27);
+		btnMua.setBounds(67, 92, 106, 35);
 		jp_Content_GioVe.add(btnMua);
 
 		// Copy vào DoiVe_GUI . Lưu ý bỏ nút
 		JPanel jp_DanhSachVe = new JPanel();
 		jp_DanhSachVe.setLayout(null);
-		jp_DanhSachVe.setBounds(0, 0, 244, 60);
+		jp_DanhSachVe.setBounds(0, 0, 244, 84);
 		jp_Content_GioVe.add(jp_DanhSachVe);
 
 		lbl_Chieu = new JLabel();
@@ -400,7 +315,7 @@ public class DoiVe_GUI extends JPanel {
 
 		// Tạo JScrollPane cho jp_VeMua
 		JScrollPane scrollPane = new JScrollPane(jp_VeMua);
-		scrollPane.setBounds(0, 2, 244, 59);
+		scrollPane.setBounds(0, 2, 244, 82);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -425,47 +340,21 @@ public class DoiVe_GUI extends JPanel {
 		lblMaToa.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblMaToa.setHorizontalAlignment(SwingConstants.CENTER);
 
-		btnTiep = new JButton("Tiếp");
-		btnTiep.setBounds(1365, 25, 85, 21);
-		add(btnTiep);
-		btnTiep.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lbl_Chieu_1.setText("Chiều đi: ");
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
-				lbl_Ga_1.setText(txt_GaDen.getText() + " - " + txt_GaDi.getText());
-
-				jp_TinhTrangToa.removeAll();
-				jp_TinhTrangToa.revalidate();
-				jp_TinhTrangToa.repaint();
-
-				jp_TinhTrangGhe.removeAll();
-				jp_TinhTrangGhe.revalidate();
-				jp_TinhTrangGhe.repaint();
-
-				suKienBatDauChon(txt_GaDen.getText(), txt_GaDi.getText());
-			}
-		});
-
-		btnQuayLai = new JButton("Quay lại");
-		btnQuayLai.setBounds(1270, 25, 85, 21);
-		add(btnQuayLai);
-
 		jp_VeCu = new JPanel();
 		jp_VeCu.setLayout(null);
 		jp_VeCu.setBackground(Color.WHITE);
-		jp_VeCu.setBounds(10, 324, 244, 98);
+		jp_VeCu.setBounds(10, 270, 244, 118);
 		add(jp_VeCu);
 
 		jp_Content_VeCu = new JPanel();
 		jp_Content_VeCu.setLayout(null);
 		jp_Content_VeCu.setBackground(SystemColor.controlHighlight);
-		jp_Content_VeCu.setBounds(0, 31, 244, 62);
+		jp_Content_VeCu.setBounds(0, 31, 244, 82);
 		jp_VeCu.add(jp_Content_VeCu);
 
 		JPanel jp_DanhSachVeCu = new JPanel();
 		jp_DanhSachVeCu.setLayout(null);
-		jp_DanhSachVeCu.setBounds(0, 0, 244, 62);
+		jp_DanhSachVeCu.setBounds(0, 0, 244, 83);
 		jp_Content_VeCu.add(jp_DanhSachVeCu);
 
 
@@ -479,13 +368,13 @@ public class DoiVe_GUI extends JPanel {
 		jp_VeMuaCu.setLayout(new BoxLayout(jp_VeMuaCu, BoxLayout.Y_AXIS));
 		pVeCu = new Ve_JPanel(qlv.veDoi, null, jp_VeMua);
 		jp_VeMuaCu.add(pVeCu);
-
+		veCu = ve_DAO.getVeTheoMaVe(qlv.veDoi.getMaVe());
 
 		// Tạo JScrollPane cho jp_VeMua
 		JScrollPane scrollPane_VeCu = new JScrollPane(jp_VeMuaCu);
 		scrollPane_VeCu.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollPane_VeCu.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane_VeCu.setBounds(0, 2, 244, 68);
+		scrollPane_VeCu.setBounds(0, 2, 244, 81);
 		jp_DanhSachVeCu.add(scrollPane_VeCu);
 
 		jp_Header_VeCu = new JPanel();
@@ -500,39 +389,6 @@ public class DoiVe_GUI extends JPanel {
 		lbl_tieuDeTK_VeCu.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lbl_tieuDeTK_VeCu.setBounds(61, 0, 121, 32);
 		jp_Header_VeCu.add(lbl_tieuDeTK_VeCu);
-		btnQuayLai.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lbl_Chieu_1.setText("Chiều đi: ");
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
-				lbl_Ga_1.setText(txt_GaDi.getText() + " - " + txt_GaDen.getText());
-
-				if (chuyenTauCu != null) {
-					ChuyenTau_JPanel pChuyenTau = new ChuyenTau_JPanel(chuyenTauCu);
-					pChuyenTau.setBounds(boundsPanel);
-					// su kien
-					loadToa(pChuyenTau, chuyenTauCu);
-					if (toaCu != null) {
-						Toa_JPanel pToa;
-						if (toaCu.getLoaiToa().equals("VIP")) {
-							pToa = new Toa_JPanel("", 2);
-						} else if (toaCu.getLoaiToa().equals("Giường nằm")) {
-							pToa = new Toa_JPanel("", 3);
-						} else {
-							pToa = new Toa_JPanel("", 4);
-						}
-						pToa.setBounds(boundsPanelToa);
-						// su kien
-						loadGhe(pToa, toaCu);
-					}
-				}
-
-				suKienBatDauChon(txt_GaDi.getText(), txt_GaDen.getText());
-			}
-		});
-
-		btnTiep.setVisible(false);
-		btnQuayLai.setVisible(false);
 
 		// Thêm MouseListener vào contentPane
 		this.addMouseListener(new MouseAdapter() {
@@ -549,11 +405,7 @@ public class DoiVe_GUI extends JPanel {
 
 		lblMaToa.setText("");
 		jp_ThongTinChuyenTau.removeAll();
-		boolean isKhuHoi = rdbtn_KhuHoi.isSelected();
 		LocalDate ngayDi = chooserNgayDi.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		if (isKhuHoi) {
-			chooserNgayVe.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		}
 
 		ArrayList<ChuyenTau> dsTauHienThi = new ArrayList<ChuyenTau>();
 		for (ChuyenTau chuyenTau : dsChuyenTau) {
@@ -801,8 +653,8 @@ public class DoiVe_GUI extends JPanel {
 						dsVeDatTam.removeIf(v -> (v.getSoGhe().getSoGhe() == ghe.getSoGhe())
 								&& v.getToa().getMaToa().equals(ghe.getToa().getMaToa()));
 					} else {
-						if (dsVeDatTam.size() == 4) {
-							JOptionPane.showMessageDialog(null,"Đã đạt tối đa số lượng vé có thể đặt trong một hóa đơn!");
+						if (dsVeDatTam.size() == 1) {
+							JOptionPane.showMessageDialog(null,"Xóa vé cũ đã chọn trước khi chọn vé mới!");
 							return;
 						}
 						newIcon = new ImageIcon(getClass().getResource("/img/Ghe_2.png"));
@@ -855,25 +707,30 @@ public class DoiVe_GUI extends JPanel {
 	}
 
 	private boolean isValidatedTxtField() {
-		if ((txt_GaDi.getText() != null)
-				&& (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDi.getText()))))) {
-			if ((txt_GaDen.getText() != null)
-					&& (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDen.getText()))))) {
-				if (rdbtn_KhuHoi.isSelected()) {
-					if (chooserNgayVe.getDate() != null) {
-						return true;
-					} else {
-						JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày về!", "Thông báo",
-								JOptionPane.ERROR_MESSAGE);
+		if (!txt_GaDi.getText().equals("Nhập ga đi")) {
+			if (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDi.getText())))) {
+				if (!txt_GaDen.getText().equals("Nhập ga đến")) {
+					if (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDen.getText())))) {
+						if (!txt_GaDi.getText().equals(txt_GaDen.getText())) {
+							if (chooserNgayDi.getDate() != null) {
+								return true;
+							}
+							JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+							return false;							
+						}
+						JOptionPane.showMessageDialog(null, "Ga đi và ga đến không được trùng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
 						return false;
 					}
+					JOptionPane.showMessageDialog(null, "Ga đến không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+					return false;					
 				}
-				return true;
+				JOptionPane.showMessageDialog(null, "Vui lòng nhập ga đến!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				return false;
 			}
-			JOptionPane.showMessageDialog(null, "Ga đến không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Ga đi không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		JOptionPane.showMessageDialog(null, "Ga đi không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Vui lòng nhập ga đi!", "Thông báo", JOptionPane.ERROR_MESSAGE);
 		return false;
 	}
 
