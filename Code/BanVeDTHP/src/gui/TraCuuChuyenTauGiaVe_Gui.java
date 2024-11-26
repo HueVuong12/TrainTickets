@@ -10,15 +10,12 @@ import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.NumberFormat;
@@ -29,12 +26,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Random;
 import java.util.Set;
-
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -43,19 +39,17 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
-
 import components.RoundedTextField;
+
 import dao.ChuyenTau_DAO;
 import dao.Ga_DAO;
 import dao.Toa_DAO;
 import dao.Ve_DAO;
 import entity.ChuyenTau;
 import entity.Ga;
-import entity.HoaDon;
 import entity.Toa;
 import entity.Ve;
 
-import java.awt.BorderLayout;
 import javax.swing.JComboBox;
 
 public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,DocumentListener{
@@ -65,8 +59,6 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 	private static final long serialVersionUID = 1L;
 	private JTable table_Ga;
 	private JTable table_GiaVe;
-
-	private final JLabel lblChGi = new JLabel("Chú ý: giá vé đã bao gồm tiền bảo hiểm\nGía vé có thể thay đổi theo 1 số điều kiện: thời gian mua vé, đối tượng đi tàu, vị trí chỗ trên toa ...");
 	private JLabel muiTenIconLabel;
 	private JLabel dauTauIconLabel;
 	private JDateChooser dateChooser_Ngay;
@@ -93,6 +85,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 	private DefaultTableModel model;
 	private JLabel lblNewLabel_3_2_1;
 	private JComboBox<String> comboBox_Tau;
+	private int dem = 0;
 	public TraCuuChuyenTauGiaVe_Gui(TrangChu_GUI trangChu) {
 		setBackground(new Color(255, 255, 255));
 		setBounds(0, 170, 1460, 570);
@@ -136,7 +129,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 				new Object[][] {
 				},
 				new String[] {
-						"STT", "Ga đi", "Cự ly(km)", "Ngày đi", "Giờ đến", "Giờ đi"
+						"STT", "Ga đi", "Cự ly(km)", "Ngày đi","Giờ đi","Ngày đến","Giờ đến"
 				}
 				));
 		table_Ga.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -159,14 +152,12 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 			public void focusGained(FocusEvent e) {
 				// Cập nhật giá trị mỗi khi trường có focus
 				tenGaDi = txtGaDi.getText();
-				System.out.println("Giá trị Ga đi: " + tenGaDi); // In ra để kiểm tra
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
 				// Cập nhật giá trị nếu cần thiết khi trường mất focus
 				tenGaDi = txtGaDi.getText(); // Lưu giá trị vào biến khi mất focus
-				System.out.println("Giá trị Ga đi khi mất focus: " + tenGaDi); // In ra để kiểm tra
 			}
 		});
 		chonGa(txtGaDi);
@@ -200,14 +191,12 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 			public void focusGained(FocusEvent e) {
 				// Lưu giá trị vào biến khi trường có focus
 				tenGaDen = txtGaDen.getText();
-				System.out.println("Giá trị Ga đến: " + tenGaDen); // In ra để kiểm tra
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
 				// Cập nhật giá trị nếu cần thiết khi trường mất focus
 				tenGaDen = txtGaDen.getText(); // Lưu giá trị vào biến khi mất focus
-				System.out.println("Giá trị Ga đến khi mất focus: " + tenGaDen); // In ra để kiểm tra
 				// Gọi chonChuyenTau ở đây hoặc nơi thích hợp
 			}
 		});
@@ -232,23 +221,31 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		dateChooser_Ngay.setLayout(null);
 		// Thêm sự kiện PropertyChangeListener cho dateChooserTu
 		dateChooser_Ngay.getDateEditor().addPropertyChangeListener("date", evt -> {
-			selectedDate = dateChooser_Ngay.getDate();
-			if (selectedDate != null) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");	        
-				// Kiểm tra ngày đã chọn có trước ngày hiện tại không
-				Date currentDate = new Date(); // Ngày hiện tại
-				if (selectedDate.before(currentDate)) {
-					JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi từ ngày hiện tại.",
-							"Thông báo", JOptionPane.WARNING_MESSAGE);
-					return;
-				}
-				textField_NgayChon.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
-				// Gọi chonChuyenTau mỗi khi ngày được cập nhật
-				chonChuyenTau(comboBox_Tau ,tenGaDi, tenGaDen, textField_NgayChon.getText());		
-			} else {
-				textField_NgayChon.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
-			}
-			System.out.println(textField_NgayChon.getText());
+		    selectedDate = dateChooser_Ngay.getDate();
+		    if (selectedDate != null) {
+		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		        
+		        // Lấy ngày hiện tại mà không có thời gian
+		        Calendar currentCalendar = Calendar.getInstance();
+		        currentCalendar.set(Calendar.HOUR_OF_DAY, 0);
+		        currentCalendar.set(Calendar.MINUTE, 0);
+		        currentCalendar.set(Calendar.SECOND, 0);
+		        currentCalendar.set(Calendar.MILLISECOND, 0);
+		        Date currentDateWithoutTime = currentCalendar.getTime();
+		        
+		        // Kiểm tra ngày đã chọn có trước ngày hiện tại không (không tính đến thời gian)
+		        if (selectedDate.before(currentDateWithoutTime)) {
+		            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi từ ngày hiện tại.",
+		                    "Thông báo", JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+
+		        textField_NgayChon.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
+		        // Gọi chonChuyenTau mỗi khi ngày được cập nhật
+		        chonChuyenTau(comboBox_Tau, tenGaDi, tenGaDen, textField_NgayChon.getText());
+		    } else {
+		        textField_NgayChon.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
+		    }
 		});
 
 		textField_NgayChon = new RoundedTextField(15);
@@ -317,10 +314,6 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		dauTauIconLabel = new JLabel(new ImageIcon(scaledDauTauIcon));
 		dauTauIconLabel.setBounds(538, 10, 100, 43);
 		panel_ThongTinTau.add(dauTauIconLabel);
-		//		JLabel lblNewLabel_9 = new JLabel("");
-		//		lblNewLabel_9.setIcon(new ImageIcon(getClass().getResource("/img/container_Zoom-removebg-preview - Copy.png")));
-		//		lblNewLabel_9.setBounds(605, -20, 161, 94);
-		//		panel_ThongTinTau.add(lblNewLabel_9);
 
 		lbl_MaTau = new JLabel("");
 		lbl_MaTau.setHorizontalAlignment(SwingConstants.CENTER);
@@ -431,7 +424,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		for (Ga ga : danhSachGa) {
 			model.addRow(new Object[] { count++, ga.getTenGa(), ga.getChiSoKm(),
 					ct.getNgayDi().format(formatter),ct.getGioDi().format(timeFormatter),
-					ct.getGioDen().format(timeFormatter)});
+					ct.getNgayDen().format(formatter),ct.getGioDen().format(timeFormatter)});
 		}
 	}
 	public void dataToTableVe(String maTau) {
@@ -441,10 +434,8 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 
 		// Lấy thông tin chuyến tàu theo mã tàu
 		ChuyenTau ct = dsCT.getChuyenTauTheoMaTau(maTau);
-
 		// Lấy danh sách toa theo mã tàu
 		ArrayList<Toa> toaList = dsToa.getDsToaTheoMaTau(maTau);
-
 		// Lấy mô hình của bảng
 		model = (DefaultTableModel) table_GiaVe.getModel();
 		model.setRowCount(0); // Xóa tất cả hàng trong bảng
@@ -466,7 +457,6 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 						LocalDate.now(), LocalTime.now(), 
 						ct.getGaDi(), ct.getGaDen(), 
 						hang, khuyenMai, true, null);
-
 				// Tính giá vé
 				float giaVe = ve.tinhGiaVe();
 
@@ -485,8 +475,10 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 	// Phương thức giả lập để sinh mã vé
 	private String generateMaVe() {
 		// Sinh mã vé theo định dạng bạn muốn
-		return "VE" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")) + String.format("%04d", new Random().nextInt(10000));
+		dem++;
+		return "VE" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")) + String.format("%04d", dem);
 	}
+	
 	private void chonGa(JTextField txt_Ga) {
 		// Tạo JPopupMenu để hiển thị gợi ý
 		JPopupMenu suggestionMenu = new JPopupMenu();

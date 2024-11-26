@@ -13,10 +13,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -32,6 +30,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 import components.ComboBoxRenderer;
 import components.ConTent_JPanel;
@@ -258,6 +258,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		comboBox_TimTheoMaTK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				@SuppressWarnings("unchecked")
 				JComboBox<String> cb = (JComboBox<String>) e.getSource();
 				String selectedObj = cb.getSelectedItem() != null ? cb.getSelectedItem().toString() : null;
 
@@ -465,6 +466,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 
 
 	//Hàm kiểm tra regex
+	@SuppressWarnings("deprecation")
 	public boolean validData() {
 		if (passwordField.getText().equals("")) {
 			JOptionPane.showMessageDialog(this, "Mật khẩu không được bỏ trống");
@@ -511,22 +513,43 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 
 	//Hàm lấy dữ liệu từ JPane thông tin tài khoản
 	public TaiKhoan revertTK() {
+	    // Lấy mật khẩu từ passwordField
+	    @SuppressWarnings("deprecation")
 		String matKhau = passwordField.getText();
-		int chucVu =  comboBox_PhanQuyen.getSelectedIndex() == 0 ? 1 : 2;;
-		String maDN = generateMaDN(chucVu);
-		String maNV = textField_MaNV.getText();
-		TaiKhoan tk = new TaiKhoan(maDN, matKhau, chucVu, new NhanVien(maNV));
-		return tk;
+	    
+	    // Mã hóa mật khẩu bằng BCrypt
+	    String matKhauMaHoa = BCrypt.hashpw(matKhau, BCrypt.gensalt());
+		//	    if (matKhauMaHoa.length() > 50) {
+		//	        matKhauMaHoa = matKhauMaHoa.substring(0, 50); // Cắt chuỗi xuống 50 ký tự
+		//	    }
+
+	    System.out.println(matKhauMaHoa);
+	    
+	    // Xác định chức vụ từ comboBox
+	    int chucVu = comboBox_PhanQuyen.getSelectedIndex() == 0 ? 1 : 2;
+
+	    // Tạo mã đăng nhập
+	    String maDN = generateMaDN(chucVu);
+
+	    // Lấy mã nhân viên từ textField
+	    String maNV = textField_MaNV.getText();
+
+	    // Tạo đối tượng TaiKhoan với mật khẩu đã mã hóa
+	    TaiKhoan tk = new TaiKhoan(maDN, matKhauMaHoa, chucVu, new NhanVien(maNV));
+	    
+	    return tk;
 	}
 	//Hàm sửa thông tin tài khoản
 	public void update() {
 		int index = table_TK.getSelectedRow();
 		if (index != -1) {
-			String matKhau = passwordField.getText();
+			String matKhau = new String(passwordField.getPassword()).trim();
+			 // Mã hóa mật khẩu bằng BCrypt
+		    String matKhauMaHoa = BCrypt.hashpw(matKhau, BCrypt.gensalt());
 			int chucVu =  comboBox_PhanQuyen.getSelectedIndex() == 0 ? 1 : 2;
-			String maDN = generateMaDN(chucVu);
+			String maDN = textField_MaDN.getText();
 			String maNV = textField_MaNV.getText();
-			TaiKhoan tk = new TaiKhoan(maDN, matKhau, chucVu, new NhanVien(maNV));
+			TaiKhoan tk = new TaiKhoan(maDN, matKhauMaHoa, chucVu, new NhanVien(maNV));
 			try {
 				dstk.update(tk);
 				model.setRowCount(0);
@@ -545,7 +568,6 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	private void filterRows() {
 		ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
 		String tk = textField_MaDN.getText().trim();
-		String mk = passwordField.getText().trim();
 		String nv = textField_MaNV.getText().trim();
 		String pq = comboBox_PhanQuyen.getSelectedItem() != null ? comboBox_PhanQuyen.getSelectedItem().toString().trim() : "";
 		// Lọc theo các điều kiện

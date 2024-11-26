@@ -138,7 +138,7 @@ CREATE TABLE Ve (
 -- Tạo bảng TaiKhoan
 CREATE TABLE TaiKhoan (
     maTaiKhoan VARCHAR(50) PRIMARY KEY,
-    matKhau VARCHAR(50) NOT NULL,
+    matKhau VARCHAR(60) NOT NULL,
     phanQuyen INT NOT NULL,
     nhanVien VARCHAR(50),
     FOREIGN KEY (nhanVien) REFERENCES NhanVien(maNV)
@@ -157,6 +157,7 @@ INSERT INTO NhanVien (maNV, tenNV, ngaySinh, gioiTinh, ca, cccd, email, sdt, tra
 
 -- Thêm 2 tài khoản vào bảng TaiKhoan
 INSERT INTO TaiKhoan (maTaiKhoan, matKhau, phanQuyen, nhanVien) VALUES
+('TKQL002','$2a$10$yR9lmuZC1DDjHLft/e.KFeDPHaXBFpy0b.IREpjkdsdqG1sUsniXi',1,'NV001'),
 ('TKQL001', 'password1', 1, 'NV001'), 
 ('TKNV001', 'password2', 2, 'NV002');
 
@@ -341,9 +342,9 @@ VALUES
 ('TA004_04', N'Ghế mềm', 'TA004'),
 ('TA004_05', N'VIP', 'TA004');
 -- Thêm ghế cho toa giường nằm
-DECLARE @i INT;
+--DECLARE @i INT;
 SET @i = 1;
-WHILE @i <= 32 BEGIN
+WHILE @i <= 32 BEGIN2
     INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA004_01', 1);
     INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA004_02', 1);
     SET @i = @i + 1;

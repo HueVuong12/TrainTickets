@@ -279,41 +279,95 @@ public class Ve {
 	}
 	
 	public boolean hoanVe(Boolean isTapThe) {
+	    // Kiểm tra ngày và giờ có hợp lệ
+	    if (ngayDi == null || gioDi == null) {
+	        return false; // Không đủ điều kiện hoàn vé
+	    }
+
 	    LocalDateTime now = LocalDateTime.now();
 	    LocalDateTime thoiGianDi = LocalDateTime.of(ngayDi, gioDi);
-	    
-	    if (isTapThe) {
-	    	if (now.isBefore(thoiGianDi.minusHours(72)))
-	    		return true;
-	    } else {
-	    	if (now.isBefore(thoiGianDi.minusHours(24)))
-	    		return true;
+	    long hoursDiff = java.time.Duration.between(now, thoiGianDi).toHours();
+
+	    // Trường hợp thời gian đi đã qua
+	    if (hoursDiff < 0) {
+	        return false; // Không hoàn vé nếu thời gian đi đã qua
 	    }
-	    return false;
+
+	    // Áp dụng logic hoàn vé theo loại vé
+	    if (isTapThe) {
+	        // Vé tập thể: hoàn vé nếu còn ít nhất 24 giờ
+	        return hoursDiff >= 24;
+	    } else {
+	        // Vé cá nhân: hoàn vé nếu còn ít nhất 4 giờ
+	        return hoursDiff >= 4;
+	    }
 	}
+	
 	//tính phí hoàn vé
 	public float tinhPhiHoanVe(Boolean isTapThe) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime thoiGianDi = LocalDateTime.of(ngayDi, gioDi);
-        long hoursDiff = java.time.Duration.between(now, thoiGianDi).toHours();
-        double phiHoan = 0.0;
+	    // Kiểm tra ngày và giờ có hợp lệ hay không
+	    if (ngayDi == null || gioDi == null) {
+	    	 return 0.0f; // Không hoàn phí
+	    }
 
-        if (isTapThe) {
-            if (hoursDiff >= 72) {
-                phiHoan = 0.1; // 10% phí
-            } else if (hoursDiff >= 24) {
-                phiHoan = 0.2; // 20% phí
-            }
-        } else {
-            if (hoursDiff >= 24) {
-                phiHoan = 0.1; // 10% phí
-            } else if (hoursDiff >= 4) {
-                phiHoan = 0.2; // 20% phí
-            }
-        }
+	    LocalDateTime now = LocalDateTime.now();
+	    LocalDateTime thoiGianDi = LocalDateTime.of(ngayDi, gioDi);
+	    long hoursDiff = java.time.Duration.between(now, thoiGianDi).toHours();
+	    double phiHoan = 0.0;
 
-        return (float) (phiHoan * tinhGiaVe()); // Tính phí hoàn dựa trên giá vé
-    }
+	    // Trường hợp thời gian đi đã qua
+	    if (hoursDiff < 0) {
+	        return 0.0f; // Không hoàn phí
+	    }
+
+	    // Logic tính phí hoàn
+	    if (isTapThe) {
+	        if (hoursDiff >= 72) {
+	            phiHoan = 0.1; // 10% phí
+	        } else if (hoursDiff >= 24) {
+	            phiHoan = 0.2; // 20% phí
+	        }
+	    } else { // Vé cá nhân
+	        if (hoursDiff >= 24) {
+	            phiHoan = 0.1; // 10% phí
+	        } else if (hoursDiff >= 4) {
+	            phiHoan = 0.2; // 20% phí
+	        }
+	    }
+
+	    // Tính phí hoàn dựa trên giá vé
+	    float giaVe = tinhGiaVe();
+	    if (giaVe <= 0) {
+	        return 0.0f;
+	    }
+	    
+	    return (float) (phiHoan * giaVe);
+	}
+
+	public boolean kiemTraHoanTien() {
+	    // Kiểm tra ngày và giờ có hợp lệ
+	    if (ngayDi == null || gioDi == null) {
+	        return false; // Không hợp lệ để hoàn tiền
+	    }
+
+	    LocalDateTime now = LocalDateTime.now();
+	    LocalDateTime thoiGianDi = LocalDateTime.of(ngayDi, gioDi);
+	    long hoursDiff = java.time.Duration.between(now, thoiGianDi).toHours();
+
+	    // Không được hoàn nếu thời gian đi đã qua
+	    if (hoursDiff < 0) {
+	        return false;
+	    }
+
+	    // Kiểm tra giá vé có hợp lệ
+	    float giaVe = tinhGiaVe();
+	    if (giaVe <= 0) {
+	        return false;
+	    }
+
+	    // Nếu tất cả điều kiện đều hợp lệ, trả về true
+	    return true;
+	}
 	
 	
 	public void xuatVe(String pdfPath) {

@@ -58,6 +58,7 @@
 	<classpathentry kind="lib" path="libs/jakarta.xml.bind-api-3.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/log4j-api-2.18.0.jar"/>
 	<classpathentry kind="lib" path="libs/poi-examples-5.2.3.jar"/>
+	<classpathentry kind="lib" path="libs/jBCrypt-0.4.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
 		<attributes>
 			<attribute name="module" value="true"/>

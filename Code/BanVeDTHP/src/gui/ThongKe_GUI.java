@@ -55,7 +55,6 @@ import components.RoundedButton;
 import dao.Ca_DAO;
 import dao.ChiTietHoaDon_DAO;
 import dao.ChuyenTau_DAO;
-import dao.Ga_DAO;
 import dao.HoaDon_DAO;
 import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
@@ -129,12 +128,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	private String tkct_ngayKetThuc;
 	private JPanel jp_thongKeCT;
 	private NhanVien_DAO dsNV = new NhanVien_DAO();
-	private TrangChu_GUI trangChu;
-	private DangNhap_GUI dangNhap;
 	private TaiKhoan_DAO dsTK = new TaiKhoan_DAO();
 	private Ca_DAO dsCa = new Ca_DAO();
 	private KhachHang_DAO dsKH = new KhachHang_DAO();
-	private Ga_DAO dsGa= new Ga_DAO();
 	private JButton btnXem_TKDT;
 	private JButton btnXem_TKCT;
 	private JPanel jp_thongKeTheoKhuyenMai_TheoCa;
@@ -144,8 +140,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	private JButton btn_XuatFile_TheoCa;
 	private JButton btn_XuatFile_TheoDoanhThu;
 	private JButton btn_XuatFile_TheoChuyenTau;
+	
 	public ThongKe_GUI(TrangChu_GUI trangChu)  {
-		this.trangChu = trangChu;
+//		this.trangChu = trangChu;
 		setBackground(SystemColor.text);
 		setForeground(new Color(255, 255, 255));
 		setBounds(0, 170, 1460, 570);
@@ -323,7 +320,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		
 		//JFreeChat Hiển thị số lượng khách mua theo PieChart
 		//Khởi tạo dữ liệu
-		DefaultPieDataset dataset = 
+		DefaultPieDataset<String> dataset = 
 				//createDatasetTKTheoCa();
 				createDatasetPieChart(trangChu);
 		// Create chart
@@ -408,8 +405,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		lblNewLabel_2.setBounds(10, 0, 95, 35);
 		jp_header.add(lblNewLabel_2);
 		
-		
-		
+			
 		btnXem_TKDT = new RoundedButton("Xem", 15);
 		btnXem_TKDT.setBackground(SystemColor.activeCaptionBorder);
 		btnXem_TKDT.setForeground(SystemColor.desktop);
@@ -417,10 +413,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		btnXem_TKDT.setBounds(279, 10, 85, 21);
 		jp_header.add(btnXem_TKDT);
 
-
-		//Icon xổ xuống
-		ImageIcon downIcon = new ImageIcon(getClass().getResource("/img/Polygon_20.png"));
-		Image scaledDown = downIcon.getImage().getScaledInstance(20 ,20, Image.SCALE_SMOOTH);
 
 		//JPane chứa content
 		jp_content = new JPanel();
@@ -727,7 +719,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		        }
 				// Gọi phương thức xuất file Excel
 		        try {
-		            xuatExcelTheoCa(data_TheoCa,nv,thoiGianBatDauCa,thoiGianKetThucCa,lbl_doanhThuCT,lbl_slvbtc,lbl_sltvtc);
+		            xuatExcelTheoCa(data_TheoCa,nv,thoiGianBatDauCa,thoiGianKetThucCa,lbl_doanhThuTheoCa,lbl_slvbtc,lbl_sltvtc);
 		            JOptionPane.showMessageDialog(null, "Xuất file Excel thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 		        } catch (IOException | java.io.IOException ex) {
 		            JOptionPane.showMessageDialog(null, "Lỗi khi xuất file Excel: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -825,7 +817,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				            data_TheoChuyenTau.addAll(dsVeTheoChiTiet);
 				        }	
 					} else {
-						System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
 					}
 				}
 		        if (data_TheoChuyenTau == null || data_TheoChuyenTau.isEmpty()) {
@@ -931,9 +922,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 							doanhThuTheoKhuyenMai.getOrDefault(khuyenMai, 0f) + ve.tinhGiaVe());
 					doanhThu +=ve.tinhGiaVe();
 				}
-			} else {
-				System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
-			}
+			} 
 		}
 
 		// Tính số lượng vé tồn tại chưa hoàn vé
@@ -984,9 +973,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 								doanhThuTheoKhuyenMai.getOrDefault(khuyenMai, 0f) +ve.tinhGiaVe());
 						doanhThu +=ve.tinhGiaVe();
 					}
-				} else {
-					System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
-				}
+				} 
 			}
 			for(HoaDon hd: listHD) {
 				if(hd.getDaHoanVe()) {
@@ -1035,11 +1022,8 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 							// Cộng doanh thu vào chuyến tàu tương ứng
 							doanhThuTheoChuyenTau.put(chuyenTau, doanhThuTheoChuyenTau.getOrDefault(chuyenTau, 0f) + doanhThu);
 							processedChuyenTau.add(chuyenTau); // Đánh dấu là đã xử lý
-//							System.out.println("Cập nhật doanh thu: " + doanhThuTheoChuyenTau);
 						}
 					}
-				} else {
-					System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
 				}
 			}
 			for(HoaDon hd: listHD) {
@@ -1074,10 +1058,12 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Tạo ChartPanel và thiết lập kích thước
 		chartPanel = new ChartPanel(chart);
 		chartPanel.setBounds(0,0, 1311, 308);
+		jp_thongKe.setLayout(null);
+		jp_thongKe.removeAll(); // Đảm bảo xóa các thành phần cũ nếu có
+		jp_thongKe.revalidate();
+	    jp_thongKe.repaint();
 		// Thêm ChartPanel vào jp_thongKe
 		jp_thongKe.add(chartPanel);
-		jp_thongKe.revalidate(); // Cập nhật lại giao diện
-		jp_thongKe.repaint(); // Vẽ lại panel
 	}
 
 
@@ -1098,8 +1084,11 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		chartCT.getTitle().setFont(new Font("Arial", Font.PLAIN, 16));
 		// Tạo ChartPanel và thiết lập kích thước
 		chartPanelCT = new ChartPanel(chartCT);
-		jp_thongKeCT.setLayout(null);
 		chartPanelCT.setBounds(0, 0, 1313, 308);
+		jp_thongKeCT.setLayout(null);
+		jp_thongKeCT.removeAll(); // Đảm bảo xóa các thành phần cũ nếu có
+		jp_thongKeCT.revalidate();
+	    jp_thongKeCT.repaint();
 		// Thêm ChartPanel vào jp_thongKe
 		jp_thongKeCT.add(chartPanelCT);
 
@@ -1132,7 +1121,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Lấy thông tin nhân viên theo tên
 		NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
 		if (nv == null) {
-//			System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
 			return dataset;
 		}
 
@@ -1154,7 +1142,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Lấy danh sách hóa đơn của nhân viên
 		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoMaNV(nv.getMaNV());
 		if (listHD == null) {
-//			System.out.println("Không có hóa đơn nào cho nhân viên với mã: " + nv.getMaNV());
 			return dataset ;
 		}
 
@@ -1174,8 +1161,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 					doanhThuTheoKhuyenMai.put(khuyenMai,
 							doanhThuTheoKhuyenMai.getOrDefault(khuyenMai, 0f) + ve.tinhGiaVe());
 				}
-			} else {
-				System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
 			}
 		}
 		// Duyệt qua từng mục trong doanh thu theo khuyến mãi
@@ -1187,7 +1172,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			dataset.addValue(doanhThu, "Doanh Thu", khuyenMai);
 		}
 		if (doanhThuTheoKhuyenMai.isEmpty()) {
-//		    System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
 		    dataset.addValue(0, "Doanh Thu", "Không có hóa đơn");
 		}
 		return dataset;
@@ -1208,7 +1192,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		// Lấy thông tin nhân viên theo tên
 		NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
 		if (nv == null) {
-//			System.out.println("Không tìm thấy nhân viên với tên: " + trangChu.lbl_ThongTinNV.getText());
 			return dataset;
 		}
 
@@ -1255,8 +1238,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 						processedHang.add(hang); // Đánh dấu là đã xử lý
 					}
 				}
-			} else {
-				System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
 			}
 		}
 		// Duyệt qua từng mục trong doanh thu theo khuyến mãi
@@ -1268,15 +1249,14 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			dataset.addValue(doanhThu, "Doanh Thu", hang);
 		}
 		if (doanhThuTheoHang.isEmpty()) {
-//		    System.out.println("Không có hóa đơn nào trong khoảng thời gian ca: " + ca.getMaCa());
 		    dataset.addValue(0, "Doanh Thu", "");
 		}
 		return dataset;
 	}
 	
 	//Hàm truy vấn dữ liệu thống kê PieChart số lượng bán 
-	private DefaultPieDataset createDatasetPieChart(TrangChu_GUI trangChu) {
-	    DefaultPieDataset dataset = new DefaultPieDataset();
+	private DefaultPieDataset<String> createDatasetPieChart(TrangChu_GUI trangChu) {
+	    DefaultPieDataset<String> dataset = new DefaultPieDataset<String>();
 	    dsTK.reset();
 	    dsNV.reset();
 	    dsHD.reset();
@@ -1334,8 +1314,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	                    processedHang.add(hang); // Đánh dấu là đã xử lý
 	                }
 	            }
-	        } else {
-	            System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
 	        }
 	    }
 
@@ -1430,8 +1408,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 						processedChuyenTau.add(chuyenTau); // Đánh dấu là đã xử lý
 					}
 				}
-			} else {
-				System.out.println("Chi tiết hóa đơn không tìm thấy cho hóa đơn: " + hd.getChiTiet().getMaChiTiet());
 			}
 		}
 
@@ -1448,26 +1424,26 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	}
 
 
-	//Hàm truy vấn dữ liệu theo mẫu
-	private DefaultPieDataset createDatasetTKTheoCa() {
-	    DefaultPieDataset dataset = new DefaultPieDataset();
-	    
-	    // Thêm dữ liệu vào dataset
-	    dataset.setValue("Ghế mềm", 40); // Giá trị cho đối tượng 1
-	    dataset.setValue("Giường nằm", 30); // Giá trị cho đối tượng 2
-	    dataset.setValue("VIP", 20); // Giá trị cho đối tượng 3
-
-	    return dataset;
-	}
-
-	private DefaultCategoryDataset createDataset() {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		// Add data to the dataset
-		dataset.addValue(0.4, "Ghế mềm", "1");
-		dataset.addValue(0.5, "Giường nằm", "2");
-		dataset.addValue(0.9, "VIP", "3");
-		return dataset;
-	}
+//	//Hàm truy vấn dữ liệu theo mẫu
+//	private DefaultPieDataset createDatasetTKTheoCa() {
+//	    DefaultPieDataset dataset = new DefaultPieDataset();
+//	    
+//	    // Thêm dữ liệu vào dataset
+//	    dataset.setValue("Ghế mềm", 40); // Giá trị cho đối tượng 1
+//	    dataset.setValue("Giường nằm", 30); // Giá trị cho đối tượng 2
+//	    dataset.setValue("VIP", 20); // Giá trị cho đối tượng 3
+//
+//	    return dataset;
+//	}
+//
+//	private DefaultCategoryDataset createDataset() {
+//		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+//		// Add data to the dataset
+//		dataset.addValue(0.4, "Ghế mềm", "1");
+//		dataset.addValue(0.5, "Giường nằm", "2");
+//		dataset.addValue(0.9, "VIP", "3");
+//		return dataset;
+//	}
 	
 	//Hàm định dạng tiền việt
 	public String dinhDangTienTe(double soTien) {
@@ -1496,12 +1472,8 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	            	tabbedPane.setEnabledAt(1, true); // Bật tab 1
 	                tabbedPane.setEnabledAt(2, true); // Bật tab 2
 	            }
-	        } else {
-	            System.out.println("Tài khoản không tồn tại.");
 	        }
-	    } else {
-	        System.out.println("Nhân viên không tồn tại.");
-	    }
+	    } 
 	}
 	
 	/////////////////XUẤT FILE EXCEL THỐNG KÊ THEO CA//////////////////////
@@ -1629,9 +1601,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	    String fileName = "excel/" + UUID.randomUUID().toString() + ".xlsx";
 	    try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
 	        workbook.write(fileOut);
-	        System.out.println("File Excel đã được lưu tại: " + fileName);
 	    } catch (IOException e) {
-	        System.err.println("Lỗi khi ghi file Excel:");
 	        e.printStackTrace();
 	    } finally {
 	        try {

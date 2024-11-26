@@ -82,7 +82,22 @@ public class TaiKhoan_DAO {
 
 		return n > 0;
 	}
-
+	
+	public boolean updatePassword(String mk, String tendn) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		int n = 0;
+		try {
+			stmt = con.prepareStatement("UPDATE TaiKhoan SET matKhau= ? WHERE maTaiKhoan= ?");
+			stmt.setString(1, mk);
+			stmt.setString(2, tendn);
+			n = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n > 0;
+	}
 	public boolean delete(String maTaiKhoan) {
 		Connection con = ConnectDB.getInstance().getConnection();
 		PreparedStatement stmt = null;

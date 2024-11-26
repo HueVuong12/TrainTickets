@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ import dao.Ve_DAO;
 import entity.Ve;
 import dao.Ga_DAO;
 import dao.KhachHang_DAO;
+import entity.ChiTietHoaDon;
 import entity.Ga;
 import entity.HoaDon;
 import entity.KhachHang;
@@ -290,13 +293,13 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		lblGi_1_1.setBounds(10, 395, 97, 22);
 		jp_TTV.add(lblGi_1_1);
 
-		cb_TTTrue = new JRadioButton("Đã hoàn thành");
+		cb_TTTrue = new JRadioButton("Không khả dụng");
 		cb_TTTrue.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		cb_TTTrue.setToolTipText("");
 		cb_TTTrue.setBounds(130, 395, 93, 22);
 		jp_TTV.add(cb_TTTrue);
 
-		cb_TTFalse = new JRadioButton("Chưa hoàn thành");
+		cb_TTFalse = new JRadioButton("Khả dụng");
 		cb_TTFalse.setToolTipText("");
 		cb_TTFalse.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		cb_TTFalse.setBounds(228, 395, 118, 22);
@@ -339,7 +342,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 				int column =e.getColumn();
 				if(column == 12) {
 					String trangThaiValue = (String) table.getValueAt(row, column);
-					if(trangThaiValue.equalsIgnoreCase("Đã hoàn thành")) {
+					if(trangThaiValue.equalsIgnoreCase("Không khả dụng")) {
 						cb_TTTrue.setSelected(true);
 					}else {
 						cb_TTFalse.setSelected(true);
@@ -419,6 +422,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		table.addMouseListener(this);
 		btn_Tim.addActionListener(this);
 		btnXuatVe.addActionListener(this);
+		updateVe();
 		datatoTable();
 	}
 
@@ -515,7 +519,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 
 		// Lọc theo trạng thái hoàn thành
 		if (cb_TTTrue.isSelected() || cb_TTFalse.isSelected()) {
-			String status = cb_TTTrue.isSelected() ? "Đã hoàn thành" : "Chưa hoàn thành";
+			String status = cb_TTTrue.isSelected() ? "Không khả dụng" : "Khả dụng";
 
 			filters.add(new RowFilter<Object, Object>() {
 				@Override
@@ -613,6 +617,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 	public void datatoTable() {
 		dsKh.reset();
 		dsGa.reset();
+		dsVe.reset();
 		ArrayList<Ve> list = dsVe.docTuBang();
 		model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0); // Xóa tất cả hàng trong bảng
@@ -624,7 +629,6 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 			KhachHang kh = dsKh.getKhachHangTheoMaKH(ve.getKhachHang().getMaKH());
 			Ga gaDi = dsGa.getGaTheoMaGa(ve.getGaDi().getMaGa());
 			Ga gaDen = dsGa.getGaTheoMaGa(ve.getGaDen().getMaGa());
-
 			model.addRow(new Object[] {
 					stt++, 
 					kh.getTenKH(), 
@@ -638,7 +642,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 									ve.getChuyenTau().getMaTau(),
 									ve.getNgayDi().format(dateFormatter),
 									ve.getGioDi().format(timeFormatter),
-									ve.isTrangThai() ? "Đã hoàn thành" : "Chưa hoàn thành",
+									ve.isTrangThai() ? "Không khả dụng" : "Khả dụng",
 											ve.getChiTiet().getMaChiTiet()
 			});
 		}
@@ -740,9 +744,9 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		}
 
 		if (cb_TTTrue.isSelected()) {
-			filters.add(RowFilter.regexFilter("Đã hoàn thành", 12)); // Giả sử cột 11 là cột trạng thái
+			filters.add(RowFilter.regexFilter("Không khả dụng", 12)); // Giả sử cột 11 là cột trạng thái
 		} else if (cb_TTFalse.isSelected()) {
-			filters.add(RowFilter.regexFilter("Chưa hoàn thành", 12));
+			filters.add(RowFilter.regexFilter("Khả dụng", 12));
 		}
 
 		if (!maChiTiet.isEmpty()) {
@@ -755,6 +759,22 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 			sorter.setRowFilter(RowFilter.andFilter(filters)); // Kết hợp các bộ lọc
 		}
 	}
+	
+	//Hàm kiểm tra vé hẫ hoàn thành hay chưa
+	public void updateVe() {
+		ArrayList<Ve> list = dsVe.docTuBang();
+		LocalTime now = LocalTime.now(); 
+		LocalDate ngayHienTai = LocalDate.now(); // Lấy ngày hiện tại
+		for(Ve ve : list) {
+			if (ve.getNgayDen().isBefore(ngayHienTai) || 
+					(ve.getNgayDen().isEqual(ngayHienTai) && ve.getGioDen().isBefore(now))) {
+				Ve veCapNhat = new Ve(ve.getMaVe(),ve.getChuyenTau(),ve.getToa(),ve.getSoGhe(),ve.getKhachHang(),ve.getNgayDi(),ve.getGioDi(),ve.getNgayDen(),ve.getGioDen(),ve.getGaDi(),ve.getGaDen(),ve.getHang(),ve.getKhuyenMai(),
+						true, new ChiTietHoaDon(ve.getChiTiet().getMaChiTiet()));
+				dsVe.update(veCapNhat);
+			}
+		}
+	}
+		
 	private Date parseDate(String dateStr) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		try {

@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import dao.NhanVien_DAO;
 import dao.TaiKhoan_DAO;
 import entity.TaiKhoan;
@@ -29,7 +31,7 @@ public class DangNhap_GUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private BufferedImage backgroundImage;
-	private JTextField txtUser;
+	public JTextField txtUser;
 	private JPasswordField txtPassword;
 	private JButton btnLogin;
 	private Color hoverColor = new Color(0, 102, 204); // Màu khi di chuột qua
@@ -38,6 +40,7 @@ public class DangNhap_GUI extends JFrame {
 	public TaiKhoan taiKhoanLogined;
 
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+	private JButton btnQuenMatKhau;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
@@ -103,7 +106,7 @@ public class DangNhap_GUI extends JFrame {
 		ImageIcon originalUserIcon = new ImageIcon(getClass().getResource("/img/user-icon.png"));
 		Image scaledUserIcon = originalUserIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH);
 		JLabel userIconLabel = new JLabel(new ImageIcon(scaledUserIcon));
-		userIconLabel.setBounds(234, 255, 37, 37); // Cập nhật kích thước trên JLabel
+		userIconLabel.setBounds(234, 251, 37, 37); // Cập nhật kích thước trên JLabel
 		contentPane.add(userIconLabel);
 
 		// Password Icon
@@ -115,7 +118,7 @@ public class DangNhap_GUI extends JFrame {
 
 		// Tên người dùng
 		txtUser = new JTextField("Mã đăng nhập");
-		txtUser.setBounds(284, 246, 409, 54);
+		txtUser.setBounds(284, 242, 409, 54);
 		txtUser.setFont(new Font("Arial", Font.PLAIN, 24));
 		txtUser.setBorder(new MatteBorder(0, 0, 0, 0, Color.WHITE));
 		txtUser.setForeground(Color.GRAY);
@@ -200,17 +203,23 @@ public class DangNhap_GUI extends JFrame {
 					JOptionPane.showMessageDialog(null, "Tài khoản không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);					
 					return;
 				}
+
 				TaiKhoan_DAO dsTK = new TaiKhoan_DAO();
 				ArrayList<TaiKhoan> list = dsTK.docTuBang(); // Đọc danh sách tài khoản từ cơ sở dữ liệu
 
 				String user = txtUser.getText(); // Lấy tên người dùng
 				String pass = new String(txtPassword.getPassword()); // Lấy mật khẩu
+				
 
 				// Tìm tài khoản dựa trên tên người dùng
 				for (TaiKhoan taiKhoan : list) {
 					if (taiKhoan.getMaTaiKhoan().equals(user)) {
+						// Lấy mật khẩu đã mã hóa từ cơ sở dữ liệu
+				        String matKhauDaMaHoa = taiKhoan.getMatKhau();
 						// Kiểm tra mật khẩu
-						if (taiKhoan.getMatKhau().equals(pass)) {
+						if (	//taiKhoan.getMaTaiKhoan().equals(pass)
+								kiemTraMatKhau(pass, matKhauDaMaHoa)
+								) {
 							// Kiểm tra trạng thái nhân viên
 							if (nhanVien_DAO.getNhanVienTheoMaNV(taiKhoan.getNhanVien().getMaNV()).isTrangThai()) {
 								// Đăng nhập thành công
@@ -277,7 +286,7 @@ public class DangNhap_GUI extends JFrame {
 
 		// Liên kết liên hệ với quản lý
 		JLabel lblContact = new JLabel("Liên hệ với người quản lý?");
-		lblContact.setBounds(467, 430, 226, 30);
+		lblContact.setBounds(467, 492, 226, 30);
 		lblContact.setForeground(Color.WHITE);
 		lblContact.setFont(new Font("Arial", Font.PLAIN, 18));
 		contentPane.add(lblContact);
@@ -288,6 +297,62 @@ public class DangNhap_GUI extends JFrame {
 		lblFooter.setForeground(Color.WHITE);
 		lblFooter.setFont(new Font("Arial", Font.PLAIN, 13));
 		contentPane.add(lblFooter);
+		
+		btnQuenMatKhau = new JButton("Quên mật khẩu") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				Graphics2D g2d = (Graphics2D) g.create();
+				// Đặt màu nền
+				g2d.setColor(getBackground());
+				// Vẽ hình chữ nhật bo góc
+				g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+				g2d.setColor(getForeground()); // Đặt màu chữ
+				g2d.drawString(getText(), (getWidth() -	 g2d.getFontMetrics().stringWidth(getText())) / 2,
+						(getHeight() + g2d.getFontMetrics().getAscent()) / 2 - 2);
+				g2d.dispose(); // Giải phóng tài nguyên Graphics
+			}
+
+			@Override
+			public boolean contains(int x, int y) {
+				// Kiểm tra nếu x, y nằm trong vùng bo góc
+				return new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20).contains(x, y);
+			}
+		};
+		btnQuenMatKhau.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				QuenMatKhau_GUI qmk_GUI= new QuenMatKhau_GUI();
+				qmk_GUI.setVisible(true);
+				setVisible(false);
+			}
+		});
+		// Thêm sự kiện cho nút
+		btnQuenMatKhau.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseEntered(java.awt.event.MouseEvent evt) {
+				btnQuenMatKhau.setBackground(hoverColor); // Thay đổi màu nền khi đưa chuột vào
+				btnQuenMatKhau.repaint(); // Vẽ lại nút
+
+				// Đổi con trỏ chuột thành kiểu tay chỉ
+				btnQuenMatKhau.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(java.awt.event.MouseEvent evt) {
+				btnQuenMatKhau.setBackground(defaultColor); // Trở về màu mặc định khi chuột ra
+				btnQuenMatKhau.repaint(); // Vẽ lại nút
+
+				// Trả lại con trỏ chuột về mặc định
+				btnQuenMatKhau.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+		});
+		btnQuenMatKhau.setForeground(Color.WHITE);
+		btnQuenMatKhau.setFont(new Font("Arial", Font.BOLD, 20));
+		btnQuenMatKhau.setFocusPainted(false);
+		btnQuenMatKhau.setContentAreaFilled(false);
+		btnQuenMatKhau.setBorderPainted(false);
+		btnQuenMatKhau.setBackground(new Color(0, 153, 255));
+		btnQuenMatKhau.setBounds(221, 442, 477, 38);
+		contentPane.add(btnQuenMatKhau);
 
 		// Màu mặc định và màu khi đưa chuột qua
 		Color defaultLabelColor = Color.WHITE;
@@ -345,7 +410,9 @@ public class DangNhap_GUI extends JFrame {
 			this.setFocusableWindowState(true); // Bật lại focus sau khi cửa sổ hiển thị
 		});
 	}
-
+	public boolean kiemTraMatKhau(String matKhauNhap, String matKhauDaMaHoa) {
+	    return BCrypt.checkpw(matKhauNhap, matKhauDaMaHoa);
+	}
 	public LocalTime getThoiGianBatDau() {
 		return thoiGianBatDau;
 	}

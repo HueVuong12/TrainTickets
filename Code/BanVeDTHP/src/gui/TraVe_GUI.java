@@ -13,10 +13,13 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.HoaDon_DAO;
 import dao.ChiTietHoaDon_DAO;
+import dao.Ghe_DAO;
 import dao.KhachHang_DAO;
 import dao.Ve_DAO;
 import entity.ChiTietHoaDon;
+import entity.Ghe;
 import entity.KhachHang;
+import entity.Toa;
 import entity.Ve;
 import entity.HoaDon;
 
@@ -29,6 +32,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.awt.event.ActionEvent;
+import javax.swing.JCheckBox;
 
 public class TraVe_GUI extends JPanel implements ActionListener{
 
@@ -72,17 +76,16 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	private DefaultTableModel model_CTHD;
 	private Ve_DAO dsVe = new Ve_DAO();
 	private KhachHang_DAO dsKH = new KhachHang_DAO();
+	private Ghe_DAO dsGhe = new Ghe_DAO();
 	private DefaultTableModel model_DSV;
 	float tongTien=0;
 	float tienKhachDua= 0;
-	float tienTraLai=0;
+	public float tienTraLai=0;
 	private JButton btnXoa;
 	private float tongTienCoThue=0;
 	private JTextField textField_tienTra;
-	private boolean tapThe = false;
-	private float tongTienTra=0;
-	private float phiHoan;
-	private QuanLyHoaDon_GUI qlhd;
+	public float phiHoan;
+	private JCheckBox cbXuatHoaDon;
 	/**
 	 * Create the panel.
 	 */
@@ -134,13 +137,14 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 		table_CTHD = new JTable();
 		table_CTHD.setRowHeight(40);
 		table_CTHD.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		table_CTHD.setModel(new DefaultTableModel(
+		model_CTHD = new DefaultTableModel(
 				new Object[][] {
 				},
 				new String[] {
 						"Mã chi tiết", "Mã hóa đơn", "Khách hàng", "Số lượng", "Thành tiền (Chưa thuế)", "Thuế GTGT", "Tổng tiền"
 				}
-				));
+				);
+		table_CTHD.setModel(model_CTHD);
 		scrollPane.setViewportView(table_CTHD);
 
 		panel_2 = new JPanel();
@@ -317,10 +321,11 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 		textField_tienTra.setColumns(10);
 		textField_tienTra.setBounds(147, 8, 258, 30);
 		panel_5.add(textField_tienTra);
-
-		//Load dữ liệu vào bảng
-		datatoTable_CTHD(qlhd);
-		datatoTable_Ve(qlhd);
+		
+		cbXuatHoaDon = new JCheckBox("Xuất hóa đơn ");
+		cbXuatHoaDon.setBounds(86, 110, 109, 21);
+		panel_5.add(cbXuatHoaDon);
+		cbXuatHoaDon.setSelected(true);
 		
 		btnXoa.addActionListener(this);
 		btnXacNhan.addActionListener(new ActionListener() {
@@ -333,6 +338,20 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 					hd.setDaHoanVe(true);
 					hd.setDaHoanTien(true);
 					dsHD.update(hd);
+					
+					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(qlhd.hoaDonTraVe.getChiTiet().getMaChiTiet());
+					for(Ve ve : cthd.getDsVe()) {
+						Ve veCapNhat = new Ve(ve.getMaVe(),ve.getChuyenTau(),ve.getToa(),ve.getSoGhe(),ve.getKhachHang(),ve.getNgayDi(),ve.getGioDi(),ve.getNgayDen(),ve.getGioDen(),ve.getGaDi(),ve.getGaDen(),ve.getHang(),ve.getKhuyenMai(),
+								true, new ChiTietHoaDon(ve.getChiTiet().getMaChiTiet()));
+						dsVe.update(veCapNhat);
+						Ghe ghe = dsGhe.getGheTheoMaToaVaSoGhe(ve.getToa().getMaToa(), ve.getSoGhe().getSoGhe());
+						Ghe gheCapNhat = new Ghe(ghe.getSoGhe(),new Toa(ghe.getToa().getMaToa()),true);
+						dsGhe.update(gheCapNhat);
+					}
+					if(cbXuatHoaDon.isSelected()) {
+						String pdfPath = "HoaDon/" +hd.getMaHoaDon() +"_HoaDonHoanTien" + ".pdf";
+						hd.xuatHoaDonHoanTien(pdfPath);
+					}
 				}else {
 					JOptionPane.showMessageDialog(null,
 							"Số tiền nhập không bằng số tiền trả lại", "Thông báo",
@@ -341,6 +360,10 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 			
 			}
 		});
+		cbXuatHoaDon.addActionListener(this);
+		//Load dữ liệu vào bảng
+		datatoTable_CTHD(qlhd);
+		datatoTable_Ve(qlhd);
 	}
 
 	public void datatoTable_CTHD(QuanLyHoaDon_GUI qlhd) {
@@ -354,10 +377,8 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 			tongTienCoThue= cthd.tinhTien();
 			ArrayList<Ve> danhSachVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 			KhachHang kh= dsKH.getKhachHangTheoMaKH(qlhd.hoaDonTraVe.getKhachHang().getMaKH());
-			System.out.println(danhSachVe);
 			for(Ve ve: danhSachVe) {
 				tongTien+=ve.tinhGiaVe();
-				System.out.println(tongTien);
 			}
 			model_CTHD = (DefaultTableModel) table_CTHD.getModel();
 			model_CTHD.setRowCount(0); // Xóa tất cả hàng trong bảng
@@ -376,33 +397,35 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	}
 
 	public void datatoTable_Ve(QuanLyHoaDon_GUI qlhd) {
-		dsVe.reset();
-		dsCTHD.reset();
-		ArrayList<Ve> list = dsVe.getDsVeTheoMaChiTiet(qlhd.hoaDonTraVe.getChiTiet().getMaChiTiet());
-		boolean tapThe = list.size() > 1;
-		model_DSV = (DefaultTableModel) table_DSV.getModel();
-		int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
-		for (Ve ve : list) {
-			if (ve.hoanVe(tapThe)) {
-				phiHoan += ve.tinhPhiHoanVe(tapThe);
-				model_DSV.addRow(new Object[] {
-						stt++,
-						ve.getMaVe(),
-						ve.getHang(),
-						ve.getKhuyenMai(),
-						dinhDangTienTe(ve.tinhGiaVe())
-						// Hiển thị giá vé sau khi trừ phí hoàn
-				});
-			} 
-//			else {
-//				// Xử lý nếu vé không được hoàn
-//
-//			}
-		}
-		tienTraLai = tongTienCoThue - phiHoan;
-		textField_TienTraLai.setText(dinhDangTienTe(tienTraLai));
-		textField_tienTra.setText(dinhDangTienTe(phiHoan));
+	    dsVe.reset();
+	    dsCTHD.reset();
+	    phiHoan = 0;
+	    tienTraLai = 0;
+
+	    ArrayList<Ve> list = dsVe.getDsVeTheoMaChiTiet(qlhd.hoaDonTraVe.getChiTiet().getMaChiTiet());
+	    if (list == null || list.isEmpty()) {
+	        JOptionPane.showMessageDialog(null, "Không có vé nào để hiển thị", "Thông báo", JOptionPane.WARNING_MESSAGE);
+	        return;
+	    }
+
+	    boolean tapThe = list.size() > 1;
+
+	    model_DSV = (DefaultTableModel) table_DSV.getModel();
+	    model_DSV.setRowCount(0); // Xóa dữ liệu cũ
+
+	    int stt = 1;
+	    for (Ve ve : list) {
+	    	phiHoan += ve.tinhPhiHoanVe(tapThe);
+	    	model_DSV.addRow(new Object[] {
+	    			stt++, ve.getMaVe(), ve.getHang(), ve.getKhuyenMai(), dinhDangTienTe(ve.tinhGiaVe())
+	    	});
+	    }
+
+	    tienTraLai = tongTienCoThue - phiHoan;
+	    textField_TienTraLai.setText(dinhDangTienTe(tienTraLai));
+	    textField_tienTra.setText(dinhDangTienTe(phiHoan));
 	}
+
 
 
 	public String dinhDangTienTe(double soTien) {

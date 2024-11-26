@@ -26,9 +26,13 @@ import javax.swing.event.DocumentListener;
 import com.toedter.calendar.JDateChooser;
 
 import components.RoundedButton;
+import dao.ChiTietHoaDon_DAO;
 import dao.HoaDon_DAO;
 import dao.KhachHang_DAO;
+import entity.ChiTietHoaDon;
 import entity.HoaDon;
+import entity.Ve;
+
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -52,12 +56,11 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 	private JCheckBox chckbxDaHoanTien;
 	private JCheckBox chckbxDaHoanVe;
 	private JCheckBox chckbxTatCa;
-	private HoaDon_DAO dsHD;
 	private TableRowSorter<TableModel> sorter;
 	private JTextField txtTu;
 	private JTextField txtDen;
 	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
-	private JButton btnTraVe;
+	private ChiTietHoaDon_DAO chiTietHoaDon_DAO = new ChiTietHoaDon_DAO();
 	private JButton btnTraVe_1;
 	public HoaDon hoaDonTraVe;
 	public HoaDon hoaDonTXemCT;
@@ -288,16 +291,9 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		chckbxDaHoanVe.addActionListener(this);
 		chckbxDaHoanTien.addActionListener(this);
 		chckbxTatCa.addActionListener(this);
-//<<<<<<< HEAD
-		
-		
-		btnTraVe = new RoundedButton("Trả vé", 15);
-		btnTraVe.setForeground(new Color(255, 255, 255));
-//=======
 		btnTraVe_1 = new RoundedButton("Trả vé", 15);
 		btnTraVe_1.setForeground(new Color(255, 255, 255));
 		btnTraVe_1.setForeground(new Color(255, 255, 255));
-//>>>>>>> 9ad2620864ffe2999491c02ad49861913c76ec6d
 		btnTraVe_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnTraVe_1.setBounds(230, 527, 85, 30);
 		btnTraVe_1.setBackground(new Color(51, 102, 153));
@@ -308,13 +304,35 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 				int row = table.getSelectedRow();
 				if (row != -1) { // Kiểm tra nếu có dòng nào được chọn
 					hoaDonTraVe = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
-					System.out.println(hoaDonTraVe);
+					ChiTietHoaDon cthd = chiTietHoaDon_DAO.getCTHDTheoMaChiTiet(hoaDonTraVe.getChiTiet().getMaChiTiet());
+					boolean tapThe = cthd.getDsVe().size() > 1;
+					for(Ve ve: cthd.getDsVe()) {
+						if(!ve.kiemTraHoanTien() || ve.isTrangThai()) {
+							JOptionPane.showMessageDialog(null, "Hóa đơn không khả dụng", "Thông báo", JOptionPane.WARNING_MESSAGE);
+							return;
+						}else {
+							if(tapThe && !ve.hoanVe(tapThe)) {
+								JOptionPane.showMessageDialog(null, "Chỉ có thể hoàn vé (tập thể) từ 24-72 tiếng trước giờ đi", "Thông báo", JOptionPane.WARNING_MESSAGE);
+								return;
+							}
+							if(!tapThe && !ve.hoanVe(tapThe)) {
+								JOptionPane.showMessageDialog(null, "Chỉ có thể hoàn vé (cá nhân) từ 4-24 tiếng trước giờ đi", "Thông báo", JOptionPane.WARNING_MESSAGE);
+								return;
+							}
+						}
+					}
 					if (hoaDonTraVe != null) {
-						TraVe_GUI traVe_GUI = new TraVe_GUI(QuanLyHoaDon_GUI.this, trangChu);
-						trangChu.content.removeAll();
-						trangChu.content.add(traVe_GUI);
-						trangChu.content.revalidate();
-						trangChu.content.repaint();
+						if(!hoaDonTraVe.getDaHoanVe()) {
+							TraVe_GUI traVe_GUI = new TraVe_GUI(QuanLyHoaDon_GUI.this, trangChu);
+							trangChu.content.removeAll();
+							trangChu.content.add(traVe_GUI);
+							trangChu.content.revalidate();
+							trangChu.content.repaint();
+						}
+						if(hoaDonTraVe.getDaHoanVe()) {
+							JOptionPane.showMessageDialog(null, "Hóa đơn đã hoàn vé", "Thông báo", JOptionPane.WARNING_MESSAGE);
+							return;
+						}
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn muốn trả", "Thông báo", JOptionPane.WARNING_MESSAGE);
@@ -329,7 +347,6 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 				int row = table.getSelectedRow();
 				if (row != -1) { // Kiểm tra nếu có dòng nào được chọn
 					hoaDonTXemCT = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
-					System.out.println(hoaDonTXemCT);
 					if (hoaDonTXemCT != null) {
 						ChiTietHoaDon_GUI chiTietHoaDon_GUI = new ChiTietHoaDon_GUI(QuanLyHoaDon_GUI.this,trangChu);
 						trangChu.content.removeAll();
@@ -403,9 +420,9 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 
 	// Hàm tải dữ liệu vào bảng
 	public void datatoTable() {
-		dsHD = new HoaDon_DAO();
+		hoaDon_DAO.reset();
 		KhachHang_DAO dsKH = new KhachHang_DAO();
-		ArrayList<HoaDon> list = dsHD.docTuBang();
+		ArrayList<HoaDon> list = hoaDon_DAO.docTuBang();
 		model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0); // Xóa tất cả hàng trong bảng
 		int count = 1;
