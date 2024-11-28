@@ -55,6 +55,7 @@ import javax.swing.Icon;
 import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.border.LineBorder;
 
 public class BanVe_GUI extends JPanel {
 
@@ -86,6 +87,8 @@ public class BanVe_GUI extends JPanel {
 	public Rectangle boundsPanelToa;
 	private ChuyenTau_JPanel chuyenTauTruocDo = null;
 	private int soVeChieuDi = 0;
+	
+	private JLabel userIconLabel;
 
 	// Khai bao DAO
 	Ga_DAO ga_dao = new Ga_DAO();
@@ -138,16 +141,19 @@ public class BanVe_GUI extends JPanel {
 		jp_title.add(lbl_Ga_1);
 
 		jp_ThongTinChuyenTau = new JPanel();
+		jp_ThongTinChuyenTau.setBackground(Color.WHITE);
 		jp_ThongTinChuyenTau.setBounds(264, 56, 1186, 118);
 		add(jp_ThongTinChuyenTau);
 		jp_ThongTinChuyenTau.setLayout(null);
 
 		jp_TinhTrangToa = new JPanel();
+		jp_TinhTrangToa.setBackground(Color.WHITE);
 		jp_TinhTrangToa.setBounds(264, 184, 1186, 76);
 		add(jp_TinhTrangToa);
 		jp_TinhTrangToa.setLayout(null);
 
 		jp_TinhTrangGhe = new JPanel();
+		jp_TinhTrangGhe.setBackground(Color.WHITE);
 		jp_TinhTrangGhe.setBounds(264, 300, 1186, 260);
 		add(jp_TinhTrangGhe);
 		jp_TinhTrangGhe.setLayout(null);
@@ -159,11 +165,13 @@ public class BanVe_GUI extends JPanel {
 		add(jp_timKiem);
 
 		JPanel jp_Content_ThongTin = new JPanel();
+		jp_Content_ThongTin.setBorder(new LineBorder(new Color(0, 0, 0)));
 		jp_Content_ThongTin.setLayout(null);
-		jp_Content_ThongTin.setBackground(SystemColor.controlHighlight);
+		jp_Content_ThongTin.setBackground(Color.WHITE);
 		jp_Content_ThongTin.setBounds(0, 32, 244, 319);
 		jp_timKiem.add(jp_Content_ThongTin);
 		btnTim = new RoundedButton("Tìm", 15);
+		btnTim.setText("Tìm kiếm");
 		btnTim.setForeground(new Color(255, 255, 255));
 		btnTim.setBackground(new Color(51, 102, 153));
 
@@ -188,7 +196,7 @@ public class BanVe_GUI extends JPanel {
 				}
 			}
 		});
-		btnTim.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnTim.setFont(new Font("Tahoma", Font.BOLD, 15));
 		btnTim.setBounds(73, 278, 85, 27);
 		jp_Content_ThongTin.add(btnTim);
 
@@ -215,6 +223,7 @@ public class BanVe_GUI extends JPanel {
 		focusTxtField(txt_GaDen, "Nhập ga đến");
 
 		rdbtn_MotChieu = new JRadioButton("Một Chiều");
+		rdbtn_MotChieu.setForeground(new Color(0, 0, 0));
 		buttonGroup.add(rdbtn_MotChieu);
 		rdbtn_MotChieu.setBounds(21, 130, 85, 21);
 		jp_Content_ThongTin.add(rdbtn_MotChieu);
@@ -306,40 +315,51 @@ public class BanVe_GUI extends JPanel {
 		});
 
 		JLabel lbl_GaDi = new JLabel("Ga Đi");
-		lbl_GaDi.setBounds(24, 10, 45, 13);
+		lbl_GaDi.setForeground(new Color(30, 144, 255));
+		lbl_GaDi.setBounds(24, 10, 202, 13);
 		jp_Content_ThongTin.add(lbl_GaDi);
 
 		JLabel lbl_GaDen = new JLabel("Ga Đến");
-		lbl_GaDen.setBounds(21, 63, 45, 13);
+		lbl_GaDen.setForeground(new Color(30, 144, 255));
+		lbl_GaDen.setBounds(21, 63, 202, 13);
 		jp_Content_ThongTin.add(lbl_GaDen);
 
 		JLabel lbl_LuaChon = new JLabel("Lựa chọn");
-		lbl_LuaChon.setBounds(24, 111, 58, 13);
+		lbl_LuaChon.setForeground(new Color(30, 144, 255));
+		lbl_LuaChon.setBounds(24, 111, 202, 13);
 		jp_Content_ThongTin.add(lbl_LuaChon);
 
 		JLabel lbl_ChonNgayDi = new JLabel("Ngày đi");
-		lbl_ChonNgayDi.setBounds(21, 157, 45, 13);
+		lbl_ChonNgayDi.setForeground(new Color(30, 144, 255));
+		lbl_ChonNgayDi.setBounds(21, 157, 202, 13);
 		jp_Content_ThongTin.add(lbl_ChonNgayDi);
 
 		JLabel lbl_ChonNgayVe = new JLabel("Ngày về");
-		lbl_ChonNgayVe.setBounds(21, 217, 48, 13);
+		lbl_ChonNgayVe.setForeground(new Color(30, 144, 255));
+		lbl_ChonNgayVe.setBounds(21, 217, 202, 13);
 		jp_Content_ThongTin.add(lbl_ChonNgayVe);
 
 		JPanel jp_Header_ThongTin = new JPanel();
 		jp_Header_ThongTin.setLayout(null);
-		jp_Header_ThongTin.setBackground(new Color(51, 102, 153));
+		jp_Header_ThongTin.setBackground(Color.LIGHT_GRAY);
 		jp_Header_ThongTin.setBounds(0, 0, 244, 32);
 		jp_timKiem.add(jp_Header_ThongTin);
 
-		JLabel downIconLabel = new JLabel((Icon) null);
-		downIconLabel.setBounds(0, 0, 30, 35);
-		jp_Header_ThongTin.add(downIconLabel);
+		ImageIcon userIcon = new ImageIcon(getClass().getResource("/img/iconmenu.png"));
+	    Image scaledUser = userIcon.getImage().getScaledInstance(30,32, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
+	    jp_Header_ThongTin.setLayout(null);
+	    userIconLabel = new JLabel(new ImageIcon(scaledUser));
+	    userIconLabel.setBounds(0 ,0 , 30 ,32); // Cập nhật kích thước trên JLabel
+	    jp_Header_ThongTin.add(userIconLabel);
+//		JLabel downIconLabel = new JLabel((Icon) null);
+//		downIconLabel.setBounds(0, 0, 30, 32);
+//		jp_Header_ThongTin.add(downIconLabel);
 
-		JLabel lbl_tieuDeTK = new JLabel("Thông tin chuyến tàu");
+		JLabel lbl_tieuDeTK = new JLabel("Thông tin hành trình");
 		lbl_tieuDeTK.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_tieuDeTK.setForeground(Color.WHITE);
+		lbl_tieuDeTK.setForeground(new Color(30, 144, 255));
 		lbl_tieuDeTK.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lbl_tieuDeTK.setBounds(0, 0, 222, 35);
+		lbl_tieuDeTK.setBounds(30, 0, 214, 32);
 		jp_Header_ThongTin.add(lbl_tieuDeTK);
 
 		JPanel jp_GioVe = new JPanel();
@@ -349,8 +369,9 @@ public class BanVe_GUI extends JPanel {
 		add(jp_GioVe);
 
 		JPanel jp_Content_GioVe = new JPanel();
+		jp_Content_GioVe.setBorder(new LineBorder(new Color(0, 0, 0)));
 		jp_Content_GioVe.setLayout(null);
-		jp_Content_GioVe.setBackground(SystemColor.controlHighlight);
+		jp_Content_GioVe.setBackground(Color.WHITE);
 		jp_Content_GioVe.setBounds(0, 31, 244, 160);
 		jp_GioVe.add(jp_Content_GioVe);
 		
@@ -374,12 +395,14 @@ public class BanVe_GUI extends JPanel {
 			}
 		});
 
-		btnMua.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnMua.setFont(new Font("Tahoma", Font.BOLD, 15));
 		btnMua.setBounds(78, 126, 85, 27);
 		jp_Content_GioVe.add(btnMua);
 
 		// Copy vào DoiVe_GUI . Lưu ý bỏ nút
 		JPanel jp_DanhSachVe = new JPanel();
+		jp_DanhSachVe.setBorder(new LineBorder(new Color(0, 0, 0)));
+		jp_DanhSachVe.setBackground(Color.WHITE);
 		jp_DanhSachVe.setLayout(null);
 		jp_DanhSachVe.setBounds(0, 0, 244, 122);
 		jp_Content_GioVe.add(jp_DanhSachVe);
@@ -391,6 +414,7 @@ public class BanVe_GUI extends JPanel {
 
 		// JPanel chứa các vé
 		jp_VeMua = new JPanel();
+		jp_VeMua.setBackground(Color.WHITE);
 		jp_VeMua.setLayout(new BoxLayout(jp_VeMua, BoxLayout.Y_AXIS));
 
 		// Tạo JScrollPane cho jp_VeMua
@@ -403,19 +427,19 @@ public class BanVe_GUI extends JPanel {
 
 		JPanel jp_Header_GioVe = new JPanel();
 		jp_Header_GioVe.setLayout(null);
-		jp_Header_GioVe.setBackground(new Color(51, 102, 153));
+		jp_Header_GioVe.setBackground(Color.LIGHT_GRAY);
 		jp_Header_GioVe.setBounds(0, 0, 244, 32);
 		jp_GioVe.add(jp_Header_GioVe);
 
 		JLabel downIconLabel_1 = new JLabel((Icon) null);
-		downIconLabel_1.setBounds(0, 0, 30, 35);
+		downIconLabel_1.setBounds(0, 0, 30, 32);
 		jp_Header_GioVe.add(downIconLabel_1);
 
 		JLabel lbl_tieuDeTK_GioVe = new JLabel("Giỏ Vé");
-		lbl_tieuDeTK_GioVe.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_tieuDeTK_GioVe.setForeground(Color.WHITE);
+		lbl_tieuDeTK_GioVe.setHorizontalAlignment(SwingConstants.LEFT);
+		lbl_tieuDeTK_GioVe.setForeground(new Color(30, 144, 255));
 		lbl_tieuDeTK_GioVe.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lbl_tieuDeTK_GioVe.setBounds(61, 0, 121, 32);
+		lbl_tieuDeTK_GioVe.setBounds(30, 0, 214, 32);
 		jp_Header_GioVe.add(lbl_tieuDeTK_GioVe);
 
 		lblMaToa = new JLabel();

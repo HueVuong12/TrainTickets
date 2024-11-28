@@ -8,8 +8,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -26,6 +29,7 @@ import javax.swing.event.DocumentListener;
 import com.toedter.calendar.JDateChooser;
 
 import components.RoundedButton;
+import components.RoundedTextField;
 import dao.ChiTietHoaDon_DAO;
 import dao.HoaDon_DAO;
 import dao.KhachHang_DAO;
@@ -104,20 +108,29 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		lblKhachHang.setBounds(10, 166, 136, 27);
 		panelTimKiem_Tong.add(lblKhachHang);
 
-		txtMaHD = new JTextField();
-		txtMaHD.setBounds(10, 70, 266, 27);
-		panelTimKiem_Tong.add(txtMaHD);
+		txtMaHD = new RoundedTextField(15);
+		txtMaHD.setForeground(SystemColor.activeCaptionBorder);
+		txtMaHD.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtMaHD.setColumns(10);
+		txtMaHD.setBounds(11, 70, 266, 27);
+		panelTimKiem_Tong.add(txtMaHD);
+//		focusTxtField(txtMaHD, "Theo mã hoá đơn");
 
-		txtNhanVien = new JTextField();
+		txtNhanVien = new RoundedTextField(15);
+		txtNhanVien.setForeground(SystemColor.activeCaptionBorder);
+		txtNhanVien.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtNhanVien.setColumns(10);
-		txtNhanVien.setBounds(10, 129, 266, 27);
+		txtNhanVien.setBounds(11, 129, 266, 27);
 		panelTimKiem_Tong.add(txtNhanVien);
+//		focusTxtField(txtNhanVien, "Theo nhân viên lập");
 
-		txtKH = new JTextField();
-		txtKH.setBounds(10, 190, 266, 27);
+		txtKH = new RoundedTextField(15);
+		txtKH.setForeground(SystemColor.activeCaptionBorder);
+		txtKH.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtKH.setBounds(11, 190, 266, 27);
 		panelTimKiem_Tong.add(txtKH);
 		txtKH.setColumns(10);
+//		focusTxtField(txtKH, "Theo tên khách hàng");
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
@@ -144,16 +157,17 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		dateChooserTu.setLayout(null);
 
 		txtTu = new JTextField();
+		txtTu.setForeground(SystemColor.activeCaptionBorder);
 		txtTu.setBounds(0, 0, 245, 27);
 		dateChooserTu.add(txtTu);
 		txtTu.setColumns(10);
+//		focusTxtField(txtTu, "Từ");
 
 		// Thêm sự kiện PropertyChangeListener cho dateChooserTu
 		dateChooserTu.getDateEditor().addPropertyChangeListener("date", evt -> {
 			Date selectedDate = dateChooserTu.getDate();
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				txtTu.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
 			} else {
 				txtTu.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
 			}
@@ -167,16 +181,17 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		dateChooserDen.setLayout(null);
 
 		txtDen = new JTextField();
+		txtDen.setForeground(SystemColor.activeCaptionBorder);
 		txtDen.setBounds(0, 0, 245, 27);
 		dateChooserDen.add(txtDen);
 		txtDen.setColumns(10);
+//		focusTxtField(txtDen, "Đến");
 
 		// Thêm sự kiện PropertyChangeListener cho dateChooserDen
 		dateChooserDen.getDateEditor().addPropertyChangeListener("date", evt -> {
 			Date selectedDate = dateChooserDen.getDate();
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				txtDen.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
 			} else {
 				txtDen.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
 			}
@@ -267,14 +282,14 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		
 		btnXemChiTiet = new RoundedButton("Xem chi tiết", 15);
 		btnXemChiTiet.setBackground(new Color(51, 102, 153));
-		btnXemChiTiet.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnXemChiTiet.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnXemChiTiet.setBounds(10, 527, 100, 30);
 		btnXemChiTiet.setForeground(new Color(255, 255, 255));
 		add(btnXemChiTiet);
 
 		btnXuatHoaDon = new RoundedButton("Xuất hóa đơn", 15);
 		btnXuatHoaDon.setForeground(new Color(255, 255, 255));
-		btnXuatHoaDon.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnXuatHoaDon.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnXuatHoaDon.setBounds(120, 527, 100, 30);
 		btnXuatHoaDon.setBackground(new Color(51, 102, 153));
 		add(btnXuatHoaDon);
@@ -294,7 +309,7 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		btnTraVe_1 = new RoundedButton("Trả vé", 15);
 		btnTraVe_1.setForeground(new Color(255, 255, 255));
 		btnTraVe_1.setForeground(new Color(255, 255, 255));
-		btnTraVe_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnTraVe_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnTraVe_1.setBounds(230, 527, 85, 30);
 		btnTraVe_1.setBackground(new Color(51, 102, 153));
 		add(btnTraVe_1);
@@ -563,5 +578,32 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	private void focusTxtField(JTextField txtField, String placeholder) {
+	    // Đặt màu chữ mờ khi chưa có focus
+	    txtField.setForeground(SystemColor.textInactiveText);
+	    txtField.setText(placeholder); // Đặt chữ mặc định cho trường văn bản
+
+	    // Thêm listener để xử lý sự kiện focus
+	    txtField.addFocusListener(new FocusAdapter() {
+	        @Override
+	        public void focusGained(FocusEvent e) {
+	            // Khi có focus, xóa văn bản nếu đang là placeholder
+	            if (txtField.getText().equals(placeholder)) {
+	                txtField.setText(""); // Xóa văn bản mặc định
+	                txtField.setForeground(Color.BLACK); // Đổi màu chữ thành đen
+	            }
+	        }
+
+	        @Override
+	        public void focusLost(FocusEvent e) {
+	            // Khi mất focus, hiển thị lại placeholder nếu trường trống
+	            if (txtField.getText().isEmpty()) {
+	                txtField.setForeground(SystemColor.textInactiveText); // Màu mờ
+	                txtField.setText(placeholder); // Thiết lập lại placeholder
+	            }
+	        }
+	    });
 	}
 }

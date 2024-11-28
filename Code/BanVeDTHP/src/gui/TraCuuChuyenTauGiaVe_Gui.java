@@ -143,6 +143,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 
 		//		txtGaDi = new JTextField();
 		txtGaDi = new RoundedTextField(15);
+		txtGaDi.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtGaDi.setBounds(85, 0, 366, 38);
 		panel_2.add(txtGaDi);
 		txtGaDi.setColumns(10);
@@ -181,6 +182,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 
 		//		txtGaDi_top = new JTextField();
 		txtGaDen = new RoundedTextField(15);
+		txtGaDen.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtGaDen.setBounds(85, 0, 366, 38);
 		panel_2_1.add(txtGaDen);
 		txtGaDen.setColumns(10);
@@ -267,6 +269,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		panel_2_1_1.add(lblTau);
 
 		comboBox_Tau = new JComboBox<>();
+		comboBox_Tau.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		comboBox_Tau.setBounds(84, 0, 367, 38);
 		panel_2_1_1.add(comboBox_Tau);
 		chonChuyenTau(comboBox_Tau, tenGaDi, tenGaDen, tauChon);
@@ -309,7 +312,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		panel_ThongTinTau.add(muiTenIconLabel);
 
 
-		ImageIcon dauTauIcon = new ImageIcon(getClass().getResource("/img/Toa_Dau.png"));
+		ImageIcon dauTauIcon = new ImageIcon(getClass().getResource("/img/icontau.png"));
 		Image scaledDauTauIcon =dauTauIcon.getImage().getScaledInstance(100, 43, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 		dauTauIconLabel = new JLabel(new ImageIcon(scaledDauTauIcon));
 		dauTauIconLabel.setBounds(538, 10, 100, 43);
@@ -350,12 +353,12 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		panel_ThongTinTau.add(lbl_GaDen);
 
 		lbl_NgayDi = new JLabel("");
-		lbl_NgayDi.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbl_NgayDi.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lbl_NgayDi.setBounds(241, 77, 78, 21);
 		panel_ThongTinTau.add(lbl_NgayDi);
 
 		lbl_NgayDen = new JLabel("");
-		lbl_NgayDen.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbl_NgayDen.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lbl_NgayDen.setBounds(1017, 77, 78, 21);
 		panel_ThongTinTau.add(lbl_NgayDen);
 

@@ -23,6 +23,7 @@ import javax.swing.table.TableRowSorter;
 
 import components.ConTent_JPanel;
 import components.RoundedButton;
+import components.RoundedTextField;
 import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
 import entity.KhachHang;
@@ -64,7 +65,7 @@ public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
 		setLayout(null);
 
 		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel.setBackground(Color.WHITE);
 		panel.setBounds(10, 10, 1420, 560);
 		add(panel);
 		panel.setLayout(null);
@@ -98,37 +99,29 @@ public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
 		panel.add(panelThongTinKhachHang);
 		panelThongTinKhachHang.setLayout(null);
 
-		txtMaKH = new JTextField();
-		String placeholder_maKH = "Theo mã khách hàng";
-
-		txtMaKH.setForeground(Color.GRAY);
+		txtMaKH = new RoundedTextField(15);
+		txtMaKH.setForeground(SystemColor.activeCaptionBorder);
 		txtMaKH.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtMaKH.setBounds(35, 86, 274, 30);
 		panelThongTinKhachHang.add(txtMaKH);
 		txtMaKH.setColumns(10);
 
-		txtTen = new JTextField();
-		String placeholder_TenKH = "Theo tên khách hàng";
-
-		txtTen.setForeground(Color.GRAY);
+		txtTen = new RoundedTextField(15);
+		txtTen.setForeground(SystemColor.activeCaptionBorder);
 		txtTen.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtTen.setColumns(10);
 		txtTen.setBounds(35, 165, 274, 30);
 		panelThongTinKhachHang.add(txtTen);
 
-		txtEmail = new JTextField();
-		String placeholder_Email = "Theo email";
-
-		txtEmail.setForeground(Color.GRAY);
+		txtEmail = new RoundedTextField(15);
+		txtEmail.setForeground(SystemColor.activeCaptionBorder);
 		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtEmail.setColumns(10);
 		txtEmail.setBounds(35, 234, 274, 30);
 		panelThongTinKhachHang.add(txtEmail);
 
-		txtSDT = new JTextField();
-		String placeholder_SDT = "Theo số điện thoại";
-
-		txtSDT.setForeground(Color.GRAY);
+		txtSDT = new RoundedTextField(15);
+		txtSDT.setForeground(SystemColor.activeCaptionBorder);
 		txtSDT.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtSDT.setColumns(10);
 		txtSDT.setBounds(35, 313, 274, 36);
@@ -147,11 +140,8 @@ public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
 		lb_Tim.setBounds(125, 0, 95, 36);
 		panel_2.add(lb_Tim);
 
-		txtCCCD = new JTextField();
-		String placeholder = "Theo căn cước công dân";
-
-		txtCCCD.setForeground(Color.GRAY);
-		txtCCCD.setToolTipText("");
+		txtCCCD = new RoundedTextField(15);
+		txtCCCD.setForeground(SystemColor.activeCaptionBorder);
 		txtCCCD.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtCCCD.setColumns(10);
 		txtCCCD.setBounds(35, 392, 274, 36);

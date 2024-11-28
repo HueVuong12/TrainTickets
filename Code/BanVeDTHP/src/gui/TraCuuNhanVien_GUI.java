@@ -18,17 +18,10 @@ import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
-import javax.swing.RowFilter.Entry;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.JScrollPane;
@@ -42,19 +35,20 @@ import com.toedter.calendar.JDateChooser;
 
 import components.ComboBoxRenderer;
 import components.RoundedButton;
+import components.RoundedTextField;
 import dao.NhanVien_DAO;
-import entity.Ca;
 import entity.NhanVien;
 
-public class TraCuuNhanVien_GUI extends JPanel implements ActionListener,MouseListener{
+public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField txt_MaNV;
 	private JTextField txt_HoTen;
-	private JTextField txt_GioiTinh;
 	private JTextField txt_SDT;
 	private JTextField txt_Email;
-	private JTextField txt_ChucVu;
-	private JTextField txt_Ca;
 	private JTable table;
 	private JRadioButton cb_nam;
 	private JRadioButton cb_nu;
@@ -80,11 +74,10 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		lb_MaNV.setBounds(22, 82, 111, 27);
 		panel.add(lb_MaNV);
 		
-		txt_MaNV = new JTextField();
-		txt_MaNV.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txt_MaNV.setText("Mã nhân viên");
+		txt_MaNV = new RoundedTextField(15);
+		txt_MaNV.setForeground(SystemColor.activeCaptionBorder);
+		txt_MaNV.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txt_MaNV.setBounds(22, 108, 239, 27);
-//		focusTxtField(textField_PhanQuyen, "Phân quyền");
 		panel.add(txt_MaNV);
 		txt_MaNV.setColumns(10);
 		
@@ -93,9 +86,9 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		lb_HoTen.setBounds(22, 146, 111, 27);
 		panel.add(lb_HoTen);
 		
-		txt_HoTen = new JTextField();
-		txt_HoTen.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txt_HoTen.setText("Họ tên");
+		txt_HoTen = new RoundedTextField(15);
+		txt_HoTen.setForeground(SystemColor.activeCaptionBorder);
+		txt_HoTen.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txt_HoTen.setColumns(10);
 		txt_HoTen.setBounds(22, 170, 239, 27);
 		panel.add(txt_HoTen);
@@ -127,9 +120,9 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		lb_SDT.setBounds(22, 269, 111, 27);
 		panel.add(lb_SDT);
 		
-		txt_SDT = new JTextField();
-		txt_SDT.setText("Số điện thoại");
-		txt_SDT.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txt_SDT = new RoundedTextField(15);
+		txt_SDT.setForeground(SystemColor.activeCaptionBorder);
+		txt_SDT.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txt_SDT.setColumns(10);
 		txt_SDT.setBounds(22, 293, 237, 27);
 		panel.add(txt_SDT);
@@ -139,9 +132,9 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		lb_Email.setBounds(22, 330, 88, 27);
 		panel.add(lb_Email);
 		
-		txt_Email = new JTextField();
-		txt_Email.setText("Email");
-		txt_Email.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txt_Email = new RoundedTextField(15);
+		txt_Email.setForeground(SystemColor.activeCaptionBorder);
+		txt_Email.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txt_Email.setColumns(10);
 		txt_Email.setBounds(22, 354, 237, 27);
 		panel.add(txt_Email);
@@ -171,19 +164,17 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		panel.add(comboBox_Ca);
 		
 		dateChooser_NgaySinh = new JDateChooser();
-//		dateChooser_NgaySinh.setBounds(129, 149, 188, 25);
-//		panel.add(dateChooser_NgaySinh);
 		dateChooser_NgaySinh.setDateFormatString("dd/MM/yyyy");
 		
-//		btnTim = new JButton("Tìm");
-		btnTim = new RoundedButton("Tìm", 15);
-		btnTim.setForeground(new Color(255, 255, 255));
+		btnTim = new RoundedButton("Tìm", 10);
 		btnTim.setBackground(new Color(51, 102, 153));
+		btnTim.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnTim.setForeground(new Color(255, 255, 255));
 		btnTim.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnTim.setBounds(93, 514, 90, 33);
+		btnTim.setBounds(138, 514, 118, 27);
 		panel.add(btnTim);
 		btnTim.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
@@ -222,50 +213,6 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		comboBoxGioiTinh = new JComboBox<>();
 		comboBoxGioiTinh.addItem("Nam");
 		comboBoxGioiTinh.addItem("Nữ");
-		
-		// Lấy cột "Giới tính" từ bảng
-		TableColumn gioiTinhColumn = table.getColumnModel().getColumn(4); // 4 là chỉ số của cột "Gioi tính"
-		// Thiết lập JComboBox làm editor cho cột "Giới tính"
-		gioiTinhColumn.setCellEditor(new DefaultCellEditor(comboBoxGioiTinh));
-		// Thiết lập renderer cho cột để hiển thị JComboBox
-		gioiTinhColumn.setCellRenderer(new ComboBoxRenderer(comboBoxGioiTinh));
-		
-		// Tạo JComboBox cho cột "Ca"
-		JComboBox<String> comboBoxCa = new JComboBox<>();
-		comboBoxCa.addItem("CA01");
-		comboBoxCa.addItem("CA02");
-		comboBoxCa.addItem("CA03");
-
-		// Lấy cột "Ca" từ bảng
-		TableColumn caColumn = table.getColumnModel().getColumn(5); // 5 là chỉ số của cột "Ca"
-		// Thiết lập JComboBox làm editor cho cột "Giới tính"
-		caColumn.setCellEditor(new DefaultCellEditor(comboBoxCa));
-		// Thiết lập renderer cho cột để hiển thị JComboBox
-		caColumn.setCellRenderer(new ComboBoxRenderer(comboBoxCa));
-
-		// Tạo JComboBox cho cột "Trạng Thái"
-		JComboBox<String> comboBoxTrangThai = new JComboBox<>();
-		comboBoxTrangThai.addItem("Đang làm");
-		comboBoxTrangThai.addItem("Nghỉ làm");
-		
-		// Lấy cột "Trạng Thái" từ bảng
-		TableColumn trangThaiColumn = table.getColumnModel().getColumn(9); // 9 là chỉ số của cột "Trạng Thái"
-		// Thiết lập JComboBox làm editor cho cột "Trạng Thái"
-		trangThaiColumn.setCellEditor(new DefaultCellEditor(comboBoxTrangThai));
-		// Thiết lập renderer cho cột để hiển thị JComboBox
-		trangThaiColumn.setCellRenderer(new ComboBoxRenderer(comboBoxTrangThai));
-				
-		// Tạo JComboBox cho cột "Chức vụ"
-		JComboBox<String> comboBoxChucVu = new JComboBox<>();
-		comboBoxChucVu.addItem("Quản lý");
-		comboBoxChucVu.addItem("Nhân viên");
-
-		// Lấy cột "Chức vụ" từ bảng
-		TableColumn chucVuColumn = table.getColumnModel().getColumn(10); // 10 là chỉ số của cột "Chức vụ"
-		// Thiết lập JComboBox làm editor cho cột "Trạng Thái"
-		chucVuColumn.setCellEditor(new DefaultCellEditor(comboBoxChucVu));
-		// Thiết lập renderer cho cột để hiển thị JComboBox
-		chucVuColumn.setCellRenderer(new ComboBoxRenderer(comboBoxChucVu));
 		
 		//Thêm sự kiện table listener
 		model.addTableModelListener(new TableModelListener() {
@@ -307,7 +254,6 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 				}
 			}
 		});
-		table.addMouseListener(this);
 		cb_nam.addActionListener(this);
 		cb_nu.addActionListener(this);
 		btnTim.addActionListener(this);
@@ -332,56 +278,7 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 			}
 		});
 	}
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		int row = table.getSelectedRow();
-		System.out.println(row);
-		if (row != -1) {	
-			NhanVien nv = dsnv.getNhanVienTheoMaNV(table.getValueAt(row, 1).toString());
-			System.out.println(table.getValueAt(row, 1).toString());
-			txt_MaNV.setText(nv.getMaNV());
-			txt_HoTen.setText(nv.getTenNV());
-			if (nv.isGioiTinh()) {
-				cb_nam.setSelected(false);
-				cb_nu.setSelected(true);
-			} else {
-				cb_nam.setSelected(true);
-				cb_nu.setSelected(false);
-			}
-			dateChooser_NgaySinh.setDate(Date.from(nv.getNgaySinh().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-			txt_SDT.setText(nv.getSdt());
-			txt_Email.setText(nv.getEmail());
-			comboBox_Ca.setSelectedItem(nv.getCa().getMaCa());
-			if(nv.getChucVu() == 1) {
-				comboBox_ChucVu.setSelectedIndex(0);
-			}
-			else {
-				comboBox_ChucVu.setSelectedIndex(1);
-			}
-		}
-		
-	}
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub

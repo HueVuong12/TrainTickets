@@ -18,9 +18,13 @@ import entity.TaiKhoan;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -44,6 +48,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 
 public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener{
 
@@ -135,7 +140,9 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(italiannoFont); // Đăng ký font
             
-            titleLabel.setFont(italiannoFont); // Áp dụng font
+//            titleLabel.setFont(italiannoFont); // Áp dụng font
+            // Áp dụng font, bóng, và viền
+            applyTextEffectWithBorder(titleLabel, italiannoFont, Color.WHITE, Color.GRAY, Color.BLACK);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -265,7 +272,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		menuBar.add(mnTrGip);
 		
 		jp_nhanVien = new JPanel();
-		jp_nhanVien.setBackground(SystemColor.text);
+		jp_nhanVien.setBackground(SystemColor.menu);
 		jp_nhanVien.setBounds(1203, 0, 267, 200);
 		header.add(jp_nhanVien);
 		jp_nhanVien.setLayout(null);
@@ -360,6 +367,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 			}
 		});
 	    jp_nhanVien.add(btn_KetCa);
+	    
 	    exitIconLabel.addMouseListener(new MouseAdapter() {
 	    	public void mouseClicked(MouseEvent e) {
 	    		if(click != 2) {
@@ -767,4 +775,57 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		return dangNhap;
 	}
 
+	// Hàm áp dụng hiệu ứng bóng và viền
+    private void applyTextEffectWithBorder(JLabel label, Font font, Color textColor, Color shadowColor, Color borderColor) {
+        label.setFont(font);
+        label.setForeground(textColor); // Màu chữ chính
+
+        // Ghi đè UI của JLabel để vẽ bóng, viền, và căn giữa
+        label.setUI(new javax.swing.plaf.basic.BasicLabelUI() {
+            @Override
+            public void paint(Graphics g, JComponent c) {
+                Graphics2D g2d = (Graphics2D) g;
+
+                // Bật khử răng cưa
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Tính toán kích thước chữ
+                FontMetrics metrics = g2d.getFontMetrics(label.getFont());
+                int textWidth = metrics.stringWidth(label.getText());
+                int textHeight = metrics.getHeight();
+
+                // Tính toán vị trí để chữ nằm giữa JLabel
+                int x = (label.getWidth() - textWidth) / 2;
+                int y = (label.getHeight() - textHeight) / 2 + metrics.getAscent();
+
+                // Vẽ bóng nghiêng
+                g2d.setColor(shadowColor); // Màu bóng
+                int xOffset = 8; // Dịch sang phải
+                int yOffset = 8; // Dịch xuống dưới
+                for (int dx = 0; dx <= xOffset; dx++) {
+                    for (int dy = 0; dy <= yOffset; dy++) {
+                        if (Math.sqrt(dx * dx + dy * dy) <= Math.max(xOffset, yOffset)) {
+                            g2d.drawString(label.getText(), x + dx, y + dy);
+                        }
+                    }
+                }
+
+                // Vẽ viền bằng cách vẽ chữ nhiều lần quanh biên
+                g2d.setColor(borderColor); // Màu viền
+                for (int i = -1; i <= 3; i++) {
+                    for (int j = -1; j <= 1; j++) {
+                        if (i != 0 || j != 0) { // Không vẽ lên chính giữa
+                            g2d.drawString(label.getText(), x + i, y + j);
+                        }
+                    }
+                }
+
+                // Vẽ chữ chính
+                g2d.setColor(label.getForeground());
+                g2d.drawString(label.getText(), x, y);
+
+                super.paint(g, c);
+            }
+        });
+    }
 }

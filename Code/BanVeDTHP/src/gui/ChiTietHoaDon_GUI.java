@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -31,6 +32,7 @@ import javax.swing.table.TableRowSorter;
 
 import components.ConTent_JPanel;
 import components.RoundedButton;
+import components.RoundedTextField;
 import dao.ChiTietHoaDon_DAO;
 import dao.Ve_DAO;
 import entity.ChiTietHoaDon;
@@ -82,8 +84,12 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 	private JLabel lbl_quayLai;
 
 	public ChiTietHoaDon_GUI(QuanLyHoaDon_GUI quanLyHoaDon_GUI,TrangChu_GUI trangChu) {
-		setBackground(new Color(255, 255, 255));
+		
+		setBackground(SystemColor.window);
+		setForeground(new Color(255, 255, 255));
+		setBounds(0, 170, 1460, 570);
 		setLayout(null);
+		
 		panel = new JPanel();
 		panel.setBackground(new Color(255, 255, 255));
 		panel.setBounds(30, 10, 146, 29);
@@ -144,8 +150,9 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 		lblMaChiTiet.setBounds(10, 0, 93, 30);
 		panel_3.add(lblMaChiTiet);
 
-		txtMaChiTiet = new JTextField();
-		txtMaChiTiet.setBounds(7, 26, 257, 30);
+		txtMaChiTiet = new RoundedTextField(10);
+		txtMaChiTiet.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtMaChiTiet.setBounds(7, 27, 257, 30);
 		panel_3.add(txtMaChiTiet);
 		txtMaChiTiet.setColumns(10);
 
@@ -154,8 +161,8 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 		lblMaHoaDon.setBounds(10, 64, 110, 30);
 		panel_3.add(lblMaHoaDon);
 
-		txtMaHoaDon = new JTextField();
-		txtMaHoaDon.setColumns(10);
+		txtMaHoaDon = new RoundedTextField(10);
+		txtMaHoaDon.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		txtMaHoaDon.setBounds(7, 92, 257, 30);
 		panel_3.add(txtMaHoaDon);
 
@@ -208,8 +215,8 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 		lblTu.setBounds(10, 0, 93, 30);
 		panel_3_1.add(lblTu);
 
-		txtTu = new JTextField();
-		txtTu.setColumns(10);
+		txtTu = new RoundedTextField(10);
+		txtTu.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		txtTu.setBounds(7, 26, 257, 30);
 		panel_3_1.add(txtTu);
 
@@ -218,8 +225,8 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 		lblDen.setBounds(10, 52, 110, 30);
 		panel_3_1.add(lblDen);
 
-		txtDen = new JTextField();
-		txtDen.setColumns(10);
+		txtDen = new RoundedTextField(10);
+		txtDen.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		txtDen.setBounds(7, 80, 257, 30);
 		panel_3_1.add(txtDen);
 
