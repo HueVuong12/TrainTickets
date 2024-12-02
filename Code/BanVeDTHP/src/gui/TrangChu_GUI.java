@@ -276,12 +276,23 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		jp_nhanVien.setBounds(1203, 0, 267, 200);
 		header.add(jp_nhanVien);
 		jp_nhanVien.setLayout(null);
+		
 		ImageIcon userIcon = new ImageIcon(getClass().getResource("/img/user.png"));
 	    Image scaledUser = userIcon.getImage().getScaledInstance(73 ,56, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    jp_nhanVien.setLayout(null);
 	    userIconLabel = new JLabel(new ImageIcon(scaledUser));
 	    userIconLabel.setBounds(40 ,10 , 73 ,56); // Cập nhật kích thước trên JLabel
 	    jp_nhanVien.add(userIconLabel);
+	    
+	    userIconLabel.addMouseListener(new MouseAdapter() {
+	        @Override
+	        public void mouseClicked(MouseEvent e) {
+	            // Chuyển sang TaiKhoan_GUI
+	            TaiKhoan_GUI taiKhoanGUI = new TaiKhoan_GUI(dangNhap); // Khởi tạo cửa sổ mới
+	            taiKhoanGUI.setVisible(true); // Hiển thị cửa sổ mới
+	            
+	        }
+	    });
 	    
 	    lbl_ThongTinNV = new JLabel();
 	    lbl_ThongTinNV.setText(nhanVien_DAO.getNhanVienTheoMaNV((taiKhoan_DAO.getTaiKhoanTheoMaTK(dangNhap.getTaiKhoanLogined().getMaTaiKhoan()))
