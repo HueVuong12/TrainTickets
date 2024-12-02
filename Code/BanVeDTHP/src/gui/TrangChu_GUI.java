@@ -289,7 +289,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    Image scaledUser = userIcon.getImage().getScaledInstance(73 ,56, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    jp_nhanVien.setLayout(null);
 	    userIconLabel = new JLabel(new ImageIcon(scaledUser));
-	    userIconLabel.setBounds(40 ,10 , 73 ,56); // Cập nhật kích thước trên JLabel
+	    userIconLabel.setBounds(96 ,10 , 73 ,56); // Cập nhật kích thước trên JLabel
 	    jp_nhanVien.add(userIconLabel);
 	    
 	    userIconLabel.addMouseListener(new MouseAdapter() {
@@ -413,12 +413,71 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    		btn_VaoCa.setBounds(247, 271, 85, 21);
 	    		contentPane1.add(btn_VaoCa);
 	    		
+	    		btn_VaoCa.addActionListener(new ActionListener() {
+	    			
+	    			@Override
+	    			public void actionPerformed(ActionEvent e) {
+	    				// TODO Auto-generated method stub
+	    				// Hiển thị hộp thoại xác nhận sau khi mở file
+	    				LocalDateTime currentTime = LocalDateTime.now();
+	    				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	    				String time= currentTime.format(formatter);
+	                    int confirm = JOptionPane.showConfirmDialog(
+	                        null, 
+	                        "Bắt đầu ca làm :" + time, 
+	                        "Xác nhận", 
+	                        JOptionPane.YES_NO_OPTION
+	                    );
+
+	                    // Xóa file nếu người dùng chọn "Yes"
+	                    if (confirm == JOptionPane.YES_OPTION) {
+	                        if (kiemTraVaoCaLam(lbl_ThongTinNV, currentTime)) {
+	                            vaoCa= LocalDateTime.now();;
+	                            click++;
+	                        } else {
+	                        	JOptionPane.showMessageDialog(null, "Chưa thới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
+	                        }
+	                    }else {
+	                    	return;
+	                    }
+	    			}
+	    		});
+	    		
 	    		btn_KetCa = new RoundedButton("Kết ca", 10);
 	    		btn_KetCa.setForeground(new Color(255, 255, 255));
 	    		btn_KetCa.setBackground(new Color(51, 102, 153));
 	    		btn_KetCa.setFont(new Font("Tahoma", Font.PLAIN, 15));
 	    		btn_KetCa.setBounds(382, 271, 85, 21);
 	    		contentPane1.add(btn_KetCa);
+	    		
+	    		btn_KetCa.addActionListener(new ActionListener() {
+	    			
+	    			@Override
+	    			public void actionPerformed(ActionEvent e) {
+	    				// TODO Auto-generated method stub
+	    				LocalDateTime currentTime = LocalDateTime.now();
+	    				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	    				String time= currentTime.format(formatter);
+	                    int confirm = JOptionPane.showConfirmDialog(
+	                        null, 
+	                        "Kết thúc ca làm :" + time, 
+	                        "Xác nhận", 
+	                        JOptionPane.YES_NO_OPTION
+	                    );
+
+	                    // Xóa file nếu người dùng chọn "Yes"
+	                    if (confirm == JOptionPane.YES_OPTION) {
+	                        if (kiemTraKetCaLam(lbl_ThongTinNV, currentTime)) {
+	                        	ketCa= LocalDateTime.now();
+	                        	click++;
+	                        } else {
+	                        	JOptionPane.showMessageDialog(null, "Chưa thới thời gian kết thúc ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE); 
+	                        }
+	                    }else {
+	                    	return;
+	                    }
+	    			}
+	    		});
 	    		
 	    		 dialog.setContentPane(contentPane1);
 	            // Hiển thị dialog
@@ -446,70 +505,70 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    exitIconLabel.setBounds(111 ,153 , 40 ,37); // Cập nhật kích thước trên JLabel
 	    jp_nhanVien.add(exitIconLabel);
 	    
-	    btn_VaoCa = new JButton("Vào ca");
-	    btn_VaoCa.setBounds(145, 10, 85, 25);
-	    jp_nhanVien.add(btn_VaoCa);
-	    btn_VaoCa.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				// Hiển thị hộp thoại xác nhận sau khi mở file
-				LocalDateTime currentTime = LocalDateTime.now();
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-				String time= currentTime.format(formatter);
-                int confirm = JOptionPane.showConfirmDialog(
-                    null, 
-                    "Bắt đầu ca làm :" + time, 
-                    "Xác nhận", 
-                    JOptionPane.YES_NO_OPTION
-                );
-
-                // Xóa file nếu người dùng chọn "Yes"
-                if (confirm == JOptionPane.YES_OPTION) {
-                    if (kiemTraVaoCaLam(lbl_ThongTinNV, currentTime)) {
-                        vaoCa= LocalDateTime.now();;
-                        click++;
-                    } else {
-                    	JOptionPane.showMessageDialog(null, "Chưa thới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
-                    }
-                }else {
-                	return;
-                }
-			}
-		});
-	    
-	    btn_KetCa = new JButton("Kết ca");
-	    btn_KetCa.setBounds(145, 45, 85, 25);
-	    btn_KetCa.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				LocalDateTime currentTime = LocalDateTime.now();
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-				String time= currentTime.format(formatter);
-                int confirm = JOptionPane.showConfirmDialog(
-                    null, 
-                    "Kết thúc ca làm :" + time, 
-                    "Xác nhận", 
-                    JOptionPane.YES_NO_OPTION
-                );
-
-                // Xóa file nếu người dùng chọn "Yes"
-                if (confirm == JOptionPane.YES_OPTION) {
-                    if (kiemTraKetCaLam(lbl_ThongTinNV, currentTime)) {
-                    	ketCa= LocalDateTime.now();
-                    	click++;
-                    } else {
-                    	JOptionPane.showMessageDialog(null, "Chưa thới thời gian kết thúc ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE); 
-                    }
-                }else {
-                	return;
-                }
-			}
-		});
-	    jp_nhanVien.add(btn_KetCa);
+//	    btn_VaoCa = new JButton("Vào ca");
+//	    btn_VaoCa.setBounds(145, 10, 85, 25);
+//	    jp_nhanVien.add(btn_VaoCa);
+//	    btn_VaoCa.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				// Hiển thị hộp thoại xác nhận sau khi mở file
+//				LocalDateTime currentTime = LocalDateTime.now();
+//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//				String time= currentTime.format(formatter);
+//                int confirm = JOptionPane.showConfirmDialog(
+//                    null, 
+//                    "Bắt đầu ca làm :" + time, 
+//                    "Xác nhận", 
+//                    JOptionPane.YES_NO_OPTION
+//                );
+//
+//                // Xóa file nếu người dùng chọn "Yes"
+//                if (confirm == JOptionPane.YES_OPTION) {
+//                    if (kiemTraVaoCaLam(lbl_ThongTinNV, currentTime)) {
+//                        vaoCa= LocalDateTime.now();;
+//                        click++;
+//                    } else {
+//                    	JOptionPane.showMessageDialog(null, "Chưa thới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
+//                    }
+//                }else {
+//                	return;
+//                }
+//			}
+//		});
+//	    
+//	    btn_KetCa = new JButton("Kết ca");
+//	    btn_KetCa.setBounds(145, 45, 85, 25);
+//	    btn_KetCa.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				LocalDateTime currentTime = LocalDateTime.now();
+//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//				String time= currentTime.format(formatter);
+//                int confirm = JOptionPane.showConfirmDialog(
+//                    null, 
+//                    "Kết thúc ca làm :" + time, 
+//                    "Xác nhận", 
+//                    JOptionPane.YES_NO_OPTION
+//                );
+//
+//                // Xóa file nếu người dùng chọn "Yes"
+//                if (confirm == JOptionPane.YES_OPTION) {
+//                    if (kiemTraKetCaLam(lbl_ThongTinNV, currentTime)) {
+//                    	ketCa= LocalDateTime.now();
+//                    	click++;
+//                    } else {
+//                    	JOptionPane.showMessageDialog(null, "Chưa thới thời gian kết thúc ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE); 
+//                    }
+//                }else {
+//                	return;
+//                }
+//			}
+//		});
+//	    jp_nhanVien.add(btn_KetCa);
 	    
 	    exitIconLabel.addMouseListener(new MouseAdapter() {
 	    	public void mouseClicked(MouseEvent e) {
