@@ -344,7 +344,7 @@ VALUES
 -- Thêm ghế cho toa giường nằm
 --DECLARE @i INT;
 SET @i = 1;
-WHILE @i <= 32 BEGIN2
+WHILE @i <= 32 BEGIN
     INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA004_01', 1);
     INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA004_02', 1);
     SET @i = @i + 1;
