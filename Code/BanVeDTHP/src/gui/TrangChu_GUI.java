@@ -29,6 +29,7 @@ import java.awt.RenderingHints;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 
 import javax.swing.JMenuBar;
@@ -846,6 +847,14 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 
 			}
 		});
+	    
+	    mnTrGip.addMouseListener(new MouseAdapter() {
+	        @Override
+	        public void mouseClicked(MouseEvent e) {
+	            OpenHtmlFile(); // Gọi phương thức khi nhấn vào menu
+	        }
+	    });
+	    
 	    updateTime(); // hàm lấy thời gian thực
 		Timer timer = new Timer(1000, new ActionListener() {
 			@Override
@@ -1029,5 +1038,29 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
                 super.paint(g, c);
             }
         });
+    }
+    
+    private void OpenHtmlFile() {
+        try {
+            // Đường dẫn đến file index.html trong thư mục TrangHoTro
+            File htmlFile = new File("TrangHoTro/html/index.html");
+
+            // Kiểm tra xem file có tồn tại hay không
+            if (!htmlFile.exists()) {
+                System.out.println("File không tồn tại: " + htmlFile.getAbsolutePath());
+                return;
+            }
+
+            // Kiểm tra Desktop API có khả dụng không
+            if (Desktop.isDesktopSupported()) {
+                Desktop desktop = Desktop.getDesktop();
+                desktop.browse(htmlFile.toURI()); // Mở file trong trình duyệt mặc định
+            } else {
+                System.out.println("Desktop API không được hỗ trợ trên hệ thống này.");
+            }
+        } catch (IOException e) {
+            System.out.println("Có lỗi xảy ra khi mở file: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
