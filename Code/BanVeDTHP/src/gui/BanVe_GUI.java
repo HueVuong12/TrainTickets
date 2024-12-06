@@ -19,6 +19,7 @@ import javax.swing.SwingConstants;
 import com.toedter.calendar.JDateChooser;
 
 import components.ChuyenTau_JPanel;
+import components.ScrollBarUI;
 import components.RoundedButton;
 import components.Toa_JPanel;
 import components.Ve_JPanel;
@@ -34,6 +35,8 @@ import entity.Toa;
 import entity.Ve;
 
 import javax.swing.JRadioButton;
+import javax.swing.JScrollBar;
+
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -56,6 +59,8 @@ import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.ScrollPaneConstants;
 
 public class BanVe_GUI extends JPanel {
 
@@ -99,6 +104,7 @@ public class BanVe_GUI extends JPanel {
 	Ghe_DAO ghe_DAO = new Ghe_DAO();
 	private RoundedButton btnTim;
 	private RoundedButton btnMua;
+	private JScrollPane scrollPaneTinhTrangToa;
 
 	/**
 	 * Create the panel.
@@ -145,15 +151,40 @@ public class BanVe_GUI extends JPanel {
 		add(jp_ThongTinChuyenTau);
 		jp_ThongTinChuyenTau.setLayout(null);
 
+//		jp_TinhTrangToa = new JPanel();
+//		jp_TinhTrangToa.setBackground(Color.WHITE);
+//		jp_TinhTrangToa.setBounds(264, 184, 907, 76);
+//		add(jp_TinhTrangToa);
+//		jp_TinhTrangToa.setLayout(null);
+		
+		// Bỏ `jp_TinhTrangToa` trực tiếp vào container
 		jp_TinhTrangToa = new JPanel();
 		jp_TinhTrangToa.setBackground(Color.WHITE);
-		jp_TinhTrangToa.setBounds(264, 184, 907, 76);
-		add(jp_TinhTrangToa);
-		jp_TinhTrangToa.setLayout(null);
+		jp_TinhTrangToa.setLayout(null); // Layout null để tự định nghĩa vị trí
+
+		// Tạo JScrollPane bọc quanh jp_TinhTrangToa
+		scrollPaneTinhTrangToa = new JScrollPane(jp_TinhTrangToa);
+		scrollPaneTinhTrangToa.setBounds(264, 184, 907, 83);
+		scrollPaneTinhTrangToa.setBorder(null);
+		scrollPaneTinhTrangToa.setBackground(Color.WHITE);
+
+		// Áp dụng thanh cuộn tùy chỉnh
+		JScrollBar horizontalScrollBar = scrollPaneTinhTrangToa.getHorizontalScrollBar();
+		horizontalScrollBar.setUI(new ScrollBarUI());
+		horizontalScrollBar.setPreferredSize(new Dimension(0, 8)); // Độ dày thanh cuộn ngang
+
+		// Tùy chọn cuộn chỉ hiển thị khi cần
+		scrollPaneTinhTrangToa.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPaneTinhTrangToa.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+		add(scrollPaneTinhTrangToa);
+
+		// Thêm JScrollPane vào container thay vì jp_TinhTrangToa trực tiếp
+		add(scrollPaneTinhTrangToa);
 
 		jp_TinhTrangGhe = new JPanel();
 		jp_TinhTrangGhe.setBackground(Color.WHITE);
-		jp_TinhTrangGhe.setBounds(264, 300, 907, 260);
+		jp_TinhTrangGhe.setBounds(264, 310, 907, 250);
 		add(jp_TinhTrangGhe);
 		jp_TinhTrangGhe.setLayout(null);
 
@@ -186,6 +217,10 @@ public class BanVe_GUI extends JPanel {
 					jp_TinhTrangToa.removeAll();
 					jp_TinhTrangToa.revalidate();
 					jp_TinhTrangToa.repaint();
+					
+					jp_TinhTrangToa.setPreferredSize(new Dimension(0, 76));
+					scrollPaneTinhTrangToa.revalidate();
+				    scrollPaneTinhTrangToa.repaint();
 
 					jp_TinhTrangGhe.removeAll();
 					jp_TinhTrangGhe.revalidate();
@@ -437,7 +472,7 @@ public class BanVe_GUI extends JPanel {
 		jp_Header_GioVe.add(lbl_tieuDeTK_GioVe);
 
 		lblMaToa = new JLabel();
-		lblMaToa.setBounds(534, 267, 272, 23);
+		lblMaToa.setBounds(532, 277, 272, 23);
 		add(lblMaToa);
 		lblMaToa.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblMaToa.setHorizontalAlignment(SwingConstants.CENTER);
@@ -463,6 +498,10 @@ public class BanVe_GUI extends JPanel {
 				jp_TinhTrangToa.removeAll();
 				jp_TinhTrangToa.revalidate();
 				jp_TinhTrangToa.repaint();
+				
+				jp_TinhTrangToa.setPreferredSize(new Dimension(0, 76));
+				scrollPaneTinhTrangToa.revalidate();
+			    scrollPaneTinhTrangToa.repaint();
 
 				jp_TinhTrangGhe.removeAll();
 				jp_TinhTrangGhe.revalidate();
@@ -486,25 +525,41 @@ public class BanVe_GUI extends JPanel {
 				lbl_Ga_1.setText(txt_GaDi.getText() + " - " + txt_GaDen.getText());
 				LocalDate ngayDi = chooserNgayDi.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-				if (chuyenTauCu != null) {
-					ChuyenTau_JPanel pChuyenTau = new ChuyenTau_JPanel(chuyenTauCu);
-					pChuyenTau.setBounds(boundsPanel);
-					// su kien
-					loadToa(pChuyenTau, chuyenTauCu);
-					if (toaCu != null) {
-						Toa_JPanel pToa;
-						if (toaCu.getLoaiToa().equals("VIP")) {
-							pToa = new Toa_JPanel("", 2);
-						} else if (toaCu.getLoaiToa().equals("Giường nằm")) {
-							pToa = new Toa_JPanel("", 3);
-						} else {
-							pToa = new Toa_JPanel("", 4);
-						}
-						pToa.setBounds(boundsPanelToa);
-						// su kien
-						loadGhe(pToa, toaCu);
-					}
-				}
+//				if (chuyenTauCu != null) {
+//					ChuyenTau_JPanel pChuyenTau = new ChuyenTau_JPanel(chuyenTauCu);
+//					pChuyenTau.setBounds(boundsPanel);
+//					// su kien
+//					loadToa(pChuyenTau, chuyenTauCu);
+//					if (toaCu != null) {
+//						Toa_JPanel pToa;
+//						if (toaCu.getLoaiToa().equals("VIP")) {
+//							pToa = new Toa_JPanel("", 2);
+//						} else if (toaCu.getLoaiToa().equals("Giường nằm")) {
+//							pToa = new Toa_JPanel("", 3);
+//						} else {
+//							pToa = new Toa_JPanel("", 4);
+//						}
+//						pToa.setBounds(boundsPanelToa);
+//						// su kien
+//						loadGhe(pToa, toaCu);
+//					}
+//				}
+				
+				jp_ThongTinChuyenTau.removeAll();
+				jp_ThongTinChuyenTau.revalidate();
+				jp_ThongTinChuyenTau.repaint();
+
+				jp_TinhTrangToa.removeAll();
+				jp_TinhTrangToa.revalidate();
+				jp_TinhTrangToa.repaint();
+				
+				jp_TinhTrangToa.setPreferredSize(new Dimension(0, 76));
+				scrollPaneTinhTrangToa.revalidate();
+			    scrollPaneTinhTrangToa.repaint();
+
+				jp_TinhTrangGhe.removeAll();
+				jp_TinhTrangGhe.revalidate();
+				jp_TinhTrangGhe.repaint();
 
 				suKienBatDauChon(txt_GaDi.getText(), txt_GaDen.getText(), ngayDi);
 			}
@@ -513,8 +568,16 @@ public class BanVe_GUI extends JPanel {
 		btnTiep.setVisible(false);
 		btnQuayLai.setVisible(false);
 		
+		// Tạo viền bo góc với màu RGB (221, 221, 221)
+        LineBorder lineBorder = new LineBorder(new Color(221, 221, 221), 2, true); // Viền bo góc
+        TitledBorder titledBorder = new TitledBorder(lineBorder, "Chú thích"); // Thêm tiêu đề
+        titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 14)); // Font tiêu đề
+        titledBorder.setTitleColor(Color.BLACK); // Màu chữ tiêu đề
+		
 		JPanel panel_ChuThich = new JPanel();
 		panel_ChuThich.setBounds(1195, 56, 255, 504);
+		panel_ChuThich.setBackground(Color.WHITE);
+		panel_ChuThich.setBorder(titledBorder);;
 		add(panel_ChuThich);
 		panel_ChuThich.setLayout(null);
 		
@@ -526,12 +589,12 @@ public class BanVe_GUI extends JPanel {
 		Image scaledContainerIcon_GM = containerIcon_GM.getImage().getScaledInstance(100, 49, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 		lblNewLabel = new JLabel(new ImageIcon(scaledContainerIcon_GM));
 		lblNewLabel.setBackground(Color.WHITE);
-		lblNewLabel.setBounds(10, 12, 100, 49);
+		lblNewLabel.setBounds(10, 35, 100, 49);
 		panel_ChuThich.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Toa ghế mềm");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel_1.setBounds(120, 21, 125, 31);
+		lblNewLabel_1.setBounds(120, 44, 125, 31);
 		panel_ChuThich.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("New label");
@@ -542,13 +605,13 @@ public class BanVe_GUI extends JPanel {
 		Image scaledContainerIcon_GN = containerIcon_GN.getImage().getScaledInstance(100, 49, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 		lblNewLabel_2 = new JLabel(new ImageIcon(scaledContainerIcon_GN));
 		lblNewLabel_2.setBackground(Color.WHITE);
-		lblNewLabel_2.setBounds(10, 75, 100, 49);
+		lblNewLabel_2.setBounds(10, 98, 100, 49);
 		
 		panel_ChuThich.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Toa giường nằm");
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel_1_1.setBounds(120, 82, 125, 31);
+		lblNewLabel_1_1.setBounds(120, 105, 125, 31);
 		panel_ChuThich.add(lblNewLabel_1_1);
 		
 		JLabel lblNewLabel_3 = new JLabel("New label");
@@ -559,13 +622,13 @@ public class BanVe_GUI extends JPanel {
 		Image scaledContainerIcon_VIP = containerIcon_VIP.getImage().getScaledInstance(100, 49, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 		lblNewLabel_3 = new JLabel(new ImageIcon(scaledContainerIcon_VIP));
 		lblNewLabel_3.setBackground(Color.WHITE);
-		lblNewLabel_3.setBounds(10, 138, 100, 49);
+		lblNewLabel_3.setBounds(10, 161, 100, 49);
 		
 		panel_ChuThich.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel_1_2 = new JLabel("Toa VIP");
 		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel_1_2.setBounds(120, 145, 125, 31);
+		lblNewLabel_1_2.setBounds(120, 168, 125, 31);
 		panel_ChuThich.add(lblNewLabel_1_2);
 		
 		JLabel lblNewLabel_4 = new JLabel("New label");
@@ -576,13 +639,13 @@ public class BanVe_GUI extends JPanel {
 		Image scaledContainerIcon_HC = containerIcon_HC.getImage().getScaledInstance(100, 49, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 		lblNewLabel_4 = new JLabel(new ImageIcon(scaledContainerIcon_HC));
 		lblNewLabel_4.setBackground(Color.WHITE);
-		lblNewLabel_4.setBounds(10, 197, 100, 49);
+		lblNewLabel_4.setBounds(10, 220, 100, 49);
 		
 		panel_ChuThich.add(lblNewLabel_4);
 		
 		JLabel lblNewLabel_1_3 = new JLabel("Toa hết chỗ");
 		lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel_1_3.setBounds(120, 204, 125, 31);
+		lblNewLabel_1_3.setBounds(120, 227, 125, 31);
 		panel_ChuThich.add(lblNewLabel_1_3);
 		
 		ImageIcon containerIcon_Ghe1;
@@ -590,12 +653,12 @@ public class BanVe_GUI extends JPanel {
 		Image scaledContainerIcon_Ghe1 = containerIcon_Ghe1.getImage().getScaledInstance(26, 42, Image.SCALE_SMOOTH);
 		// JLabel cho hình ảnh
 		JLabel containerIconLabel_Ghe1 = new JLabel(new ImageIcon(scaledContainerIcon_Ghe1));
-		containerIconLabel_Ghe1.setBounds(24, 271, 26, 42); // Đặt kích thước cho hình ảnh
+		containerIconLabel_Ghe1.setBounds(24, 311, 26, 42); // Đặt kích thước cho hình ảnh
 		panel_ChuThich.add(containerIconLabel_Ghe1);
 					
 		JLabel lblNewLabel_1_3_1 = new JLabel("Ghế chưa đặt");
 		lblNewLabel_1_3_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel_1_3_1.setBounds(86, 276, 159, 31);
+		lblNewLabel_1_3_1.setBounds(86, 316, 159, 31);
 		panel_ChuThich.add(lblNewLabel_1_3_1);
 		
 		ImageIcon containerIcon_Ghe2;
@@ -603,12 +666,12 @@ public class BanVe_GUI extends JPanel {
 		Image scaledContainerIcon_Ghe2 = containerIcon_Ghe2.getImage().getScaledInstance(26, 42, Image.SCALE_SMOOTH);
 		// JLabel cho hình ảnh
 		JLabel containerIconLabel_Ghe2 = new JLabel(new ImageIcon(scaledContainerIcon_Ghe2));
-		containerIconLabel_Ghe2.setBounds(24, 350, 26, 42); // Đặt kích thước cho hình ảnh
+		containerIconLabel_Ghe2.setBounds(24, 383, 26, 42); // Đặt kích thước cho hình ảnh
 		panel_ChuThich.add(containerIconLabel_Ghe2);
 		
 		JLabel lblNewLabel_1_3_1_1 = new JLabel("Ghế đang chọn");
 		lblNewLabel_1_3_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel_1_3_1_1.setBounds(86, 355, 159, 31);
+		lblNewLabel_1_3_1_1.setBounds(86, 388, 159, 31);
 		panel_ChuThich.add(lblNewLabel_1_3_1_1);
 		
 		ImageIcon containerIcon_Ghe0;
@@ -616,12 +679,12 @@ public class BanVe_GUI extends JPanel {
 		Image scaledContainerIcon_Ghe0 = containerIcon_Ghe0.getImage().getScaledInstance(26, 42, Image.SCALE_SMOOTH);
 		// JLabel cho hình ảnh
 		JLabel containerIconLabel_Ghe0 = new JLabel(new ImageIcon(scaledContainerIcon_Ghe0));
-		containerIconLabel_Ghe0.setBounds(24, 424, 26, 42); // Đặt kích thước cho hình ảnh
+		containerIconLabel_Ghe0.setBounds(24, 452, 26, 42); // Đặt kích thước cho hình ảnh
 		panel_ChuThich.add(containerIconLabel_Ghe0);
 		
 		JLabel lblNewLabel_1_3_1_2 = new JLabel("Ghế đã đặt");
 		lblNewLabel_1_3_1_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel_1_3_1_2.setBounds(86, 429, 159, 31);
+		lblNewLabel_1_3_1_2.setBounds(86, 457, 159, 31);
 		panel_ChuThich.add(lblNewLabel_1_3_1_2);
 		
 		// Thêm MouseListener vào contentPane
@@ -723,6 +786,7 @@ public class BanVe_GUI extends JPanel {
 	private void loadToa(ChuyenTau_JPanel pChuyenTau, ChuyenTau chuyenTau) {
 		chuyenTauCu = chuyenTau;
 		boundsPanel = pChuyenTau.getBounds();
+		int chieuDaiPanel = 102;
 
 		ImageIcon trainIcon;
 		// Logo chương trình
@@ -761,10 +825,19 @@ public class BanVe_GUI extends JPanel {
 			suKienTrenToa(pToa, toa);
 			jp_TinhTrangToa.add(pToa);
 			x += 102; // Điều chỉnh vị trí cho panel tiếp theo
+			chieuDaiPanel += 102;
 		}
+		
+		jp_TinhTrangToa.setPreferredSize(new Dimension(chieuDaiPanel, 76));
 
 		jp_ThongTinChuyenTau.revalidate();
 		jp_ThongTinChuyenTau.repaint();
+		
+		jp_TinhTrangToa.revalidate();
+	    jp_TinhTrangToa.repaint();
+	    
+	    scrollPaneTinhTrangToa.revalidate();
+	    scrollPaneTinhTrangToa.repaint();
 	}
 
 	private void suKienTrenToa(Toa_JPanel pToa, Toa toa) {
@@ -796,7 +869,7 @@ public class BanVe_GUI extends JPanel {
 
 		jp_TinhTrangGhe.removeAll();
 
-		int x = 35, y = 35, count = 1;
+		int x = 35, y = 10, count = 1;
 		for (Ghe ghe : toa.getDsGhe()) {
 			ImageIcon containerIcon;
 			if (!ghe.isTrangThai()) {

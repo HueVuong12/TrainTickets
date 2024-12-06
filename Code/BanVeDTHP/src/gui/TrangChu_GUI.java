@@ -108,6 +108,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	
 	private JPanel contentPane1;
 	private JLabel lb_TenNV,lb_MaNV,lb_NgaySinh,lb_CCCD,lb_Email,lb_SDT,lb_ChucVu,userIconLabel1;
+	protected JDialog dialog;
 	
 	public TrangChu_GUI(DangNhap_GUI dangNhap) {
 		this.dangNhap = dangNhap;
@@ -372,7 +373,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	        @Override
 	        public void mouseClicked(MouseEvent e) {
 	        	// Tạo một JDialog
-	            JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(userIconLabel), "Thông tin tài khoản", true);
+	            dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(userIconLabel), "Thông tin tài khoản", true);
 	            dialog.setBounds(300, 300, 720, 388); 
 	            dialog.setLocationRelativeTo(null);
 	            
@@ -511,6 +512,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	                        if (kiemTraVaoCaLam(lbl_ThongTinNV, currentTime)) {
 	                            vaoCa= LocalDateTime.now();;
 	                            click = true;
+	                            dialog.dispose();
 	                        } else {
 	                        	JOptionPane.showMessageDialog(null, "Chưa thới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
 	                        }

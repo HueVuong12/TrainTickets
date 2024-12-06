@@ -537,8 +537,8 @@ public class QuenMatKhau_GUI extends JFrame {
 		btnHuy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DangNhap_GUI dn_GUI= new DangNhap_GUI();
-				dn_GUI.setVisible(true);
 				setVisible(false);
+				dn_GUI.setVisible(true);
 			}
 		});
 	}
