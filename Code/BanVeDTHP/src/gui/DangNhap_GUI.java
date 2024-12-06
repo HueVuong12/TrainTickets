@@ -351,7 +351,7 @@ public class DangNhap_GUI extends JFrame {
 		btnQuenMatKhau.setContentAreaFilled(false);
 		btnQuenMatKhau.setBorderPainted(false);
 		btnQuenMatKhau.setBackground(new Color(0, 153, 255));
-		btnQuenMatKhau.setBounds(221, 442, 477, 38);
+		btnQuenMatKhau.setBounds(234, 443, 464, 37);
 		contentPane.add(btnQuenMatKhau);
 
 		// Màu mặc định và màu khi đưa chuột qua
