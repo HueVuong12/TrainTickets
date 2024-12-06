@@ -391,7 +391,7 @@ public class HoaDon {
 			table.addCell(new Cell(1, 5).add(new Paragraph(df.format(tongThue) + " VND").setFont(fontRegular)
 					.setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
 			table.addCell(new Cell(1, 2).add(new Paragraph("Tổng tiền bằng số: ").setFont(fontBold).setFontSize(10)));
-			table.addCell(new Cell(1, 5).add(new Paragraph(df.format(tongThue) + " VND").setFont(fontRegular)
+			table.addCell(new Cell(1, 5).add(new Paragraph(df.format(tongCoThue) + " VND").setFont(fontRegular)
 					.setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
 			table.addCell(new Cell(1, 2).add(new Paragraph("Tổng tiền bằng chữ: ").setFont(fontBold).setFontSize(10)));
 			table.addCell(new Cell(1, 5).add(new Paragraph(convertToWords((long) tongCoThue).toUpperCase())

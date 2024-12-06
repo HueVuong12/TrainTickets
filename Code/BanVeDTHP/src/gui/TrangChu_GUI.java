@@ -133,6 +133,26 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		ImageIcon originalLogo = new ImageIcon(getClass().getResource("/img/LogoDepHonTrang.png"));
 	    Image scaledLogo = originalLogo.getImage().getScaledInstance(300, 120, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    logoLabel = new JLabel(new ImageIcon(scaledLogo));
+	    logoLabel.addMouseListener(new MouseAdapter() {
+	    	@Override
+			public void mouseEntered(MouseEvent e) {
+	    		logoLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				logoLabel.setCursor(Cursor.getDefaultCursor());
+			}
+
+	    	@Override
+	    	public void mouseClicked(MouseEvent e) {
+	    		ConTent_JPanel jpct = new ConTent_JPanel();
+	    		content.removeAll();
+	    		content.add(jpct);
+				content.revalidate();
+				content.repaint();
+	    	}
+	    });
 	    logoLabel.setBounds(18, 18, 300, 108); // Cập nhật kích thước trên JLabel
 	    title.add(logoLabel);
 	    
@@ -590,7 +610,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		content.setForeground(new Color(255, 255, 255));
 		contentPane.add(content);
 		
-		ConTent_JPanel jpct= new ConTent_JPanel();
+		ConTent_JPanel jpct = new ConTent_JPanel();
 		content.add(jpct);
 	    
 		traCuuKhachHang.addActionListener(new ActionListener() {

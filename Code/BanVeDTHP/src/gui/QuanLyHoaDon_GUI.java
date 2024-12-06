@@ -109,28 +109,22 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		panelTimKiem_Tong.add(lblKhachHang);
 
 		txtMaHD = new RoundedTextField(15);
-		txtMaHD.setForeground(SystemColor.activeCaptionBorder);
 		txtMaHD.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtMaHD.setColumns(10);
 		txtMaHD.setBounds(11, 70, 266, 27);
 		panelTimKiem_Tong.add(txtMaHD);
-//		focusTxtField(txtMaHD, "Theo mã hoá đơn");
 
 		txtNhanVien = new RoundedTextField(15);
-		txtNhanVien.setForeground(SystemColor.activeCaptionBorder);
 		txtNhanVien.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtNhanVien.setColumns(10);
 		txtNhanVien.setBounds(11, 129, 266, 27);
 		panelTimKiem_Tong.add(txtNhanVien);
-//		focusTxtField(txtNhanVien, "Theo nhân viên lập");
 
 		txtKH = new RoundedTextField(15);
-		txtKH.setForeground(SystemColor.activeCaptionBorder);
 		txtKH.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtKH.setBounds(11, 190, 266, 27);
 		panelTimKiem_Tong.add(txtKH);
 		txtKH.setColumns(10);
-//		focusTxtField(txtKH, "Theo tên khách hàng");
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
@@ -157,17 +151,17 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		dateChooserTu.setLayout(null);
 
 		txtTu = new JTextField();
-		txtTu.setForeground(SystemColor.activeCaptionBorder);
 		txtTu.setBounds(0, 0, 245, 27);
 		dateChooserTu.add(txtTu);
 		txtTu.setColumns(10);
-//		focusTxtField(txtTu, "Từ");
+		txtTu.setEditable(false);
 
 		// Thêm sự kiện PropertyChangeListener cho dateChooserTu
 		dateChooserTu.getDateEditor().addPropertyChangeListener("date", evt -> {
 			Date selectedDate = dateChooserTu.getDate();
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				txtTu.setText(dateFormat.format(dateChooserTu.getDate()));
 			} else {
 				txtTu.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
 			}
@@ -181,17 +175,17 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		dateChooserDen.setLayout(null);
 
 		txtDen = new JTextField();
-		txtDen.setForeground(SystemColor.activeCaptionBorder);
 		txtDen.setBounds(0, 0, 245, 27);
 		dateChooserDen.add(txtDen);
 		txtDen.setColumns(10);
-//		focusTxtField(txtDen, "Đến");
+		txtDen.setEditable(false);
 
 		// Thêm sự kiện PropertyChangeListener cho dateChooserDen
 		dateChooserDen.getDateEditor().addPropertyChangeListener("date", evt -> {
 			Date selectedDate = dateChooserDen.getDate();
 			if (selectedDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				txtDen.setText(dateFormat.format(dateChooserDen.getDate()));
 			} else {
 				txtDen.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
 			}

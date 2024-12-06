@@ -80,7 +80,6 @@ public class BanVe_GUI extends JPanel {
 	public JPanel jp_VeMua;
 	private JButton btnTiep;
 	private JButton btnQuayLai;
-	private JLabel lbl_Chieu;
 	protected ChuyenTau chuyenTauCu;
 	public Toa toaCu;
 	protected Rectangle boundsPanel;
@@ -407,11 +406,6 @@ public class BanVe_GUI extends JPanel {
 		jp_DanhSachVe.setBounds(0, 0, 244, 122);
 		jp_Content_GioVe.add(jp_DanhSachVe);
 
-		lbl_Chieu = new JLabel();
-		lbl_Chieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lbl_Chieu.setBounds(93, 2, 51, 23);
-		jp_DanhSachVe.add(lbl_Chieu);
-
 		// JPanel chứa các vé
 		jp_VeMua = new JPanel();
 		jp_VeMua.setBackground(Color.WHITE);
@@ -419,7 +413,7 @@ public class BanVe_GUI extends JPanel {
 
 		// Tạo JScrollPane cho jp_VeMua
 		JScrollPane scrollPane = new JScrollPane(jp_VeMua);
-		scrollPane.setBounds(0, 30, 244, 92);
+		scrollPane.setBounds(0, 0, 244, 122);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -458,9 +452,13 @@ public class BanVe_GUI extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				lbl_Chieu_1.setText("Chiều về: ");
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				lbl_NgayDi_1.setText(sdf.format(chooserNgayDi.getDate()));
+				lbl_NgayDi_1.setText(sdf.format(chooserNgayVe.getDate()));
 				lbl_Ga_1.setText(txt_GaDen.getText() + " - " + txt_GaDi.getText());
 				LocalDate ngayDi = chooserNgayVe.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				
+				jp_ThongTinChuyenTau.removeAll();
+				jp_ThongTinChuyenTau.revalidate();
+				jp_ThongTinChuyenTau.repaint();
 
 				jp_TinhTrangToa.removeAll();
 				jp_TinhTrangToa.revalidate();
@@ -648,16 +646,22 @@ public class BanVe_GUI extends JPanel {
 
 		ArrayList<ChuyenTau> dsTauHienThi = new ArrayList<ChuyenTau>();
 		for (ChuyenTau chuyenTau : dsChuyenTau) {
-			if ((ga_dao.getGaTheoMaGa(chuyenTau.getGaDi().getMaGa()).getDiaChi().equals(gaDi))
+			if ((ga_dao.getGaTheoMaGa(chuyenTau.getGaDi().getMaGa()).getTenGaRaw().equals(gaDi))
 					&& (chuyenTau.getNgayDi().equals(ngayDi))) {
 				for (Ga gaDung : chuyenTau.getTramDung()) {
-					if (gaDen.equals(gaDung.getDiaChi()))
+					if (gaDen.equals(gaDung.getTenGaRaw()))
 						dsTauHienThi.add(chuyenTau);
 				}
-				if (gaDen.equals(ga_dao.getGaTheoMaGa(chuyenTau.getGaDen().getMaGa()).getDiaChi()))
+				if (gaDen.equals(ga_dao.getGaTheoMaGa(chuyenTau.getGaDen().getMaGa()).getTenGaRaw()))
 					dsTauHienThi.add(chuyenTau);
 			}
 		}
+		
+		if (dsTauHienThi.size() < 1) {
+			JOptionPane.showMessageDialog(null, "Không tìm thấy tàu đi cho tuyến của bạn.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		int x = 0, y = 0;
 		for (ChuyenTau chuyenTau : dsTauHienThi) {
 			// Tạo ChuyenTau_JPanel ban đầu với tham số false
@@ -918,7 +922,7 @@ public class BanVe_GUI extends JPanel {
 						LocalTime gioDen = chuyenTau.getGioDen();
 						Ga gaDi = chuyenTau.getGaDi();
 						Ga gaDen = chuyenTau.getTramDung().stream()
-								.filter(ga -> ga.getDiaChi().equals(txt_GaDen.getText())).findFirst()
+								.filter(ga -> ga.getTenGaRaw().equals(txt_GaDen.getText())).findFirst()
 								.orElse(chuyenTau.getGaDen());
 						String hang = toa.getLoaiToa();
 						boolean trangThai = false;
@@ -958,9 +962,9 @@ public class BanVe_GUI extends JPanel {
 
 	private boolean isValidatedTxtField() {
 		if (!txt_GaDi.getText().equals("Nhập ga đi")) {
-			if (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDi.getText())))) {
+			if (dsGa.stream().anyMatch(ga -> (ga.getTenGaRaw().equals(txt_GaDi.getText())))) {
 				if (!txt_GaDen.getText().equals("Nhập ga đến")) {
-					if (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDen.getText())))) {
+					if (dsGa.stream().anyMatch(ga -> (ga.getTenGaRaw().equals(txt_GaDen.getText())))) {
 						if (!txt_GaDi.getText().equals(txt_GaDen.getText())) {
 							if (chooserNgayDi.getDate() != null) {
 								if (rdbtn_KhuHoi.isSelected()) {
@@ -1026,8 +1030,8 @@ public class BanVe_GUI extends JPanel {
 					int count = 0; // Biến đếm số gợi ý đã thêm
 					// Lọc danh sách ga theo từ khóa người dùng nhập
 					for (Ga ga : dsGa) {
-						if (ga.getDiaChi().toLowerCase().startsWith(input.toLowerCase())) {
-							JMenuItem item = new JMenuItem(ga.getDiaChi());
+						if (ga.getTenGaRaw().toLowerCase().startsWith(input.toLowerCase())) {
+							JMenuItem item = new JMenuItem(ga.getTenGaRaw());
 							item.addActionListener(new ActionListener() {
 								@Override
 								public void actionPerformed(ActionEvent e) {

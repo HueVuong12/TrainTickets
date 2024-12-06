@@ -444,7 +444,8 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 				    // Tăng số thứ tự vé cho lần tạo tiếp theo
 				    currentVeNumber++;
 				    
-				    JOptionPane.showMessageDialog(null, "Đặt vé thành công!", "Thông báo", JOptionPane.OK_OPTION);
+				    JOptionPane.showMessageDialog(null,"Đặt vé thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE, 
+			                new ImageIcon(getClass().getResource("/img/299110_check_sign_icon.png")));
 				    
 				    QuanLyVe_Gui quanLyVe_gui = new QuanLyVe_Gui(trangChu);
 					trangChu.content.removeAll();

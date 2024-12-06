@@ -409,16 +409,22 @@ public class DoiVe_GUI extends JPanel {
 
 		ArrayList<ChuyenTau> dsTauHienThi = new ArrayList<ChuyenTau>();
 		for (ChuyenTau chuyenTau : dsChuyenTau) {
-			if ((ga_dao.getGaTheoMaGa(chuyenTau.getGaDi().getMaGa()).getDiaChi().equals(gaDi))
+			if ((ga_dao.getGaTheoMaGa(chuyenTau.getGaDi().getMaGa()).getTenGaRaw().equals(gaDi))
 					&& (chuyenTau.getNgayDi().equals(ngayDi))) {
 				for (Ga gaDung : chuyenTau.getTramDung()) {
-					if (gaDen.equals(gaDung.getDiaChi()))
+					if (gaDen.equals(gaDung.getTenGaRaw()))
 						dsTauHienThi.add(chuyenTau);
 				}
-				if (gaDen.equals(ga_dao.getGaTheoMaGa(chuyenTau.getGaDen().getMaGa()).getDiaChi()))
+				if (gaDen.equals(ga_dao.getGaTheoMaGa(chuyenTau.getGaDen().getMaGa()).getTenGaRaw()))
 					dsTauHienThi.add(chuyenTau);
 			}
 		}
+		
+		if (dsTauHienThi.size() < 1) {
+			JOptionPane.showMessageDialog(null, "Không tìm thấy tàu đi cho tuyến của bạn.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		int x = 0, y = 0;
 		for (ChuyenTau chuyenTau : dsTauHienThi) {
 			// Tạo ChuyenTau_JPanel ban đầu với tham số false
@@ -668,7 +674,7 @@ public class DoiVe_GUI extends JPanel {
 						LocalTime gioDen = chuyenTau.getGioDen();
 						Ga gaDi = chuyenTau.getGaDi();
 						Ga gaDen = chuyenTau.getTramDung().stream()
-								.filter(ga -> ga.getDiaChi().equals(txt_GaDen.getText())).findFirst()
+								.filter(ga -> ga.getTenGaRaw().equals(txt_GaDen.getText())).findFirst()
 								.orElse(chuyenTau.getGaDen());
 						String hang = toa.getLoaiToa();
 						boolean trangThai = false;
@@ -708,9 +714,9 @@ public class DoiVe_GUI extends JPanel {
 
 	private boolean isValidatedTxtField() {
 		if (!txt_GaDi.getText().equals("Nhập ga đi")) {
-			if (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDi.getText())))) {
+			if (dsGa.stream().anyMatch(ga -> (ga.getTenGaRaw().equals(txt_GaDi.getText())))) {
 				if (!txt_GaDen.getText().equals("Nhập ga đến")) {
-					if (dsGa.stream().anyMatch(ga -> (ga.getDiaChi().equals(txt_GaDen.getText())))) {
+					if (dsGa.stream().anyMatch(ga -> (ga.getTenGaRaw().equals(txt_GaDen.getText())))) {
 						if (!txt_GaDi.getText().equals(txt_GaDen.getText())) {
 							if (chooserNgayDi.getDate() != null) {
 								return true;
@@ -769,8 +775,8 @@ public class DoiVe_GUI extends JPanel {
 					int count = 0; // Biến đếm số gợi ý đã thêm
 					// Lọc danh sách ga theo từ khóa người dùng nhập
 					for (Ga ga : dsGa) {
-						if (ga.getDiaChi().toLowerCase().startsWith(input.toLowerCase())) {
-							JMenuItem item = new JMenuItem(ga.getDiaChi());
+						if (ga.getTenGaRaw().toLowerCase().startsWith(input.toLowerCase())) {
+							JMenuItem item = new JMenuItem(ga.getTenGaRaw());
 							item.addActionListener(new ActionListener() {
 								@Override
 								public void actionPerformed(ActionEvent e) {

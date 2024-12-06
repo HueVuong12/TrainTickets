@@ -57,7 +57,7 @@ public class NhanVien {
 		if(tenNV.matches(regexTenNV))
 			this.tenNV = tenNV;
 		else
-			throw new IllegalArgumentException("Tên nhân viên không hợp lê!");
+			throw new IllegalArgumentException("Tên nhân viên không hợp lệ!");
 	}
 
 	public LocalDate getNgaySinh() {
