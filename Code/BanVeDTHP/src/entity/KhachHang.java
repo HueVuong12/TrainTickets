@@ -39,7 +39,7 @@ public class KhachHang {
 	}
 
 	public void setTenKH(String tenKH) {
-		String regexTenKH="^[A-Z][a-z\\p{L}]*([ ]+[A-Z][a-z\\p{L}]*)*$";
+		String regexTenKH = "^[A-ZÀ-Ỵ][a-zà-ỹ\\p{L}]*([ ]+[A-ZÀ-Ỵ][a-zà-ỹ\\p{L}]*)*$";
 		if(tenKH.matches(regexTenKH))
 			this.tenKH = tenKH;
 		else

@@ -26,7 +26,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -101,6 +100,8 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	public LocalDateTime vaoCa;
 	public LocalDateTime ketCa;
 	private int click = 0;
+	private Color hoverColor = new Color(0, 102, 204); // Màu khi di chuột qua
+	private Color defaultColor = SystemColor.menu; // Màu mặc định
 	
 	private JPanel contentPane1;
 	private JLabel lb_TenNV,lb_MaNV,lb_NgaySinh,lb_CCCD,lb_Email,lb_SDT,lb_ChucVu,userIconLabel1;
@@ -291,14 +292,37 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    jp_nhanVien.setLayout(null);
 	    userIconLabel = new JLabel(new ImageIcon(scaledUser));
 	    userIconLabel.setBounds(96 ,10 , 73 ,56); // Cập nhật kích thước trên JLabel
+	    userIconLabel.setOpaque(true);
+	    userIconLabel.setBackground(defaultColor);
 	    jp_nhanVien.add(userIconLabel);
 	    
+		// Thêm sự kiện cho nút
+	    userIconLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+	    	@Override
+	    	public void mouseEntered(java.awt.event.MouseEvent evt) {
+	    		userIconLabel.setBackground(hoverColor); // Thay đổi màu nền khi đưa chuột vào
+	    		userIconLabel.repaint(); // Vẽ lại nút
+
+	    		// Đổi con trỏ chuột thành kiểu tay chỉ
+	    		userIconLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	    	}
+
+	    	@Override
+	    	public void mouseExited(java.awt.event.MouseEvent evt) {
+	    		userIconLabel.setBackground(defaultColor); // Trở về màu mặc định khi chuột ra
+	    		userIconLabel.repaint(); // Vẽ lại nút
+
+	    		// Trả lại con trỏ chuột về mặc định
+	    		userIconLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	    	}
+	    });
 	    userIconLabel.addMouseListener(new MouseAdapter() {
 	        @Override
 	        public void mouseClicked(MouseEvent e) {
 	        	// Tạo một JDialog
 	            JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(userIconLabel), "Thông tin tài khoản", true);
 	            dialog.setBounds(300, 300, 720, 388); 
+	            dialog.setLocationRelativeTo(null);
 	            
 	            contentPane1 = new JPanel();
 	    		contentPane1.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -486,6 +510,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	        }
 	    });
 	    
+	    
 	    lbl_ThongTinNV = new JLabel();
 	    lbl_ThongTinNV.setText(nhanVien_DAO.getNhanVienTheoMaNV((taiKhoan_DAO.getTaiKhoanTheoMaTK(dangNhap.getTaiKhoanLogined().getMaTaiKhoan()))
 	    															.getNhanVien().getMaNV()).getTenNV());
@@ -506,93 +531,35 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    exitIconLabel.setBounds(111 ,153 , 40 ,37); // Cập nhật kích thước trên JLabel
 	    jp_nhanVien.add(exitIconLabel);
 	    
-//	    btn_VaoCa = new JButton("Vào ca");
-//	    btn_VaoCa.setBounds(145, 10, 85, 25);
-//	    jp_nhanVien.add(btn_VaoCa);
-//	    btn_VaoCa.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				// TODO Auto-generated method stub
-//				// Hiển thị hộp thoại xác nhận sau khi mở file
-//				LocalDateTime currentTime = LocalDateTime.now();
-//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//				String time= currentTime.format(formatter);
-//                int confirm = JOptionPane.showConfirmDialog(
-//                    null, 
-//                    "Bắt đầu ca làm :" + time, 
-//                    "Xác nhận", 
-//                    JOptionPane.YES_NO_OPTION
-//                );
-//
-//                // Xóa file nếu người dùng chọn "Yes"
-//                if (confirm == JOptionPane.YES_OPTION) {
-//                    if (kiemTraVaoCaLam(lbl_ThongTinNV, currentTime)) {
-//                        vaoCa= LocalDateTime.now();;
-//                        click++;
-//                    } else {
-//                    	JOptionPane.showMessageDialog(null, "Chưa thới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
-//                    }
-//                }else {
-//                	return;
-//                }
-//			}
-//		});
-//	    
-//	    btn_KetCa = new JButton("Kết ca");
-//	    btn_KetCa.setBounds(145, 45, 85, 25);
-//	    btn_KetCa.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				// TODO Auto-generated method stub
-//				LocalDateTime currentTime = LocalDateTime.now();
-//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//				String time= currentTime.format(formatter);
-//                int confirm = JOptionPane.showConfirmDialog(
-//                    null, 
-//                    "Kết thúc ca làm :" + time, 
-//                    "Xác nhận", 
-//                    JOptionPane.YES_NO_OPTION
-//                );
-//
-//                // Xóa file nếu người dùng chọn "Yes"
-//                if (confirm == JOptionPane.YES_OPTION) {
-//                    if (kiemTraKetCaLam(lbl_ThongTinNV, currentTime)) {
-//                    	ketCa= LocalDateTime.now();
-//                    	click++;
-//                    } else {
-//                    	JOptionPane.showMessageDialog(null, "Chưa thới thời gian kết thúc ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE); 
-//                    }
-//                }else {
-//                	return;
-//                }
-//			}
-//		});
-//	    jp_nhanVien.add(btn_KetCa);
-	    
 	    exitIconLabel.addMouseListener(new MouseAdapter() {
 	    	public void mouseClicked(MouseEvent e) {
-	    		if(click != 2) {
-		    		int confirm = JOptionPane.showConfirmDialog(
-	    					null, 
-	    					"Ban xác nhận kết thúc ca làm ?", 
-	    					"Xác nhận", 
-	    					JOptionPane.YES_NO_OPTION
-	    					);
-
-	    			// Xóa file nếu người dùng chọn "Yes"
-	    			if (confirm == JOptionPane.YES_OPTION) {
-	    				LocalDateTime currentTime = LocalDateTime.now();
-	    				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	    				String time= currentTime.format(formatter);
-	    				ketCa= LocalDateTime.now();
-	    				JOptionPane.showMessageDialog(null, "Kết thúc ca làm "+time, "Thông báo",confirm); 
+	    		if(click > 0) {
+	    			if(click == 1) {
+			    		int confirm = JOptionPane.showConfirmDialog(
+		    					null, 
+		    					"Ban xác nhận kết thúc ca làm ?", 
+		    					"Xác nhận", 
+		    					JOptionPane.YES_NO_OPTION
+		    					);
+	
+		    			// Xóa file nếu người dùng chọn "Yes"
+		    			if (confirm == JOptionPane.YES_OPTION) {
+		    				LocalDateTime currentTime = LocalDateTime.now();
+		    				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		    				String time= currentTime.format(formatter);
+		    				ketCa= LocalDateTime.now();
+		    				JOptionPane.showMessageDialog(null, "Kết thúc ca làm "+time, "Thông báo",confirm); 
+		    				DangNhap_GUI dn= new DangNhap_GUI();
+				    		TrangChu_GUI.this.setVisible(false);
+				    		dn.setVisible(true);
+		    			}else {
+		    				return;
+		    			}
+	    			}
+	    			if(click ==2) {
 	    				DangNhap_GUI dn= new DangNhap_GUI();
 			    		TrangChu_GUI.this.setVisible(false);
 			    		dn.setVisible(true);
-	    			}else {
-	    				return;
 	    			}
 	    		}else {
 	    			DangNhap_GUI dn= new DangNhap_GUI();
@@ -643,19 +610,16 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 			}
 		});
 		traCuuNV.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if(click == 1) {
-					TraCuuNhanVien_GUI tcnv = new TraCuuNhanVien_GUI(TrangChu_GUI.this);
-					content.removeAll();
-					content.add(tcnv); // Sử dụng layout thích hợp
-					content.revalidate();
-					content.repaint();
-				}else {
-					JOptionPane.showMessageDialog(null, "Vui lòng nhấn vào ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE);
-				}
+				TraCuuNhanVien_GUI tcnv = new TraCuuNhanVien_GUI(TrangChu_GUI.this);
+				content.removeAll();
+				content.add(tcnv); // Sử dụng layout thích hợp
+				content.revalidate();
+				content.repaint();
+
 			}
 		});
 		traCuuVCT.addActionListener(new ActionListener() {
@@ -663,15 +627,11 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if(click == 1) {
 					TraCuuChuyenTauGiaVe_Gui tcvct = new TraCuuChuyenTauGiaVe_Gui(TrangChu_GUI.this);
 					content.removeAll();;
 					content.add(tcvct); // Sử dụng layout thích hợp
 					content.revalidate();
 					content.repaint();
-				}else {
-					JOptionPane.showMessageDialog(null, "Vui lòng nhấn vào ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE);
-				}
 			}
 		});
 		datVe.addActionListener(new ActionListener() {
@@ -698,43 +658,33 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				tk= dangNhap.taiKhoanLogined;
-				if(click == 1) {
-					if(tk.getPhanQuyen() ==1) {
-						ThongKe_GUI jptkct= new ThongKe_GUI(TrangChu_GUI.this);
-						jptkct.hienThiThongKeChuyenTau();
-						content.removeAll();
-						content.add(jptkct); // Sử dụng layout thích hợp
-						content.revalidate();
-						content.repaint();
-					}else {
-						JOptionPane.showMessageDialog(TrangChu_GUI.this,"Tài khoản của bạn không có quyền truy cập");
-					}
+				if(tk.getPhanQuyen() ==1) {
+					ThongKe_GUI jptkct= new ThongKe_GUI(TrangChu_GUI.this);
+					jptkct.hienThiThongKeChuyenTau();
+					content.removeAll();
+					content.add(jptkct); // Sử dụng layout thích hợp
+					content.revalidate();
+					content.repaint();
 				}else {
-					JOptionPane.showMessageDialog(null, "Vui lòng nhấn vào ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(TrangChu_GUI.this,"Tài khoản của bạn không có quyền truy cập");
 				}
 			}
 		});
 		thongKeDT.addActionListener(new ActionListener() {
-
 			private TaiKhoan tk;
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub 
 				tk= dangNhap.taiKhoanLogined;
-				if(click == 1) {
-					if(tk.getPhanQuyen() ==1) {
-						ThongKe_GUI jptkct= new ThongKe_GUI(TrangChu_GUI.this);
-						jptkct.hienThiThongKeDoanhThu();;
-						content.removeAll();
-						content.add(jptkct); // Sử dụng layout thích hợp
-						content.revalidate();
-						content.repaint();
-					}else {
-						JOptionPane.showMessageDialog(TrangChu_GUI.this,"Tài khoản của bạn không có quyền truy cập");
-					}
+				// TODO Auto-generated method stub 
+				if(tk.getPhanQuyen() == 1) {
+					ThongKe_GUI jptkct= new ThongKe_GUI(TrangChu_GUI.this);
+					jptkct.hienThiThongKeDoanhThu();;
+					content.removeAll();
+					content.add(jptkct); // Sử dụng layout thích hợp
+					content.revalidate();
+					content.repaint();
 				}else {
-					JOptionPane.showMessageDialog(null, "Vui lòng nhấn vào ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(TrangChu_GUI.this,"Tài khoản của bạn không có quyền truy cập");
 				}
 			}
 		});
@@ -788,15 +738,11 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 			@Override
 			public void menuSelected(MenuEvent e) {
 				// TODO Auto-generated method stub
-//				if(click == 1) {
 					QuanLyNhanVien_GUI jpnv= new QuanLyNhanVien_GUI(TrangChu_GUI.this);
 					content.removeAll();
 					content.add(jpnv); // Sử dụng layout thích hợp
 					content.revalidate();
 					content.repaint();
-//				}else {
-//					JOptionPane.showMessageDialog(null, "Vui lòng nhấn vào ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE);
-//				}
 			}
 
 			@Override

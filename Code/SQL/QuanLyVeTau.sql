@@ -153,13 +153,16 @@ INSERT INTO Ca (maCa, tenCa, thoiGianBatDau, thoiGianKetThuc) VALUES
 -- Thêm 3 nhân viên vào bảng NhanVien
 INSERT INTO NhanVien (maNV, tenNV, ngaySinh, gioiTinh, ca, cccd, email, sdt, trangThai, chucVu) VALUES
 ('NV001', N'Lê Tấn Phong', '2004-03-30', 0, 'CA01', '049204013502', 'letanphong400@gmail.com', '0919128639', 1, 1),
-('NV002', N'Vương Ngọc Huệ', '2003-08-12', 1, 'CA02', '049203000000', 'ngochue12@gmail.com', '0987654321', 1, 2);
+('NV002', N'Vương Ngọc Huệ', '2003-08-12', 1, 'CA02', '049203000000', 'ngochue12@gmail.com', '0987654321', 1, 1),
+('NV003',N'Nguyễn Danh Minh Toàn','2004-12-14',0,'CA02','079204033973','toan@gmail.com','0765593697',1,2),
+('NV004',N'Trần Quốc Đảm','2004-12-06',0,'CA03','079000000000','damtran@gmail.com','0760000000',1,2);
 
 -- Thêm 2 tài khoản vào bảng TaiKhoan
 INSERT INTO TaiKhoan (maTaiKhoan, matKhau, phanQuyen, nhanVien) VALUES
-('TKQL002','$2a$10$yR9lmuZC1DDjHLft/e.KFeDPHaXBFpy0b.IREpjkdsdqG1sUsniXi',1,'NV001'),
-('TKQL001', 'password1', 1, 'NV001'), 
-('TKNV001', 'password2', 2, 'NV002');
+('TKNV001','$2a$10$srI9GG.XfevMMh/fMzoHkeJe9Je74LBntHxb39pKfbACdcNahuzMC',2,'NV003'),
+('TKNV002', '$2a$10$.WeVGlVgcmyuAHU7X4PAGuJeDG9Ayh8hcHzX0inxIFWHGjzmi56vK', 2, 'NV004'), 
+('TKQL001', '$2a$10$TRm5dVhaJWRHb79qS8HsseY6IJMi9h7v1QkRnLrJv11rgJPe/a3Ha', 1, 'NV001'),
+('TKQL002','$2a$10$vgzYlKNkHWLrktVahbnrge5.Zj41Dn00JGrFnJwNF5i.6Nw/0ZgAG',1,'NV002');
 
 -- Thêm 35 ga vào bảng Ga
 INSERT INTO Ga (maGa, tenGa, diaChi, chiSoKm, trangThai) VALUES
