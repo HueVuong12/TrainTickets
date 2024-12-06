@@ -75,6 +75,10 @@ public class Ga {
 	public void setTrangThai(boolean trangThai) {
 		this.trangThai = trangThai;
 	}
+	
+	public String getTenGaRaw() {
+		return tenGa.substring(3);
+	}
 
 	@Override
 	public int hashCode() {

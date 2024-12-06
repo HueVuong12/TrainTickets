@@ -497,8 +497,8 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 					int count = 0; // Biến đếm số gợi ý đã thêm
 					// Lọc danh sách ga theo từ khóa người dùng nhập
 					for (Ga ga : danhSachGa) {
-						if (ga.getDiaChi().toLowerCase().startsWith(input.toLowerCase())) {
-							JMenuItem item = new JMenuItem(ga.getDiaChi());
+						if (ga.getTenGaRaw().toLowerCase().startsWith(input.toLowerCase())) {
+							JMenuItem item = new JMenuItem(ga.getTenGaRaw());
 							item.addActionListener(new ActionListener() {
 								@Override
 								public void actionPerformed(ActionEvent e) {
@@ -580,8 +580,8 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 		ChuyenTau ct = dsCT.getChuyenTauTheoMaTau(maTau);
 		lbl_MaTau.setText(ct.getMaTau());
-		lbl_GaDi.setText(ct.getGaDi().getDiaChi());
-		lbl_GaDen.setText(ct.getGaDen().getDiaChi());
+		lbl_GaDi.setText(ct.getGaDi().getTenGaRaw());
+		lbl_GaDen.setText(ct.getGaDen().getTenGaRaw());
 		lbl_NgayDi.setText(ct.getNgayDi().format(formatter));  // Đảm bảo ct.getNgayDi() trả về LocalDate
 		lbl_NgayDen.setText(ct.getNgayDen().format(formatter)); // Đảm bảo ct.getNgayDen() trả về LocalDate
 		lbl_GioDi.setText(ct.getGioDi().format(timeFormatter));

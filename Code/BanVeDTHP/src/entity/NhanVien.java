@@ -53,11 +53,11 @@ public class NhanVien {
 	}
 
 	public void setTenNV(String tenNV) {
-		String regexTenNV="^[A-Z][a-z\\p{L}]*([ ]+[A-Z][a-z\\p{L}]*)*$";
+		String regexTenNV = "^[A-ZÀ-Ỵ][a-zà-ỹ\\p{L}]*([ ]+[A-ZÀ-Ỵ][a-zà-ỹ\\p{L}]*)*$";
 		if(tenNV.matches(regexTenNV))
 			this.tenNV = tenNV;
 		else
-			throw new IllegalArgumentException("Tên nhân viên không hợp lê!");
+			throw new IllegalArgumentException("Tên nhân viên không hợp lệ!");
 	}
 
 	public LocalDate getNgaySinh() {
