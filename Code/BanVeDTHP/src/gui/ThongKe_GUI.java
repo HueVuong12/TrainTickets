@@ -54,7 +54,6 @@ import components.ConTent_JPanel;
 import components.RoundedButton;
 import dao.Ca_DAO;
 import dao.ChiTietHoaDon_DAO;
-import dao.ChuyenTau_DAO;
 import dao.HoaDon_DAO;
 import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
@@ -121,7 +120,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	private Ve_DAO dsVe = new Ve_DAO();
 	private DefaultCategoryDataset dataset;
 	private JPanel jp_thongKe;
-	private ChuyenTau_DAO dsCT = new ChuyenTau_DAO();
 	private JDateChooser dateChooser_TKCT_batDau;
 	private JDateChooser dateChooser_TKCT_ketThuc;
 	private String tkct_ngayBatDau;
@@ -545,6 +543,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				}
 				// Duyệt qua từng hóa đơn và kiểm tra thời gian
 				for (HoaDon hd : listHD) {
+					if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+						 continue; // Bỏ qua hóa đơn đã hoàn tiền
+					}
 					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 					if (cthd != null) {
 						ArrayList<Ve> dsVeTheoChiTiet = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
@@ -704,7 +705,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 					if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 						continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
 					}
-
+					if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+						 continue; // Bỏ qua hóa đơn đã hoàn tiền
+					}
 					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 					if (cthd != null) {
 						data_TheoCa = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
@@ -810,6 +813,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				}
 				// Duyệt qua từng hóa đơn và kiểm tra thời gian
 				for (HoaDon hd : listHD) {
+					if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+						 continue; // Bỏ qua hóa đơn đã hoàn tiền
+					}
 					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 					if (cthd != null) {
 						ArrayList<Ve> dsVeTheoChiTiet = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
@@ -910,7 +916,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 				continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
 			}
-
+			if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+				continue; // Bỏ qua hóa đơn đã hoàn tiền
+			}
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 			if (cthd != null) {
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
@@ -961,7 +969,11 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			int sltv=0;
 			// Duyệt qua từng hóa đơn
 			for (HoaDon hd : listHD) {
+				if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+					continue; // Bỏ qua hóa đơn đã hoàn tiền
+				}
 				ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
+				
 				// Kiểm tra cthd có null hay không
 				if (cthd != null) {
 					ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
@@ -1007,6 +1019,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			int sltv=0;
 			// Duyệt qua từng hóa đơn
 			for (HoaDon hd : listHD) {
+				if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+					continue; // Bỏ qua hóa đơn đã hoàn tiền
+				}
 				ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 				// Kiểm tra cthd có null hay không
 				if (cthd != null) {
@@ -1151,7 +1166,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 				continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
 			}
-
+			if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+				 continue; // Bỏ qua hóa đơn đã hoàn tiền
+			}
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 			if (cthd != null) {
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
@@ -1223,7 +1240,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 				continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
 			}
-
+			if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+				 continue; // Bỏ qua hóa đơn đã hoàn tiền
+			}
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 			if (cthd != null) {
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
@@ -1300,7 +1319,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 	        if (thoiGianHoaDon.isBefore(thoiGianBatDauCa) || thoiGianHoaDon.isAfter(thoiGianKetThucCa)) {
 	            continue; // Bỏ qua hóa đơn ngoài khoảng thời gian ca
 	        }
-
+	        if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+				 continue; // Bỏ qua hóa đơn đã hoàn tiền
+			}
 	        ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 	        if (cthd != null) {
 	            ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
@@ -1345,6 +1366,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoNgayLapHD(formattedNgayBatDau, formattedNgayKetThuc);
 		// Duyệt qua từng hóa đơn
 		for (HoaDon hd : listHD) {
+			if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+				 continue; // Bỏ qua hóa đơn đã hoàn tiền
+			}
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 
 			// Kiểm tra cthd có null hay không
@@ -1377,36 +1401,26 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		dsHD.reset();
 		dsVe.reset();
 		dsCTHD.reset();
-		dsCT.reset();
 		SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String formattedNgayBatDau = sqlDateFormat.format(dateChooser_TKCT_batDau.getDate());
 		String formattedNgayKetThuc = sqlDateFormat.format(dateChooser_TKCT_ketThuc.getDate());
-
+	    
 		Map<String, Float> doanhThuTheoChuyenTau = new HashMap<>();
 		ArrayList<HoaDon> listHD = dsHD.getHoaDonTheoNgayLapHD(formattedNgayBatDau, formattedNgayKetThuc);
 
 		// Duyệt qua từng hóa đơn
 		for (HoaDon hd : listHD) {
+			if(hd.getDaHoanTien() && hd.getDaHoanVe()) {
+				 continue; // Bỏ qua hóa đơn đã hoàn tiền
+			}
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 
 			// Kiểm tra cthd có null hay không
 			if (cthd != null) {
-				float doanhThu = cthd.tinhTien(); // Tính doanh thu từ cthd
-
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
-
-				// Sử dụng một Set để theo dõi mã chuyến tàu đã được xử lý
-				Set<String> processedChuyenTau = new HashSet<>();
-
 				for (Ve ve : listVe) {
 					String chuyenTau = ve.getChuyenTau().getMaTau(); // Lấy mã chuyến tàu
-
-					// Kiểm tra xem mã chuyến tàu đã được xử lý chưa
-					if (!processedChuyenTau.contains(chuyenTau)) {
-						// Cộng doanh thu vào chuyến tàu tương ứng
-						doanhThuTheoChuyenTau.put(chuyenTau, doanhThuTheoChuyenTau.getOrDefault(chuyenTau, 0f) + doanhThu);
-						processedChuyenTau.add(chuyenTau); // Đánh dấu là đã xử lý
-					}
+					doanhThuTheoChuyenTau.put(chuyenTau, doanhThuTheoChuyenTau.getOrDefault(chuyenTau, 0f) + ve.tinhGiaVe());
 				}
 			}
 		}
@@ -1415,7 +1429,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		for (Map.Entry<String, Float> entry : doanhThuTheoChuyenTau.entrySet()) {
 			String chuyenTau = entry.getKey();
 			Float doanhThu = entry.getValue();
-
 			// Thêm dữ liệu vào dataset
 			dataset.addValue(doanhThu, "Doanh Thu", chuyenTau);
 		}
@@ -1423,27 +1436,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		return dataset;
 	}
 
-
-//	//Hàm truy vấn dữ liệu theo mẫu
-//	private DefaultPieDataset createDatasetTKTheoCa() {
-//	    DefaultPieDataset dataset = new DefaultPieDataset();
-//	    
-//	    // Thêm dữ liệu vào dataset
-//	    dataset.setValue("Ghế mềm", 40); // Giá trị cho đối tượng 1
-//	    dataset.setValue("Giường nằm", 30); // Giá trị cho đối tượng 2
-//	    dataset.setValue("VIP", 20); // Giá trị cho đối tượng 3
-//
-//	    return dataset;
-//	}
-//
-//	private DefaultCategoryDataset createDataset() {
-//		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-//		// Add data to the dataset
-//		dataset.addValue(0.4, "Ghế mềm", "1");
-//		dataset.addValue(0.5, "Giường nằm", "2");
-//		dataset.addValue(0.9, "VIP", "3");
-//		return dataset;
-//	}
 	
 	//Hàm định dạng tiền việt
 	public String dinhDangTienTe(double soTien) {
@@ -1837,7 +1829,6 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		    if (maTauTrung.contains(ve.getMaVe())) {
 		        continue; // Bỏ qua nếu trùng mã vé
 		    }
-		    
 		    // Thêm mã vé vào Set
 		    maTauTrung.add(ve.getMaVe());
 		    doanhThuTheoTau.put(maTau, doanhThuTheoTau.getOrDefault(maTau, 0f) + ve.tinhGiaVe());
