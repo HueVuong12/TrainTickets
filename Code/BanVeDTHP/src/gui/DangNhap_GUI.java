@@ -76,8 +76,8 @@ public class DangNhap_GUI extends JFrame {
 
 				// Vẽ hai đường kẻ màu trắng
 				g.setColor(Color.WHITE); // Đặt màu cho đường kẻ
-				g.drawLine(213, 295, 693, 295); // Đường kẻ thứ nhất
-				g.drawLine(213, 355, 693, 355); // Đường kẻ thứ hai
+				g.drawLine(213, 320, 693, 320); // Đường kẻ thứ nhất
+				g.drawLine(213, 380, 693, 380); // Đường kẻ thứ hai
 			}
 		};
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -106,19 +106,19 @@ public class DangNhap_GUI extends JFrame {
 		ImageIcon originalUserIcon = new ImageIcon(getClass().getResource("/img/user-icon.png"));
 		Image scaledUserIcon = originalUserIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH);
 		JLabel userIconLabel = new JLabel(new ImageIcon(scaledUserIcon));
-		userIconLabel.setBounds(234, 251, 37, 37); // Cập nhật kích thước trên JLabel
+		userIconLabel.setBounds(236, 275, 37, 37); // Cập nhật kích thước trên JLabel
 		contentPane.add(userIconLabel);
 
 		// Password Icon
 		ImageIcon originalPassIcon = new ImageIcon(getClass().getResource("/img/password-icon.png"));
 		Image scaledPassIcon = originalPassIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 		JLabel passIconLabel = new JLabel(new ImageIcon(scaledPassIcon));
-		passIconLabel.setBounds(234, 306, 40, 40); // Cập nhật kích thước trên JLabel
+		passIconLabel.setBounds(236, 330, 40, 40); // Cập nhật kích thước trên JLabel
 		contentPane.add(passIconLabel);
 
 		// Tên người dùng
 		txtUser = new JTextField("Mã đăng nhập");
-		txtUser.setBounds(284, 242, 409, 54);
+		txtUser.setBounds(286, 266, 409, 54);
 		txtUser.setFont(new Font("Arial", Font.PLAIN, 24));
 		txtUser.setBorder(new MatteBorder(0, 0, 0, 0, Color.WHITE));
 		txtUser.setForeground(Color.GRAY);
@@ -147,7 +147,7 @@ public class DangNhap_GUI extends JFrame {
 
 		// Mật khẩu
 		txtPassword = new JPasswordField("Mật khẩu");
-		txtPassword.setBounds(284, 306, 409, 54);
+		txtPassword.setBounds(286, 330, 409, 54);
 		txtPassword.setFont(new Font("Arial", Font.PLAIN, 24));
 		txtPassword.setForeground(Color.GRAY);
 		txtPassword.setBorder(new MatteBorder(0, 0, 0, 0, Color.WHITE));
@@ -281,15 +281,15 @@ public class DangNhap_GUI extends JFrame {
 			}
 		});
 
-		btnLogin.setBounds(221, 382, 472, 38);
+		btnLogin.setBounds(222, 413, 472, 38);
 		contentPane.add(btnLogin);
 
 		// Liên kết liên hệ với quản lý
-		JLabel lblContact = new JLabel("Liên hệ với người quản lý?");
-		lblContact.setBounds(467, 492, 226, 30);
-		lblContact.setForeground(Color.WHITE);
-		lblContact.setFont(new Font("Arial", Font.PLAIN, 18));
-		contentPane.add(lblContact);
+		JLabel lblQuenMK = new JLabel("Quên mật khẩu ?");
+		lblQuenMK.setBounds(550, 461, 144, 30);
+		lblQuenMK.setForeground(Color.WHITE);
+		lblQuenMK.setFont(new Font("Arial", Font.PLAIN, 18));
+		contentPane.add(lblQuenMK);
 
 		// Footer
 		JLabel lblFooter = new JLabel("ĐTHP | Group 5 | DHKTPM18ATT - 422000422703");
@@ -298,110 +298,47 @@ public class DangNhap_GUI extends JFrame {
 		lblFooter.setFont(new Font("Arial", Font.PLAIN, 13));
 		contentPane.add(lblFooter);
 		
-		btnQuenMatKhau = new JButton("Quên mật khẩu") {
-			@Override
-			protected void paintComponent(Graphics g) {
-				Graphics2D g2d = (Graphics2D) g.create();
-				// Đặt màu nền
-				g2d.setColor(getBackground());
-				// Vẽ hình chữ nhật bo góc
-				g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-				g2d.setColor(getForeground()); // Đặt màu chữ
-				g2d.drawString(getText(), (getWidth() -	 g2d.getFontMetrics().stringWidth(getText())) / 2,
-						(getHeight() + g2d.getFontMetrics().getAscent()) / 2 - 2);
-				g2d.dispose(); // Giải phóng tài nguyên Graphics
-			}
-
-			@Override
-			public boolean contains(int x, int y) {
-				// Kiểm tra nếu x, y nằm trong vùng bo góc
-				return new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20).contains(x, y);
-			}
-		};
-		btnQuenMatKhau.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				QuenMatKhau_GUI qmk_GUI= new QuenMatKhau_GUI();
-				qmk_GUI.setVisible(true);
-				setVisible(false);
-			}
-		});
-		// Thêm sự kiện cho nút
-		btnQuenMatKhau.addMouseListener(new java.awt.event.MouseAdapter() {
-			@Override
-			public void mouseEntered(java.awt.event.MouseEvent evt) {
-				btnQuenMatKhau.setBackground(hoverColor); // Thay đổi màu nền khi đưa chuột vào
-				btnQuenMatKhau.repaint(); // Vẽ lại nút
-
-				// Đổi con trỏ chuột thành kiểu tay chỉ
-				btnQuenMatKhau.setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-
-			@Override
-			public void mouseExited(java.awt.event.MouseEvent evt) {
-				btnQuenMatKhau.setBackground(defaultColor); // Trở về màu mặc định khi chuột ra
-				btnQuenMatKhau.repaint(); // Vẽ lại nút
-
-				// Trả lại con trỏ chuột về mặc định
-				btnQuenMatKhau.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			}
-		});
-		btnQuenMatKhau.setForeground(Color.WHITE);
-		btnQuenMatKhau.setFont(new Font("Arial", Font.BOLD, 20));
-		btnQuenMatKhau.setFocusPainted(false);
-		btnQuenMatKhau.setContentAreaFilled(false);
-		btnQuenMatKhau.setBorderPainted(false);
-		btnQuenMatKhau.setBackground(new Color(0, 153, 255));
-		btnQuenMatKhau.setBounds(234, 443, 464, 37);
-		contentPane.add(btnQuenMatKhau);
 
 		// Màu mặc định và màu khi đưa chuột qua
 		Color defaultLabelColor = Color.WHITE;
 		Color hoverLabelColor = new Color(0, 153, 255);
 
 		// Lấy font mặc định
-		Font originalFont = lblContact.getFont();
+		Font originalFont = lblQuenMK.getFont();
 
 		// Thêm sự kiện cho lblContact
-		lblContact.addMouseListener(new java.awt.event.MouseAdapter() {
+		lblQuenMK.addMouseListener(new java.awt.event.MouseAdapter() {
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
 			public void mouseEntered(java.awt.event.MouseEvent evt) {
-				lblContact.setForeground(hoverLabelColor); // Thay đổi màu khi đưa chuột vào
+				lblQuenMK.setForeground(hoverLabelColor); // Thay đổi màu khi đưa chuột vào
 
 				// Gạch chân văn bản
-				Font font = lblContact.getFont();
+				Font font = lblQuenMK.getFont();
 				Map attributes = font.getAttributes();
 				attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-				lblContact.setFont(font.deriveFont(attributes)); // Gạch chân chữ
+				lblQuenMK.setFont(font.deriveFont(attributes)); // Gạch chân chữ
 
 				// Đổi con trỏ chuột thành kiểu tay chỉ
-				lblContact.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				lblQuenMK.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 
 			@Override
 			public void mouseExited(java.awt.event.MouseEvent evt) {
-				lblContact.setForeground(defaultLabelColor); // Trở về màu mặc định khi chuột ra
+				lblQuenMK.setForeground(defaultLabelColor); // Trở về màu mặc định khi chuột ra
 
 				// Trả lại font gốc (không gạch chân)
-				lblContact.setFont(originalFont);
+				lblQuenMK.setFont(originalFont);
 
 				// Trả lại con trỏ chuột về mặc định
-				lblContact.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				lblQuenMK.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				// Thông tin quản lý
-				String tenQuanLy = "Lê Tấn Phong";
-				String emailQuanLy = "letanphong400@gmail.com";
-				String soDienThoaiQuanLy = "0919 128 639";
-
-				// Hiển thị JOptionPane chứa thông tin quản lý
-				JOptionPane
-						.showMessageDialog(
-								null, "Tên quản lý: " + tenQuanLy + "\nEmail: " + emailQuanLy
-										+ "\nSố điện thoại (Zalo): " + soDienThoaiQuanLy,
-								"Thông tin quản lý", JOptionPane.INFORMATION_MESSAGE);
+				QuenMatKhau_GUI qmk_GUI= new QuenMatKhau_GUI();
+				qmk_GUI.setVisible(true);
+				setVisible(false);
 			}
 		});
 
