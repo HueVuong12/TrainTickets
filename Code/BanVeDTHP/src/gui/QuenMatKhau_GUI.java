@@ -53,6 +53,7 @@ public class QuenMatKhau_GUI extends JFrame {
 	private Color hoverColor = new Color(0, 102, 204); // Màu khi di chuột qua
 	private Color defaultColor = new Color(0, 153, 255); // Màu mặc định
 	private JButton btnHuy;
+	private TaiKhoan_DAO dsTK = new TaiKhoan_DAO();
 	/**
 	 * Create the frame.
 	 */
@@ -390,90 +391,83 @@ public class QuenMatKhau_GUI extends JFrame {
 					JOptionPane.showMessageDialog(null, "Tài khoản không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);					
 					return;
 				}
-				TaiKhoan_DAO dsTK = new TaiKhoan_DAO();
 				ArrayList<TaiKhoan> list = dsTK.docTuBang(); // Đọc danh sách tài khoản từ cơ sở dữ liệu
 				String user = txtUser.getText(); // Lấy tên người dùng
 				String std = txtPhone.getText(); // Lấy số điện thoại
 				String cccd = txtCCCD.getText(); // Lây CCCD
 				String pass = new String(txtPassword.getPassword()); // Lấy mật khẩu
 				String rePass = new String(txtRePassword.getPassword()); // Lấy mật khẩu nhập lại
-
-
 				// Tìm tài khoản dựa trên tên người dùng
+				boolean found = false; // Biến kiểm tra tài khoản đã tồn tại hay chưa
 				for (TaiKhoan taiKhoan : list) {
-					if (taiKhoan.getMaTaiKhoan().equals(user)) {
-						NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-						NhanVien nv = nhanVien_DAO.getNhanVienTheoMaNV(taiKhoan.getNhanVien().getMaNV());
-						// Kiểm tra thông tin tài khoản
-						if (nv.getSdt().equals(std)) {
-							if(nv.getCccd().equals(cccd)) {
-								// Kiểm tra trạng thái nhân viên
-								if (nhanVien_DAO.getNhanVienTheoMaNV(taiKhoan.getNhanVien().getMaNV()).isTrangThai()) {
-									if(pass.equals(rePass)) {
-										//Nhập thông tin thành công
-										// Mã hóa mật khẩu bằng BCrypt
-										String matKhauMaHoa = BCrypt.hashpw(pass, BCrypt.gensalt());
-										dsTK.updatePassword(matKhauMaHoa, user);
-										JOptionPane.showMessageDialog(contentPane,"Cập nhật mật khẩu thành công");
-										setVisible(false);
-										DangNhap_GUI dn_GUI= new DangNhap_GUI();
-										dn_GUI.setVisible(true);
-										// Đảm bảo giao diện đã được hiển thị trước khi focus vào txtUser
-										SwingUtilities.invokeLater(new Runnable() {
-											public void run() {
-												dn_GUI.txtUser.requestFocus(); // Focus vào trường txtUser        
-											}
-										});
-
-									}else {
-										if (txtPassword.getForeground().equals(new Color(245, 245, 245))) {
-											JOptionPane.showMessageDialog(null, "Vui lòng nhập mật khẩu mới!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-											xoaTrang();
-											return;
-										}
-										if (txtRePassword.getForeground().equals(new Color(245, 245, 245))) {
-											JOptionPane.showMessageDialog(null, "Vui lòng nhập lại mật khẩu mới!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-											xoaTrang();
-											return;
-										}
-										// Mật khẩu không trùng khớp
-										JOptionPane.showMessageDialog(null, "Mật khẩu không trùng khớp!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-										xoaTrang();
-										return; // Kết thúc vòng lặp
-									}
-								} else {
-									// Trạng thái đã nghỉ việc
-									JOptionPane.showMessageDialog(null, "Nhân viên đã nghỉ!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-									xoaTrang();
-									return;
-								}
-							}else {
-								if (txtCCCD.getForeground().equals(new Color(245, 245, 245))) {
-									JOptionPane.showMessageDialog(null, "Căn cước công dân không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-									xoaTrang();
-									return;
-								}
-								// Mật khẩu không đúng
-								JOptionPane.showMessageDialog(null, "Căn cước công dân không đúng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-								xoaTrang();
-								return; // Kết thúc vòng lặp
-							}
-						} else {
-							if (txtPhone.getForeground().equals(new Color(245, 245, 245))) {
-								JOptionPane.showMessageDialog(null, "Số điện thoại không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-								xoaTrang();
-								return;
-							}
-							JOptionPane.showMessageDialog(null, "Số điện thoại không đúng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-							xoaTrang();
-							return; // Kết thúc vòng lặp
-						}
-					}else {
-						JOptionPane.showMessageDialog(null, "Mã tài khoản không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-						xoaTrang();
-						return;
-					}
+				    if (taiKhoan.getMaTaiKhoan().equals(user.trim())) {
+				        found = true; // Đánh dấu tìm thấy tài khoản
+				        NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				        NhanVien nv = nhanVien_DAO.getNhanVienTheoMaNV(taiKhoan.getNhanVien().getMaNV());
+				        // Kiểm tra thông tin tài khoản
+				        if (nv.getSdt().equals(std)) {
+				            if(nv.getCccd().equals(cccd)) {
+				                // Kiểm tra trạng thái nhân viên
+				                if (nhanVien_DAO.getNhanVienTheoMaNV(taiKhoan.getNhanVien().getMaNV()).isTrangThai()) {
+				                    if(pass.equals(rePass)) {
+				                        // Nhập thông tin thành công
+				                        String matKhauMaHoa = BCrypt.hashpw(pass, BCrypt.gensalt());
+				                        dsTK.updatePassword(matKhauMaHoa, user);
+				                        JOptionPane.showMessageDialog(contentPane, "Cập nhật mật khẩu thành công");
+				                        setVisible(false);
+				                        DangNhap_GUI dn_GUI= new DangNhap_GUI();
+				                        dn_GUI.setVisible(true);
+				                        SwingUtilities.invokeLater(() -> dn_GUI.txtUser.requestFocus());
+				                        return; // Thoát sau khi hoàn tất
+				                    } else {
+				                        // Các trường hợp lỗi mật khẩu không khớp
+				                        if (txtPassword.getForeground().equals(new Color(245, 245, 245))) {
+				                            JOptionPane.showMessageDialog(null, "Vui lòng nhập mật khẩu mới!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				                            xoaTrang();
+				                            return;
+				                        }
+				                        if (txtRePassword.getForeground().equals(new Color(245, 245, 245))) {
+				                            JOptionPane.showMessageDialog(null, "Vui lòng nhập lại mật khẩu mới!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				                            xoaTrang();
+				                            return;
+				                        }
+				                        JOptionPane.showMessageDialog(null, "Mật khẩu không trùng khớp!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				                        xoaTrang();
+				                        return;
+				                    }
+				                } else {
+				                    JOptionPane.showMessageDialog(null, "Nhân viên đã nghỉ!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+				                    xoaTrang();
+				                    return;
+				                }
+				            } else {
+				                if (txtCCCD.getForeground().equals(new Color(245, 245, 245))) {
+				                    JOptionPane.showMessageDialog(null, "Căn cước công dân không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				                    xoaTrang();
+				                    return;
+				                }
+				                JOptionPane.showMessageDialog(null, "Căn cước công dân không đúng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				                xoaTrang();
+				                return;
+				            }
+				        } else {
+				            if (txtPhone.getForeground().equals(new Color(245, 245, 245))) {
+				                JOptionPane.showMessageDialog(null, "Số điện thoại không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				                xoaTrang();
+				                return;
+				            }
+				            JOptionPane.showMessageDialog(null, "Số điện thoại không đúng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				            xoaTrang();
+				            return;
+				        }
+				    }
 				}
+				
+				if (!found) { // Nếu không tìm thấy
+				    JOptionPane.showMessageDialog(null, "Mã tài khoản không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				    xoaTrang();
+				}
+
 			}
 		});
 

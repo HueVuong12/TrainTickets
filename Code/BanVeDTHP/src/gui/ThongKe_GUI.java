@@ -1370,7 +1370,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				 continue; // Bỏ qua hóa đơn đã hoàn tiền
 			}
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
-
+			
 			// Kiểm tra cthd có null hay không
 			if (cthd != null) {
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
