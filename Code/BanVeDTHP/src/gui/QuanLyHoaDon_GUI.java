@@ -300,6 +300,8 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		chckbxDaHoanVe.addActionListener(this);
 		chckbxDaHoanTien.addActionListener(this);
 		chckbxTatCa.addActionListener(this);
+		
+		
 		btnTraVe_1 = new RoundedButton("Trả vé", 15);
 		btnTraVe_1.setForeground(new Color(255, 255, 255));
 		btnTraVe_1.setForeground(new Color(255, 255, 255));

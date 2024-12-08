@@ -547,13 +547,14 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 						 continue; // Bỏ qua hóa đơn đã hoàn tiền
 					}
 					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
+					if(cthd.getSoLuong() == 0) {
+						continue;
+					}
 					if (cthd != null) {
 						ArrayList<Ve> dsVeTheoChiTiet = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 				        if (dsVeTheoChiTiet != null) {
 				            data_TheoDoanhThu.addAll(dsVeTheoChiTiet);
 				        }	
-					} else {
-						System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
 					}
 				}
 		        if (data_TheoDoanhThu == null || data_TheoDoanhThu.isEmpty()) {
@@ -666,7 +667,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		Image scaledDoanhThuCT = doanhThuCTIcon.getImage().getScaledInstance(40,40, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 		jp_ketQuaTheoCa.setLayout(null);
 		
-		btn_XuatFile_TheoCa = new JButton("Xuất File");
+		btn_XuatFile_TheoCa = new RoundedButton("Xuất File", 15);
 		btn_XuatFile_TheoCa.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_XuatFile_TheoCa.setBounds(1205, 10, 96, 33);
 		jp_ketQuaTheoCa.add(btn_XuatFile_TheoCa);
@@ -710,9 +711,12 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 					}
 					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 					if (cthd != null) {
+						if(cthd.getSoLuong() == 0) {
+							continue;
+						}
 						data_TheoCa = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
-
-					} else {
+					} 
+					else {
 						System.out.println("Chi tiết hóa đơn không tồn tại cho mã chi tiết: " + hd.getChiTiet().getMaChiTiet());
 					}
 				}
@@ -817,12 +821,17 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 						 continue; // Bỏ qua hóa đơn đã hoàn tiền
 					}
 					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
+					if(cthd.getSoLuong() == 0) {
+						continue;
+					}
 					if (cthd != null) {
+						if(cthd.getSoLuong() == 0) {
+							continue;
+						}
 						ArrayList<Ve> dsVeTheoChiTiet = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 				        if (dsVeTheoChiTiet != null) {
 				            data_TheoChuyenTau.addAll(dsVeTheoChiTiet);
-				        }	
-					} else {
+				        }
 					}
 				}
 		        if (data_TheoChuyenTau == null || data_TheoChuyenTau.isEmpty()) {
@@ -921,6 +930,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			}
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 			if (cthd != null) {
+				if(cthd.getSoLuong() == 0) {
+					continue;
+				}
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 
 				for (Ve ve : listVe) {
@@ -973,9 +985,11 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 					continue; // Bỏ qua hóa đơn đã hoàn tiền
 				}
 				ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
-				
 				// Kiểm tra cthd có null hay không
 				if (cthd != null) {
+					if(cthd.getSoLuong() == 0) {
+						continue;
+					}
 					ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 					for (Ve ve : listVe) {
 						slvb++;
@@ -1025,6 +1039,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 				// Kiểm tra cthd có null hay không
 				if (cthd != null) {
+					if(cthd.getSoLuong() == 0) {
+						continue;
+					}
 					ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 					Set<String> processedChuyenTau = new HashSet<>();
 
@@ -1171,6 +1188,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			}
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 			if (cthd != null) {
+				if(cthd.getSoLuong() == 0) {
+					continue;
+				}
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 
 				for (Ve ve : listVe) {
@@ -1245,6 +1265,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			}
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 			if (cthd != null) {
+				if(cthd.getSoLuong() == 0) {
+					continue;
+				}
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 
 				for (Ve ve : listVe) {
@@ -1324,6 +1347,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			}
 	        ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
 	        if (cthd != null) {
+	        	if(cthd.getSoLuong() == 0) {
+					continue;
+				}
 	            ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 	            Set<String> processedHang = new HashSet<>(); // Set để theo dõi mã chuyến tàu đã được xử lý
 
@@ -1370,9 +1396,11 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				 continue; // Bỏ qua hóa đơn đã hoàn tiền
 			}
 			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(hd.getChiTiet().getMaChiTiet());
-			
 			// Kiểm tra cthd có null hay không
 			if (cthd != null) {
+				if(cthd.getSoLuong() == 0) {
+					continue;
+				}
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 				for (Ve ve : listVe) {
 					String khuyenMai = ve.getKhuyenMai(); // Lấy mã khuyến mãi của vé
@@ -1417,6 +1445,9 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 
 			// Kiểm tra cthd có null hay không
 			if (cthd != null) {
+				if(cthd.getSoLuong() == 0) {
+					continue;
+				}
 				ArrayList<Ve> listVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
 				for (Ve ve : listVe) {
 					String chuyenTau = ve.getChuyenTau().getMaTau(); // Lấy mã chuyến tàu

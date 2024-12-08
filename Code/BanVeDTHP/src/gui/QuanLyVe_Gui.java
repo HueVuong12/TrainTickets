@@ -93,6 +93,8 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 	private boolean isTableEventActive = false;
 	private JButton btnXuatVe;
 	public Ve veDoi;
+	private RoundedButton btn_LamMoi;
+	private ButtonGroup group;
 
 	public QuanLyVe_Gui(TrangChu_GUI trangChu) {
 		setBackground(SystemColor.window);
@@ -124,8 +126,10 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		goBackIconLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				ConTent_JPanel jpct = new ConTent_JPanel();
-				jpct.setVisible(true);
-				QuanLyVe_Gui.this.setVisible(false);
+				trangChu.content.removeAll();
+				trangChu.content.add(jpct);
+				trangChu.content.revalidate();
+				trangChu.content.repaint();
 			}
 		});
 		panel_1.add(goBackIconLabel);
@@ -143,7 +147,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 
 		JLabel lb_TTV = new JLabel("Thông tin vé");
 		lb_TTV.setForeground(new Color(255, 255, 255));
-		lb_TTV.setBounds(10, 0, 255, 33);
+		lb_TTV.setBounds(0, 0, 356, 33);
 		lb_TTV.setFont(new Font("Tahoma", Font.BOLD, 16));
 		jp_HeaderTTV.add(lb_TTV);
 
@@ -296,17 +300,17 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		cb_TTTrue = new JRadioButton("Không khả dụng");
 		cb_TTTrue.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		cb_TTTrue.setToolTipText("");
-		cb_TTTrue.setBounds(130, 395, 93, 22);
+		cb_TTTrue.setBounds(130, 395, 108, 22);
 		jp_TTV.add(cb_TTTrue);
 
 		cb_TTFalse = new JRadioButton("Khả dụng");
 		cb_TTFalse.setToolTipText("");
 		cb_TTFalse.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		cb_TTFalse.setBounds(228, 395, 118, 22);
+		cb_TTFalse.setBounds(240, 395, 106, 22);
 		jp_TTV.add(cb_TTFalse);
 
 		// Tạo nhóm button để chỉ cho phép chọn một trong hai trạng thái
-		ButtonGroup group = new ButtonGroup();
+		group = new ButtonGroup();
 		group.add(cb_TTTrue);
 		group.add(cb_TTFalse);
 
@@ -409,11 +413,19 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		panel.add(btn_DoiVe);
 
 		btn_Tim = new RoundedButton("Tìm", 15);
-		btn_Tim.setBounds(264, 5, 82, 23);
+		btn_Tim.setBounds(168, 5, 82, 23);
 		btn_Tim.setForeground(SystemColor.desktop);
 		btn_Tim.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btn_Tim.setBackground(SystemColor.activeCaptionBorder);
 		jp_HeaderTTV.add(btn_Tim);
+		
+		btn_LamMoi = new RoundedButton("Làm mới", 15);
+		btn_LamMoi.setText("Làm mới");
+		btn_LamMoi.setForeground(SystemColor.desktop);
+		btn_LamMoi.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btn_LamMoi.setBackground(SystemColor.activeCaptionBorder);
+		btn_LamMoi.setBounds(260, 5, 82, 23);
+		jp_HeaderTTV.add(btn_LamMoi);
 
 		btnXuatVe = new RoundedButton("Xuất thử", 10);
 		btnXuatVe.setForeground(Color.WHITE);
@@ -424,6 +436,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 
 		table.addMouseListener(this);
 		btn_Tim.addActionListener(this);
+		btn_LamMoi.addActionListener(this);
 		btnXuatVe.addActionListener(this);
 		updateVe();
 		datatoTable();
@@ -454,8 +467,8 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 			txt_GaDen.setText(gaDen.getTenGa());
 
 			// Cập nhật trạng thái cho radio button
-			cb_TTTrue.setSelected(!ve.isTrangThai());
-			cb_TTFalse.setSelected(ve.isTrangThai());
+			cb_TTTrue.setSelected(ve.isTrangThai());
+			cb_TTFalse.setSelected(!ve.isTrangThai());
 
 			// Cập nhật ngày đi
 			dateChooser_NgayDi.setDate(Date.from(ve.getNgayDi().atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -577,6 +590,23 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 				filterRows();
 			}
 		}
+		if (o.equals(btn_LamMoi)) {
+			if (o.equals(btn_LamMoi)) {
+			    // Xóa bộ lọc trước khi làm mới bảng
+			    sorter.setRowFilter(null);
+
+			    // Xóa dữ liệu cũ trong bảng
+			    model.setRowCount(0);
+
+			    // Tải lại dữ liệu vào bảng
+			    datatoTable();
+
+			    // Cập nhật giao diện bảng
+			    model.fireTableDataChanged();
+			}
+
+		    
+		}
 		if (o.equals(btnXuatVe)) {	
 			int row = table.getSelectedRow();
 			//			HoaDon hoaDon = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
@@ -622,12 +652,9 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		dsGa.reset();
 		dsVe.reset();
 		ArrayList<Ve> list = dsVe.docTuBang();
-		model = (DefaultTableModel) table.getModel();
-		model.setRowCount(0); // Xóa tất cả hàng trong bảng
 		int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); // Định dạng cho giờ
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // Định dạng cho ngày
-
 		for (Ve ve : list) {
 			KhachHang kh = dsKh.getKhachHangTheoMaKH(ve.getKhachHang().getMaKH());
 			Ga gaDi = dsGa.getGaTheoMaGa(ve.getGaDi().getMaGa());
@@ -665,8 +692,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		txt_ChiTiet.setText("");
 		comboBox_Hang.setSelectedItem(null);
 		comboBox_KhuyenMai.setSelectedItem(null);
-		cb_TTTrue.setSelected(false);
-		cb_TTFalse.setSelected(false);
+		group.clearSelection();
 	}
 	// Lớp FilterListener để lắng nghe các thay đổi trong các ô tìm kiếm
 	private class FilterListener implements DocumentListener{
@@ -763,7 +789,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		}
 	}
 	
-	//Hàm kiểm tra vé hẫ hoàn thành hay chưa
+	//Hàm kiểm tra vé hoàn thành hay chưa
 	public void updateVe() {
 		ArrayList<Ve> list = dsVe.docTuBang();
 		LocalTime now = LocalTime.now(); 

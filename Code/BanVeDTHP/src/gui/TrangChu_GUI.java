@@ -344,7 +344,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    Image scaledUser = userIcon.getImage().getScaledInstance(73 ,56, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    jp_nhanVien.setLayout(null);
 	    userIconLabel = new JLabel(new ImageIcon(scaledUser));
-	    userIconLabel.setBounds(96 ,10 , 73 ,56); // Cập nhật kích thước trên JLabel
+	    userIconLabel.setBounds(98 ,10 , 73 ,56); // Cập nhật kích thước trên JLabel
 	    userIconLabel.setOpaque(true);
 	    userIconLabel.setBackground(defaultColor);
 	    jp_nhanVien.add(userIconLabel);
@@ -514,7 +514,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	                            click = true;
 	                            dialog.dispose();
 	                        } else {
-	                        	JOptionPane.showMessageDialog(null, "Chưa thới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
+	                        	JOptionPane.showMessageDialog(null, "Chưa tới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
 	                        }
 	                    }else {
 	                    	return;
@@ -558,7 +558,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	        					content.revalidate();
 	        					content.repaint();
 	                        } else {
-	                        	JOptionPane.showMessageDialog(null, "Chưa thới thời gian kết thúc ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE); 
+	                        	JOptionPane.showMessageDialog(null, "Chưa tới thời gian kết thúc ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE); 
 	                        }
 	                    }else {
 	                    	return;

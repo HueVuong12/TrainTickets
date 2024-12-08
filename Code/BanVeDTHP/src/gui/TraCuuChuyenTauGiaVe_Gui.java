@@ -221,6 +221,12 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		dateChooser_Ngay.setBounds(86, 0, 365, 38);
 		panel_2_2.add(dateChooser_Ngay);
 		dateChooser_Ngay.setLayout(null);
+		
+		textField_NgayChon = new RoundedTextField(15);
+		textField_NgayChon.setBounds(0, 0, 324, 38);
+		textField_NgayChon.setEditable(false);
+		dateChooser_Ngay.add(textField_NgayChon);
+		
 		// Thêm sự kiện PropertyChangeListener cho dateChooserTu
 		dateChooser_Ngay.getDateEditor().addPropertyChangeListener("date", evt -> {
 		    selectedDate = dateChooser_Ngay.getDate();
@@ -237,11 +243,32 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		        
 		        // Kiểm tra ngày đã chọn có trước ngày hiện tại không (không tính đến thời gian)
 		        if (selectedDate.before(currentDateWithoutTime)) {
+		        	dateChooser_Ngay.setDate(null);
 		            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi từ ngày hiện tại.",
 		                    "Thông báo", JOptionPane.WARNING_MESSAGE);
 		            return;
 		        }
-
+		        if(txtGaDi.getText().equals("") && txtGaDen.getText().equals("")) {
+		        	 dateChooser_Ngay.setDate(null);
+		        	 txtGaDi.requestFocusInWindow(); // Chuyển focus đến txtGaDi
+		        	JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đi và ga đến",
+		                    "Thông báo", JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }else {
+			        if(txtGaDi.getText().equals("")) {
+			        	dateChooser_Ngay.setDate(null);
+			        	txtGaDi.requestFocusInWindow(); // Chuyển focus đến txtGaDi
+			        	JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đi",
+			                    "Thông báo", JOptionPane.WARNING_MESSAGE);
+			            return;
+			        }if(txtGaDen.getText().equals("")) {
+			        	dateChooser_Ngay.setDate(null);
+			        	txtGaDen.requestFocusInWindow(); // Chuyển focus đến txtGaDi
+			        	JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đến",
+			                    "Thông báo", JOptionPane.WARNING_MESSAGE);
+			            return;
+			        }
+		        }
 		        textField_NgayChon.setText(dateFormat.format(selectedDate)); // Gán ngày vào JTextField
 		        // Gọi chonChuyenTau mỗi khi ngày được cập nhật
 		        chonChuyenTau(comboBox_Tau, tenGaDi, tenGaDen, textField_NgayChon.getText());
@@ -249,11 +276,6 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		        textField_NgayChon.setText(""); // Nếu không có ngày nào được chọn, làm rỗng JTextField
 		    }
 		});
-
-		textField_NgayChon = new RoundedTextField(15);
-		textField_NgayChon.setBounds(0, 0, 324, 38);
-		textField_NgayChon.setEditable(false);
-		dateChooser_Ngay.add(textField_NgayChon);
 
 
 		JPanel panel_2_1_1 = new JPanel();
@@ -354,22 +376,22 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 
 		lbl_NgayDi = new JLabel("");
 		lbl_NgayDi.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lbl_NgayDi.setBounds(241, 77, 78, 21);
+		lbl_NgayDi.setBounds(241, 77, 114, 21);
 		panel_ThongTinTau.add(lbl_NgayDi);
 
 		lbl_NgayDen = new JLabel("");
 		lbl_NgayDen.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lbl_NgayDen.setBounds(1017, 77, 78, 21);
+		lbl_NgayDen.setBounds(1017, 77, 114, 21);
 		panel_ThongTinTau.add(lbl_NgayDen);
 
 		lbl_GioDi = new JLabel("");
 		lbl_GioDi.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lbl_GioDi.setBounds(329, 77, 78, 21);
+		lbl_GioDi.setBounds(365, 77, 78, 21);
 		panel_ThongTinTau.add(lbl_GioDi);
 
 		lbl_GioDen = new JLabel("");
 		lbl_GioDen.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lbl_GioDen.setBounds(1105, 77, 78, 21);
+		lbl_GioDen.setBounds(1143, 76, 78, 21);
 		panel_ThongTinTau.add(lbl_GioDen);
 
 		JPanel panel_1_1 = new JPanel();
