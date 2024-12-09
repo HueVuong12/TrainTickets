@@ -888,7 +888,8 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 				    currentVeNumber++;
 				}
 				
-				JOptionPane.showMessageDialog(null, "Đã đổi vé thành công!", "Thông báo", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(null,"Đã đổi vé thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE, 
+		                new ImageIcon(getClass().getResource("/img/299110_check_sign_icon.png")));
 				
 			    QuanLyVe_Gui quanLyVe_gui = new QuanLyVe_Gui(trangChu);
 				trangChu.content.removeAll();

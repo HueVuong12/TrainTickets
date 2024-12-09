@@ -569,8 +569,8 @@ public class QuenMatKhau_GUI extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
 				DangNhap_GUI dangNhap = new DangNhap_GUI();
-				dangNhap.setVisible(true);
 				setVisible(false);
+				dangNhap.setVisible(true);
 			}
 		});
 
