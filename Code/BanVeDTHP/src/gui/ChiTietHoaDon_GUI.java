@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.SystemColor;
@@ -10,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -34,8 +37,10 @@ import components.ConTent_JPanel;
 import components.RoundedButton;
 import components.RoundedTextField;
 import dao.ChiTietHoaDon_DAO;
+import dao.HoaDon_DAO;
 import dao.Ve_DAO;
 import entity.ChiTietHoaDon;
+import entity.HoaDon;
 import entity.Ve;
 
 import javax.swing.JButton;
@@ -47,7 +52,8 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 	private JTextField txtDen;
 	private JTable table_CTHD;
 	private JTable table_DSV;
-	private ChiTietHoaDon_DAO dsCTHD = new ChiTietHoaDon_DAO();;
+	private ChiTietHoaDon_DAO dsCTHD = new ChiTietHoaDon_DAO();
+	private HoaDon_DAO dsHD = new HoaDon_DAO();
 	private DefaultTableModel model_CTHD;
 	private Ve_DAO dsVe = new Ve_DAO();
 	private DefaultTableModel model_DSV;
@@ -325,6 +331,53 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 		btn_XuatHD.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_XuatHD.setBounds(95, 504, 151, 35);
 		add(btn_XuatHD);
+		btn_XuatHD.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int row = table_CTHD.getSelectedRow();
+				if(row != -1) {
+					ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(table_CTHD.getValueAt(row, 1).toString());
+					HoaDon hoaDon = dsHD.getHoaDonTheoMaHoaDon(cthd.getHoaDon().getMaHoaDon());
+					String pdfPath = "HoaDon/" + hoaDon.getMaHoaDon() + ".pdf";
+					hoaDon.xuatHoaDon(pdfPath);
+	
+					// Kiểm tra xem Desktop có được hỗ trợ không
+					if (Desktop.isDesktopSupported()) {
+						Desktop desktop = Desktop.getDesktop();
+						try {
+							File pdfFile = new File(pdfPath);  // Tạo đối tượng File từ đường dẫn
+							desktop.open(pdfFile);  // Mở file bằng ứng dụng mặc định
+	
+							// Hiển thị hộp thoại xác nhận sau khi mở file
+							int confirm = JOptionPane.showConfirmDialog(
+									null, 
+									"Bạn có muốn xóa file hóa đơn vừa tạo không?", 
+									"Xác nhận xóa file", 
+									JOptionPane.YES_NO_OPTION
+									);
+	
+							// Xóa file nếu người dùng chọn "Yes"
+							if (confirm == JOptionPane.YES_OPTION) {
+								if (pdfFile.delete()) {
+									System.out.println("File PDF đã được xóa: " + pdfPath);
+								} else {
+									System.out.println("Không thể xóa file PDF.");
+								}
+							}
+	
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					} else {
+						System.out.println("Mở file không được hỗ trợ trên hệ thống này.");
+					}
+				}else {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn chi tiết hóa đơn muốn xuất", "Thông báo", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
 
 		table_CTHD.addMouseListener(this);
 		txtMaChiTiet.getDocument().addDocumentListener(new FilterListener());

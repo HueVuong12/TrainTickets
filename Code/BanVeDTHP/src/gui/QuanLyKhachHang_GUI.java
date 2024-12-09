@@ -87,8 +87,10 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		goBackIconLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				ConTent_JPanel jpct = new ConTent_JPanel();
-				jpct.setVisible(true);
-				QuanLyKhachHang_GUI.this.setVisible(false);
+				trangChu.content.removeAll();
+				trangChu.content.add(jpct);
+				trangChu.content.revalidate();
+				trangChu.content.repaint();
 			}
 		});
 		JLabel lb_quaylai = new JLabel("Quay lại");

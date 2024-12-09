@@ -87,8 +87,10 @@ public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
 		goBackIconLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				ConTent_JPanel jpct = new ConTent_JPanel();
-				jpct.setVisible(true);
-				TraCuuKhachHang_GUI.this.setVisible(false);
+				trangChu.content.removeAll();
+				trangChu.content.add(jpct);
+				trangChu.content.revalidate();
+				trangChu.content.repaint();
 			}
 		});
 		jp_QL.add(goBackIconLabel);

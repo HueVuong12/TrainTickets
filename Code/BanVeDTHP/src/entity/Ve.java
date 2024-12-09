@@ -420,11 +420,11 @@ public class Ve {
 			tableKH.addCell(
 					new Cell(1,4).add(new Paragraph("Mã vé/TicketID: "+" "+ maVe).setFont(fontRegular).setTextAlignment(TextAlignment.CENTER)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(
-					new Cell().add(new Paragraph("Ga đi: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+					new Cell().add(new Paragraph("Ga đi/Train station: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(new Cell().add(new Paragraph(gaDi.getDiaChi()).setFont(fontRegular))
 					.setBorder(Border.NO_BORDER));
 			tableKH.addCell(
-					new Cell().add(new Paragraph("Ga đến: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+					new Cell().add(new Paragraph("Ga đến/Train station: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(new Cell().add(new Paragraph(gaDen.getDiaChi()).setFont(fontRegular))
 					.setBorder(Border.NO_BORDER));
 			
@@ -453,7 +453,7 @@ public class Ve {
 			tableKH.addCell(new Cell().add(new Paragraph(toa.getMaToa()).setFont(fontRegular))
 				.setBorder(Border.NO_BORDER));
 			tableKH.addCell(
-					new Cell().add(new Paragraph("Chỗ/Ghế:: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+					new Cell().add(new Paragraph("Ghế/Train seats: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(new Cell().add(new Paragraph(String.valueOf(soGhe.getSoGhe())).setFont(fontRegular))
 				.setBorder(Border.NO_BORDER));
 			tableKH.addCell(
@@ -461,13 +461,13 @@ public class Ve {
 			tableKH.addCell(new Cell(1,3).add(new Paragraph(hang).setFont(fontRegular))
 				.setBorder(Border.NO_BORDER));
 			tableKH.addCell(
-					new Cell().add(new Paragraph("Đối tượng khuyến mãi: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+					new Cell().add(new Paragraph("Đối tượng khuyến mãi/Promotion object: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(new Cell(1,3).add(new Paragraph(khuyenMai).setFont(fontRegular))
 				.setBorder(Border.NO_BORDER));
 			
 			KhachHang khachHangNew = khachHang_DAO.getKhachHangTheoMaKH(khachHang.getMaKH());
 			tableKH.addCell(
-					new Cell().add(new Paragraph("Tên khách hàng: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+					new Cell().add(new Paragraph("Họ tên/Name: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(new Cell(1,3).add(new Paragraph(khachHangNew.getTenKH()).setFont(fontRegular))
 					.setBorder(Border.NO_BORDER));
 			tableKH.addCell(
@@ -482,7 +482,9 @@ public class Ve {
 
 			document.add(new Paragraph("\n\n\n\n\n"));
 
-			document.add(new Paragraph("*Kiểm tra thông tin vé trước khi nhận vé và sau khi nhận vé").setFont(fontItalic)
+			document.add(new Paragraph("*Kiểm tra thông tin vé trước khi nhận vé và sau khi nhận vé.\n").setFont(fontItalic)
+					.setFontSize(10).setTextAlignment(TextAlignment.LEFT));
+			document.add(new Paragraph("*Please check ticket information before receiving tickets and after receiving tickets.").setFont(fontItalic)
 					.setFontSize(10).setTextAlignment(TextAlignment.LEFT));
 			// Đóng tài nguyên
 	        document.close();
