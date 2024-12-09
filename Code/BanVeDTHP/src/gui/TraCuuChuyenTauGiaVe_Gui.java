@@ -582,6 +582,11 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
                         dataToTableVe(selectedMaTau);
                     }
                 });   
+            }else {
+            	dateChooser_Ngay.setDate(null);
+            	JOptionPane.showMessageDialog(null, "Không có tàu phù hợp.Vui lòng chọn ngày khác",
+	                    "Thông báo", JOptionPane.WARNING_MESSAGE);
+	            return;
             }
 		}
 	}

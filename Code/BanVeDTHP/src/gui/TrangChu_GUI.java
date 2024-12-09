@@ -789,15 +789,19 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 			}
 		});
 	    nhanVien.addMenuListener(new MenuListener() {
+	    	private TaiKhoan tk;
 
 			@Override
 			public void menuSelected(MenuEvent e) {
 				// TODO Auto-generated method stub
-					QuanLyNhanVien_GUI jpnv= new QuanLyNhanVien_GUI(TrangChu_GUI.this);
-					content.removeAll();
-					content.add(jpnv); // Sử dụng layout thích hợp
-					content.revalidate();
-					content.repaint();
+					tk= dangNhap.taiKhoanLogined;
+					if(tk.getPhanQuyen() ==1) {
+						QuanLyNhanVien_GUI jpnv= new QuanLyNhanVien_GUI(TrangChu_GUI.this);
+						content.removeAll();
+						content.add(jpnv); // Sử dụng layout thích hợp
+						content.revalidate();
+						content.repaint();
+					}
 			}
 
 			@Override
