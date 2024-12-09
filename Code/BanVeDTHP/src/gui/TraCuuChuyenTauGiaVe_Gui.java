@@ -129,7 +129,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 				new Object[][] {
 				},
 				new String[] {
-						"STT", "Ga đi", "Cự ly(km)", "Ngày đi","Giờ đi","Ngày đến","Giờ đến"
+						"STT", "Ga", "Cự ly(km)", "Ngày đi","Giờ đi","Ngày đến","Giờ đến"
 				}
 				));
 		table_Ga.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -441,15 +441,17 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 		dsCT.reset();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-		ChuyenTau ct = dsCT.getChuyenTauTheoMaTau(maTau);
-		ArrayList<Ga> danhSachGa = ct.getTramDung();
+//		ChuyenTau ct = dsCT.getChuyenTauTheoMaTau(maTau);
+		ArrayList<ChuyenTau> listCT = dsCT.getChuyenTau_Ga(maTau);
+//		ArrayList<Ga> danhSachGa = ct.getTramDung();
 		model = (DefaultTableModel) table_Ga.getModel();
 		model.setRowCount(0); // Xóa tất cả hàng trong bảng
 		int count = 1;
-		for (Ga ga : danhSachGa) {
+		for (ChuyenTau tau: listCT) {
+			Ga ga = dsGa.getGaTheoMaGa(tau.getGaDi().getMaGa());
 			model.addRow(new Object[] { count++, ga.getTenGa(), ga.getChiSoKm(),
-					ct.getNgayDi().format(formatter),ct.getGioDi().format(timeFormatter),
-					ct.getNgayDen().format(formatter),ct.getGioDen().format(timeFormatter)});
+					tau.getNgayDi().format(formatter),tau.getGioDi().format(timeFormatter),
+					tau.getNgayDen().format(formatter),tau.getGioDen().format(timeFormatter)});
 		}
 	}
 	public void dataToTableVe(String maTau) {
@@ -547,15 +549,17 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 			}
 		});
 	}
-	private void chonChuyenTau(JComboBox<String> comboBox_Tau, String diaChiGaDi, String diaChiGaDen, String ngayChon) {
+	private void chonChuyenTau(JComboBox<String> comboBox_Tau, String tenGaDi, String tenGaDen, String ngayChon) {
 		comboBox_Tau.removeAllItems();
-		if(diaChiGaDi == null || diaChiGaDen == null || ngayChon == null) {
+		if(tenGaDi == null || tenGaDen == null || ngayChon == null) {
 			comboBox_Tau.setSelectedItem(null);
+			dateChooser_Ngay.setDate(null);
 			return; 
 		}else {
-			// Tìm các ga theo địa chỉ ga đi và ga đến
-            Ga gaDi = dsGa.getGaTheoDiaChi(diaChiGaDi);      
-            Ga gaDen = dsGa.getGaTheoDiaChi(diaChiGaDen);
+			// Tìm các ga theo tên ga đi và ga đến
+            Ga gaDi = dsGa.getGaTheoTenGa(tenGaDi);
+            Ga gaDen = dsGa.getGaTheoTenGa(tenGaDen);
+			
             ArrayList<ChuyenTau> danhSachChuyenTau = dsCT.getChuyenTauTheoGaVaNgayDi(gaDi.getMaGa(), gaDen.getMaGa(), ngayChon);
             // Sử dụng Set để kiểm tra trùng lặp
             Set<String> uniqueChuyenTau = new HashSet<>();

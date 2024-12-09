@@ -100,7 +100,7 @@ public class Ga_DAO {
         PreparedStatement stmt = null; 
         Ga ga = null;
         try {       
-            String sql = "Select * from Ga where maGa = ?"; 
+            String sql = "Select * from Ga where maGa like ?"; 
             stmt = con.prepareStatement(sql); 
             stmt.setString(1, maGa); 
             ResultSet rs = stmt.executeQuery(); 
@@ -139,6 +139,29 @@ public class Ga_DAO {
         
         return ga; 
     }
+    public Ga getGaTheoTenGa(String tenGa) { 
+        Connection con = ConnectDB.getInstance().getConnection(); 
+        PreparedStatement stmt = null; 
+        Ga ga = null;
+        try {       
+        	String sql = "SELECT * FROM Ga WHERE tenGa LIKE N'%' + ? + '%'";
+            stmt = con.prepareStatement(sql); 
+            stmt.setString(1,tenGa); 
+            ResultSet rs = stmt.executeQuery(); 
+            while (rs.next()) {
+            	String maGa = rs.getString("maGa");
+                String diaChi = rs.getNString("diaChi");
+                boolean trangThai = rs.getBoolean("trangThai");
+                int chiSoKm= rs.getInt("chiSoKm");
+                ga = new Ga(maGa, tenGa, diaChi, chiSoKm,trangThai);
+            } 
+        } catch (SQLException e) { 
+            e.printStackTrace();     
+        } 
+        
+        return ga; 
+    }
+    
     public ArrayList<Ga> getDsTramDung(String maChuyenTau) {
     	Connection con = ConnectDB.getInstance().getConnection(); 
         PreparedStatement stmt = null; 
