@@ -35,6 +35,7 @@ import javax.swing.table.TableColumn;
 import components.ButtonEditor;
 import components.ButtonRenderer;
 import components.ComboBoxRenderer;
+import components.RoundedButton;
 import components.TextAreaRenderer;
 import dao.Ga_DAO;
 import dao.KhachHang_DAO;
@@ -72,7 +73,7 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 	private KhachHang_DAO dskh = new KhachHang_DAO();
 	private ArrayList<KhachHang> list = dskh.docTuBang();
 	private JButton bt_Chuyen;
-	private JButton bt_ThanhToan_KHSDV;
+	private JButton bt_ThanhToan_KHSDV, bt_XacNhan_KHSDV;
 	public BanVe_GUI banVe_GUI;
 	public DoiVe_GUI doiVe_GUI;
 	
@@ -198,7 +199,10 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		textField_CCCD_KHMV.setBounds(814, 50, 264, 25);
 		jp_content_KHMV.add(textField_CCCD_KHMV);
 		
-		bt_Chuyen = new JButton("Chuyển");
+		bt_Chuyen = new RoundedButton("Chuyển", 15);
+		bt_Chuyen.setForeground(Color.WHITE);
+		bt_Chuyen.setFont(new Font("Tahoma", Font.BOLD, 16));
+		bt_Chuyen.setBackground(new Color(51, 102, 153));
 		bt_Chuyen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(1);
@@ -208,7 +212,6 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 				textField_CCCD_KHSDV.setText(textField_CCCD_KHMV.getText());
 			}
 		});
-		bt_Chuyen.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		bt_Chuyen.setBounds(1160, 24, 120, 40);
 		jp_content_KHMV.add(bt_Chuyen);
 		
@@ -263,7 +266,10 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		textField_CCCD_KHSDV.setBounds(814, 50, 264, 25);
 		jp_content_KHSDV.add(textField_CCCD_KHSDV);
 		
-		JButton bt_XacNhan_KHSDV = new JButton("Nhập");
+		bt_XacNhan_KHSDV = new RoundedButton("Nhập", 10);
+		bt_XacNhan_KHSDV.setForeground(Color.WHITE);
+		bt_XacNhan_KHSDV.setBackground(new Color(51, 102, 153));
+		bt_XacNhan_KHSDV.setBounds(1245, 303, 118, 25);
 		bt_XacNhan_KHSDV.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = table.getSelectedRow();
@@ -297,7 +303,9 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		add(jp_Table);
 		jp_Table.setLayout(null);
 		
-		bt_ThanhToan_KHSDV = new JButton("Thanh toán");
+		bt_ThanhToan_KHSDV = new RoundedButton("Thanh toán", 10);
+		bt_ThanhToan_KHSDV.setForeground(Color.WHITE);
+		bt_ThanhToan_KHSDV.setBackground(new Color(51, 102, 153));
 		bt_ThanhToan_KHSDV.setBounds(1245, 303, 118, 25);
 		jp_Table.add(bt_ThanhToan_KHSDV);
 		bt_ThanhToan_KHSDV.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -539,7 +547,10 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		textField_CCCD_KHMV.setBounds(814, 50, 264, 25);
 		jp_content_KHMV.add(textField_CCCD_KHMV);
 		
-		bt_Chuyen = new JButton("Chuyển");
+		bt_Chuyen = new RoundedButton("Chuyển", 15);
+		bt_Chuyen.setForeground(Color.WHITE);
+		bt_Chuyen.setFont(new Font("Tahoma", Font.BOLD, 16));
+		bt_Chuyen.setBackground(new Color(51, 102, 153));
 		bt_Chuyen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(1);
@@ -604,7 +615,10 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		textField_CCCD_KHSDV.setBounds(814, 50, 264, 25);
 		jp_content_KHSDV.add(textField_CCCD_KHSDV);
 		
-		JButton bt_XacNhan_KHSDV = new JButton("Nhập");
+		bt_XacNhan_KHSDV = new RoundedButton("Nhập", 10);
+		bt_XacNhan_KHSDV.setForeground(Color.WHITE);
+		bt_XacNhan_KHSDV.setBackground(new Color(51, 102, 153));
+		bt_XacNhan_KHSDV.setBounds(1245, 303, 118, 25);
 		bt_XacNhan_KHSDV.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = table.getSelectedRow();
@@ -638,7 +652,10 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		add(jp_Table);
 		jp_Table.setLayout(null);
 		
-		bt_ThanhToan_KHSDV = new JButton("Thanh toán");
+		bt_ThanhToan_KHSDV = new RoundedButton("Thanh toán", 10);
+		bt_ThanhToan_KHSDV.setForeground(Color.WHITE);
+		bt_ThanhToan_KHSDV.setBackground(new Color(51, 102, 153));
+		bt_ThanhToan_KHSDV.setBounds(1245, 303, 118, 25);
 		bt_ThanhToan_KHSDV.setBounds(1245, 303, 118, 25);
 		jp_Table.add(bt_ThanhToan_KHSDV);
 		bt_ThanhToan_KHSDV.setFont(new Font("Tahoma", Font.PLAIN, 14));
