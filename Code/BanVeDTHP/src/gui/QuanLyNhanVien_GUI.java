@@ -100,6 +100,8 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	private RoundedButton btnSua;
 	private RoundedButton btnTim;
 
+	NhanVien tempNhanVien = new NhanVien(""); // Đối tượng tạm thời
+	
 	public QuanLyNhanVien_GUI(TrangChu_GUI trangChu) {
 		setBackground(SystemColor.text);
 		setForeground(new Color(255, 255, 255));
@@ -650,43 +652,77 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 
 	//Hàm kiểm tra regex
 	public boolean validData() {
-		if (textField_HoTen.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "Họ tên không được để trống");
-			return false;
-		}
-		if(!cb_nam.isSelected() && !cb_nu.isSelected()) {
-			JOptionPane.showMessageDialog(this, "Chọn giới tính");
-			return false;
-		}
-		if(dateChooser_NgaySinh.getDate() == null) {
-			JOptionPane.showMessageDialog(this, "Nhập ngày sinh");
-			return false;
-		}
-		if (textField_CCCD.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
-			return false;
-		}
-		if (textField_SDT.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "SĐT không được bỏ trống");
-			return false;
-		}
-		if (textField_Email.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "Email không được bỏ trống");
-			return false;
-		}
-		if(comboBox_ChucVu.getSelectedItem() == null) {
-			JOptionPane.showMessageDialog(this, "Chức vụ không được bỏ trống");
-			return false;
-		}
-		if(comboBox_Ca.getSelectedItem()== null) {
-			JOptionPane.showMessageDialog(this, "Ca không được bỏ trống");
-			return false;
-		}
-		if (!cb_dangLam.isSelected() && !cb_nghiLam.isSelected()) {
-			JOptionPane.showMessageDialog(this, "Trạng th không được rỗng");
-			return false;
-		}
-		return true;
+		// Kiểm tra họ tên
+	    if (textField_HoTen.getText().equals("")) {
+	        JOptionPane.showMessageDialog(this, "Họ tên không được để trống");
+	        return false;
+	    }
+	    try {
+	        tempNhanVien.setTenNV(textField_HoTen.getText().trim());
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+
+	    // Kiểm tra ngày sinh từ JDateChooser
+	    if (dateChooser_NgaySinh.getDate() == null) {
+	        JOptionPane.showMessageDialog(this, "Ngày sinh không được để trống");
+	        return false;
+	    }
+
+	    try {
+	        // Lấy ngày sinh từ JDateChooser và chuyển đổi thành LocalDate
+	        LocalDate ngaySinh = new java.sql.Date(dateChooser_NgaySinh.getDate().getTime()).toLocalDate();
+	        tempNhanVien.setGioiTinh(cb_nam.isSelected()); // Lấy giới tính từ checkbox
+	        tempNhanVien.setNgaySinh(ngaySinh); // Kiểm tra ngày sinh
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+
+	    // Kiểm tra CCCD
+	    if (textField_CCCD.getText().equals("")) {
+	        JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
+	        return false;
+	    }
+	    try {
+	        tempNhanVien.setCccd(textField_CCCD.getText().trim());
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+
+	    // Kiểm tra email
+	    if (textField_Email.getText().equals("")) {
+	        JOptionPane.showMessageDialog(this, "Email không được bỏ trống");
+	        return false;
+	    }
+	    try {
+	        tempNhanVien.setEmail(textField_Email.getText().trim());
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+
+	    // Kiểm tra số điện thoại
+	    if (textField_SDT.getText().equals("")) {
+	        JOptionPane.showMessageDialog(this, "Số điện thoại không được bỏ trống");
+	        return false;
+	    }
+	    try {
+	        tempNhanVien.setSdt(textField_SDT.getText().trim());
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+
+	    // Kiểm tra giới tính
+	    if (!cb_nam.isSelected() && !cb_nu.isSelected()) {
+	        JOptionPane.showMessageDialog(this, "Chọn giới tính");
+	        return false;
+	    }
+
+	    return true;
 	}
 
 	//Hàm lấy dữ liệu từ JPane thông tin nhân viên
