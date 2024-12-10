@@ -664,6 +664,12 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	        return false;
 	    }
 
+	    // Kiểm tra giới tính
+	    if (!cb_nam.isSelected() && !cb_nu.isSelected()) {
+	        JOptionPane.showMessageDialog(this, "Chọn giới tính");
+	        return false;
+	    }
+	    
 	    // Kiểm tra ngày sinh từ JDateChooser
 	    if (dateChooser_NgaySinh.getDate() == null) {
 	        JOptionPane.showMessageDialog(this, "Ngày sinh không được để trống");
@@ -692,19 +698,7 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	        return false;
 	    }
 
-	    // Kiểm tra email
-	    if (textField_Email.getText().equals("")) {
-	        JOptionPane.showMessageDialog(this, "Email không được bỏ trống");
-	        return false;
-	    }
-	    try {
-	        tempNhanVien.setEmail(textField_Email.getText().trim());
-	    } catch (IllegalArgumentException e) {
-	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
-	        return false;
-	    }
-
-	    // Kiểm tra số điện thoại
+	 // Kiểm tra số điện thoại
 	    if (textField_SDT.getText().equals("")) {
 	        JOptionPane.showMessageDialog(this, "Số điện thoại không được bỏ trống");
 	        return false;
@@ -716,12 +710,36 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 	        return false;
 	    }
 
-	    // Kiểm tra giới tính
-	    if (!cb_nam.isSelected() && !cb_nu.isSelected()) {
-	        JOptionPane.showMessageDialog(this, "Chọn giới tính");
+	    // Kiểm tra email
+	    if (textField_Email.getText().equals("")) {
+	        JOptionPane.showMessageDialog(this, "Email không được bỏ trống");
 	        return false;
 	    }
-
+	    try {
+	        tempNhanVien.setEmail(textField_Email.getText().trim());
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+	    
+	 // Kiểm tra chức vụ
+	    if (comboBox_ChucVu.getSelectedItem() == null || comboBox_ChucVu.getSelectedIndex() == -1) {
+	        JOptionPane.showMessageDialog(this, "Vui lòng chọn chức vụ");
+	        return false;
+	    }
+	    
+	 // Kiểm tra ca làm việc
+	    if (comboBox_Ca.getSelectedItem() == null || comboBox_Ca.getSelectedIndex() == -1) {
+	        JOptionPane.showMessageDialog(this, "Vui lòng chọn ca làm việc");
+	        return false;
+	    }
+	    
+	    // Kiểm tra trạng thái
+	    if (!cb_dangLam.isSelected() && !cb_nghiLam.isSelected()) {
+	        JOptionPane.showMessageDialog(this, "Chọn trạng thái");
+	        return false;
+	    }
+	    
 	    return true;
 	}
 
