@@ -362,6 +362,52 @@ public class Ve_DAO {
 		return list;
 	}
 	
+	// Phương thức đọc tất cả các vé từ bảng Ve
+		public ArrayList<Ve> docTuBangTheoNgayLap() {
+			try {
+				Connection con = ConnectDB.getInstance().getConnection();
+				String sql = "SELECT v.* FROM Ve v JOIN ChiTietHoaDon cthd ON v.chiTiet = cthd.maChiTiet JOIN HoaDon hd ON cthd.hoaDon = hd.maHoaDon ORDER BY hd.ngayLapHoaDon DESC";
+				PreparedStatement stmt = con.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery();
+
+				while (rs.next()) {
+					String maVe = rs.getString("maVe");
+					String maTau = rs.getString("tau");
+					String maToa = rs.getString("toa");
+					int soGhe = rs.getInt("soGhe");
+					String maKH = rs.getString("khachHang");
+					LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
+					LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
+					LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
+					LocalTime gioDen = rs.getTime("gioDen").toLocalTime();
+					String maGaDi = rs.getString("gaDi");
+					String maGaDen = rs.getString("gaDen");
+					String hang = rs.getString("hang");
+					String khuyenMai = rs.getString("khuyenMai");
+					boolean trangThai = rs.getBoolean("trangThai");
+					String maChiTiet = rs.getString("chiTiet");
+
+					// Sử dụng constructor copy để tạo đối tượng
+					ChuyenTau tau = new ChuyenTau(maTau);
+					Toa toa = new Toa(maToa);
+					Ghe ghe = new Ghe(soGhe, toa);
+					KhachHang khachHang = new KhachHang(maKH);
+					Ga gaDi = dsGa.getGaTheoMaGa(maGaDi);
+					Ga gaDen = dsGa.getGaTheoMaGa(maGaDen);
+					ChiTietHoaDon chiTiet = new ChiTietHoaDon(maChiTiet);
+
+					// Tạo đối tượng Ve
+					Ve ve = new Ve(maVe, tau, toa, ghe, khachHang, ngayDi, gioDi,ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai,
+							chiTiet);
+					dsVe.add(ve);
+					System.out.println(ve);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return dsVe;
+		}
+	
 	public void reset() {
 		dsVe.removeAll(dsVe);
 	}

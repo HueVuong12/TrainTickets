@@ -651,7 +651,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		dsKh.reset();
 		dsGa.reset();
 		dsVe.reset();
-		ArrayList<Ve> list = dsVe.docTuBang();
+		ArrayList<Ve> list = dsVe.docTuBangTheoNgayLap();
 		int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); // Định dạng cho giờ
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // Định dạng cho ngày
