@@ -209,10 +209,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		panelThongTinKhachHang.add(txtCCCD);
 
 		btnThem = new RoundedButton("Thêm", 15);
-<<<<<<< HEAD
-	
-=======
->>>>>>> e7c087636b7fd8cd0b254aaf542ed1448b65d7bc
+
 		btnThem.setForeground(Color.WHITE);
 		btnThem.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnThem.setBackground(new Color(51, 102, 153));
