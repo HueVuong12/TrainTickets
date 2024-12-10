@@ -21,6 +21,8 @@ import components.RoundedButton;
 import components.RoundedTextField;
 import dao.KhachHang_DAO;
 import entity.KhachHang;
+import entity.NhanVien;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -62,6 +64,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 
 	private RoundedTextField txtTimSDT;
 
+	KhachHang tempKhachHang = new KhachHang("");
 	/**
 	 * Create the panel.
 	 */
@@ -385,22 +388,54 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 	}
 
 	public boolean validData() {
-		if (txtTenKH.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "Tên khách hàng không được để trống");
-			return false;
-		}
-		if (txtEmail.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "Email không được bỏ trống");
-			return false;
-		}
-		if (txtSDT.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "Số điện thoại không được bỏ trống");
-			return false;
-		}
-		if (txtCCCD.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
-			return false;
-		}
+		// Kiểm tra họ tên
+	    if (txtTenKH.getText().equals("")) {
+	        JOptionPane.showMessageDialog(this, "Họ tên không được để trống");
+	        return false;
+	    }
+	    try {
+	        tempKhachHang.setTenKH(txtTenKH.getText().trim());
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+	    
+		// Kiểm tra email
+	    if (txtEmail.getText().equals("")) {
+	        JOptionPane.showMessageDialog(this, "Email không được để trống");
+	        return false;
+	    }
+	    try {
+	        tempKhachHang.setEmail(txtEmail.getText().trim());
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+	    
+		// Kiểm tra số điện thoại
+	    if (txtSDT.getText().equals("")) {
+	        JOptionPane.showMessageDialog(this, "Số điện thoại không được để trống");
+	        return false;
+	    }
+	    try {
+	        tempKhachHang.setSdt(txtSDT.getText().trim());
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+	    
+		// Kiểm tra căn cước công dân
+	    if (txtCCCD.getText().equals("")) {
+	        JOptionPane.showMessageDialog(this, "Căn cước công dân không được để trống");
+	        return false;
+	    }
+	    try {
+	        tempKhachHang.setCccd(txtCCCD.getText().trim());
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, e.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+	    
 		return true;
 	}
 
