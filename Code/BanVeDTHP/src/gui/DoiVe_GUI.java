@@ -39,10 +39,13 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 import com.toedter.calendar.JDateChooser;
 
 import components.ChuyenTau_JPanel;
+import components.RoundedButton;
 import components.Toa_JPanel;
 import components.Ve_JPanel;
 import dao.ChuyenTau_DAO;
@@ -97,7 +100,9 @@ public class DoiVe_GUI extends JPanel {
 	private JPanel jp_VeMuaCu;
 	private Ve_JPanel pVeCu;
 	public Ve veCu;
-
+	
+	private JPanel panel_ChuThich;
+	private JButton btnTim, btnMua;
 	/**
 	 * Create the panel.
 	 */
@@ -138,17 +143,20 @@ public class DoiVe_GUI extends JPanel {
 		jp_title.add(lbl_Ga_1);
 
 		jp_ThongTinChuyenTau = new JPanel();
-		jp_ThongTinChuyenTau.setBounds(264, 56, 1186, 118);
+		jp_ThongTinChuyenTau.setBackground(Color.WHITE);
+		jp_ThongTinChuyenTau.setBounds(264, 56, 907, 118);
 		add(jp_ThongTinChuyenTau);
 		jp_ThongTinChuyenTau.setLayout(null);
 
 		jp_TinhTrangToa = new JPanel();
-		jp_TinhTrangToa.setBounds(264, 184, 1186, 76);
+		jp_TinhTrangToa.setBackground(Color.WHITE);
+		jp_TinhTrangToa.setBounds(264, 184, 907, 83);
 		add(jp_TinhTrangToa);
 		jp_TinhTrangToa.setLayout(null);
 
 		jp_TinhTrangGhe = new JPanel();
-		jp_TinhTrangGhe.setBounds(264, 300, 1186, 260);
+		jp_TinhTrangGhe.setBackground(Color.WHITE);
+		jp_TinhTrangGhe.setBounds(264, 310, 907, 250);
 		add(jp_TinhTrangGhe);
 		jp_TinhTrangGhe.setLayout(null);
 
@@ -160,11 +168,14 @@ public class DoiVe_GUI extends JPanel {
 
 		JPanel jp_Content_ThongTin = new JPanel();
 		jp_Content_ThongTin.setLayout(null);
-		jp_Content_ThongTin.setBackground(SystemColor.controlHighlight);
+		jp_Content_ThongTin.setBackground(Color.WHITE);
 		jp_Content_ThongTin.setBounds(0, 32, 244, 218);
 		jp_timKiem.add(jp_Content_ThongTin);
 
-		JButton btnTim = new JButton("Tìm");
+		btnTim = new RoundedButton("Tìm", 10);
+		btnTim.setForeground(new Color(255, 255, 255));
+		btnTim.setBackground(new Color(51, 102, 153));
+		
 		btnTim.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (isValidatedTxtField()) {
@@ -251,19 +262,20 @@ public class DoiVe_GUI extends JPanel {
 
 		JPanel jp_Header_ThongTin = new JPanel();
 		jp_Header_ThongTin.setLayout(null);
-		jp_Header_ThongTin.setBackground(new Color(51, 102, 153));
+		jp_Header_ThongTin.setBackground(Color.LIGHT_GRAY);
 		jp_Header_ThongTin.setBounds(0, 0, 244, 32);
 		jp_timKiem.add(jp_Header_ThongTin);
 
 		JLabel downIconLabel = new JLabel((Icon) null);
-		downIconLabel.setBounds(0, 0, 30, 35);
+		downIconLabel.setBounds(0, 0, 30, 32);
 		jp_Header_ThongTin.add(downIconLabel);
 
 		JLabel lbl_tieuDeTK = new JLabel("Thông tin chuyến tàu");
+		lbl_tieuDeTK.setBackground(Color.WHITE);
 		lbl_tieuDeTK.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_tieuDeTK.setForeground(Color.WHITE);
+		lbl_tieuDeTK.setForeground(new Color(30, 144, 255));
 		lbl_tieuDeTK.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lbl_tieuDeTK.setBounds(0, 0, 222, 35);
+		lbl_tieuDeTK.setBounds(30, 0, 214, 32);
 		jp_Header_ThongTin.add(lbl_tieuDeTK);
 
 		JPanel jp_GioVe = new JPanel();
@@ -274,11 +286,13 @@ public class DoiVe_GUI extends JPanel {
 
 		JPanel jp_Content_GioVe = new JPanel();
 		jp_Content_GioVe.setLayout(null);
-		jp_Content_GioVe.setBackground(SystemColor.controlHighlight);
+		jp_Content_GioVe.setBackground(Color.WHITE);
 		jp_Content_GioVe.setBounds(0, 31, 244, 137);
 		jp_GioVe.add(jp_Content_GioVe);
 
-		JButton btnMua = new JButton("Xác nhận");
+		btnMua = new RoundedButton("Mua", 15);
+		btnMua.setForeground(new Color(255, 255, 255));
+		btnMua.setBackground(new Color(51, 102, 153));
 		// Chuyển trang banVeNhapThongTIn_Gui bằng button Mua
 		btnMua.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -311,6 +325,7 @@ public class DoiVe_GUI extends JPanel {
 
 		// JPanel chứa các vé
 		jp_VeMua = new JPanel();
+		jp_VeMua.setBackground(Color.WHITE);
 		jp_VeMua.setLayout(new BoxLayout(jp_VeMua, BoxLayout.Y_AXIS));
 
 		// Tạo JScrollPane cho jp_VeMua
@@ -325,17 +340,17 @@ public class DoiVe_GUI extends JPanel {
 		jp_Header_GioVe.setBounds(0, 0, 244, 32);
 		jp_GioVe.add(jp_Header_GioVe);
 		jp_Header_GioVe.setLayout(null);
-		jp_Header_GioVe.setBackground(new Color(51, 102, 153));
+		jp_Header_GioVe.setBackground(Color.LIGHT_GRAY);
 
 		JLabel lbl_tieuDeTK_GioVe = new JLabel("Vé Mới");
 		lbl_tieuDeTK_GioVe.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_tieuDeTK_GioVe.setForeground(Color.WHITE);
+		lbl_tieuDeTK_GioVe.setForeground(new Color(30, 144, 255));
 		lbl_tieuDeTK_GioVe.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lbl_tieuDeTK_GioVe.setBounds(61, 0, 121, 32);
 		jp_Header_GioVe.add(lbl_tieuDeTK_GioVe);
 
 		lblMaToa = new JLabel();
-		lblMaToa.setBounds(721, 267, 272, 23);
+		lblMaToa.setBounds(519, 277, 272, 23);
 		add(lblMaToa);
 		lblMaToa.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblMaToa.setHorizontalAlignment(SwingConstants.CENTER);
@@ -367,6 +382,7 @@ public class DoiVe_GUI extends JPanel {
 		jp_VeMuaCu = new JPanel();
 		jp_VeMuaCu.setLayout(new BoxLayout(jp_VeMuaCu, BoxLayout.Y_AXIS));
 		pVeCu = new Ve_JPanel(qlv.veDoi, null, jp_VeMua);
+		pVeCu.setBackground(Color.WHITE);
 		jp_VeMuaCu.add(pVeCu);
 		veCu = ve_DAO.getVeTheoMaVe(qlv.veDoi.getMaVe());
 
@@ -381,15 +397,134 @@ public class DoiVe_GUI extends JPanel {
 		jp_Header_VeCu.setBounds(0, 0, 244, 32);
 		jp_VeCu.add(jp_Header_VeCu);
 		jp_Header_VeCu.setLayout(null);
-		jp_Header_VeCu.setBackground(new Color(51, 102, 153));
+		jp_Header_VeCu.setBackground(Color.LIGHT_GRAY);
 
 		lbl_tieuDeTK_VeCu = new JLabel("Vé Cũ");
 		lbl_tieuDeTK_VeCu.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_tieuDeTK_VeCu.setForeground(Color.WHITE);
+		lbl_tieuDeTK_VeCu.setForeground(new Color(30, 144, 255));
 		lbl_tieuDeTK_VeCu.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lbl_tieuDeTK_VeCu.setBounds(61, 0, 121, 32);
 		jp_Header_VeCu.add(lbl_tieuDeTK_VeCu);
 
+		// Tạo viền bo góc với màu RGB (221, 221, 221)
+        LineBorder lineBorder = new LineBorder(new Color(221, 221, 221), 2, true); // Viền bo góc
+        TitledBorder titledBorder = new TitledBorder(lineBorder, "Chú thích"); // Thêm tiêu đề
+        titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 14)); // Font tiêu đề
+        titledBorder.setTitleColor(Color.BLACK); // Màu chữ tiêu đề
+        
+		panel_ChuThich = new JPanel();
+		panel_ChuThich.setBounds(1195, 56, 255, 504);
+		panel_ChuThich.setBackground(Color.WHITE);
+		panel_ChuThich.setBorder(titledBorder);;
+		add(panel_ChuThich);
+		panel_ChuThich.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+//		lblNewLabel.setBounds(10, 14, 100, 49);
+		
+		ImageIcon containerIcon_GM;
+		containerIcon_GM = new ImageIcon(getClass().getResource("/img/Toa_Ghe_Mem.png"));
+		Image scaledContainerIcon_GM = containerIcon_GM.getImage().getScaledInstance(100, 49, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
+		lblNewLabel = new JLabel(new ImageIcon(scaledContainerIcon_GM));
+		lblNewLabel.setBackground(Color.WHITE);
+		lblNewLabel.setBounds(10, 35, 100, 49);
+		panel_ChuThich.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Toa ghế mềm");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_1.setBounds(120, 44, 125, 31);
+		panel_ChuThich.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("New label");
+//		lblNewLabel_2.setBounds(10, 75, 100, 49);
+		
+		ImageIcon containerIcon_GN;
+		containerIcon_GN = new ImageIcon(getClass().getResource("/img/Toa_Giuong_Nam.png"));
+		Image scaledContainerIcon_GN = containerIcon_GN.getImage().getScaledInstance(100, 49, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
+		lblNewLabel_2 = new JLabel(new ImageIcon(scaledContainerIcon_GN));
+		lblNewLabel_2.setBackground(Color.WHITE);
+		lblNewLabel_2.setBounds(10, 98, 100, 49);
+		
+		panel_ChuThich.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("Toa giường nằm");
+		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_1_1.setBounds(120, 105, 125, 31);
+		panel_ChuThich.add(lblNewLabel_1_1);
+		
+		JLabel lblNewLabel_3 = new JLabel("New label");
+//		lblNewLabel_3.setBounds(10, 138, 100, 49);
+		
+		ImageIcon containerIcon_VIP;
+		containerIcon_VIP = new ImageIcon(getClass().getResource("/img/Toa_VIP.png"));
+		Image scaledContainerIcon_VIP = containerIcon_VIP.getImage().getScaledInstance(100, 49, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
+		lblNewLabel_3 = new JLabel(new ImageIcon(scaledContainerIcon_VIP));
+		lblNewLabel_3.setBackground(Color.WHITE);
+		lblNewLabel_3.setBounds(10, 161, 100, 49);
+		
+		panel_ChuThich.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_1_2 = new JLabel("Toa VIP");
+		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_1_2.setBounds(120, 168, 125, 31);
+		panel_ChuThich.add(lblNewLabel_1_2);
+		
+		JLabel lblNewLabel_4 = new JLabel("New label");
+//		lblNewLabel_4.setBounds(10, 197, 100, 49);
+		
+		ImageIcon containerIcon_HC;
+		containerIcon_HC = new ImageIcon(getClass().getResource("/img/Toa_Het_Slot.png"));
+		Image scaledContainerIcon_HC = containerIcon_HC.getImage().getScaledInstance(100, 49, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
+		lblNewLabel_4 = new JLabel(new ImageIcon(scaledContainerIcon_HC));
+		lblNewLabel_4.setBackground(Color.WHITE);
+		lblNewLabel_4.setBounds(10, 220, 100, 49);
+		
+		panel_ChuThich.add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_1_3 = new JLabel("Toa hết chỗ");
+		lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_1_3.setBounds(120, 227, 125, 31);
+		panel_ChuThich.add(lblNewLabel_1_3);
+		
+		ImageIcon containerIcon_Ghe1;
+		containerIcon_Ghe1 = new ImageIcon(getClass().getResource("/img/Ghe_1.png"));
+		Image scaledContainerIcon_Ghe1 = containerIcon_Ghe1.getImage().getScaledInstance(26, 42, Image.SCALE_SMOOTH);
+		// JLabel cho hình ảnh
+		JLabel containerIconLabel_Ghe1 = new JLabel(new ImageIcon(scaledContainerIcon_Ghe1));
+		containerIconLabel_Ghe1.setBounds(24, 311, 26, 42); // Đặt kích thước cho hình ảnh
+		panel_ChuThich.add(containerIconLabel_Ghe1);
+					
+		JLabel lblNewLabel_1_3_1 = new JLabel("Ghế chưa đặt");
+		lblNewLabel_1_3_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_1_3_1.setBounds(86, 316, 159, 31);
+		panel_ChuThich.add(lblNewLabel_1_3_1);
+		
+		ImageIcon containerIcon_Ghe2;
+		containerIcon_Ghe2 = new ImageIcon(getClass().getResource("/img/Ghe_2.png"));
+		Image scaledContainerIcon_Ghe2 = containerIcon_Ghe2.getImage().getScaledInstance(26, 42, Image.SCALE_SMOOTH);
+		// JLabel cho hình ảnh
+		JLabel containerIconLabel_Ghe2 = new JLabel(new ImageIcon(scaledContainerIcon_Ghe2));
+		containerIconLabel_Ghe2.setBounds(24, 383, 26, 42); // Đặt kích thước cho hình ảnh
+		panel_ChuThich.add(containerIconLabel_Ghe2);
+		
+		JLabel lblNewLabel_1_3_1_1 = new JLabel("Ghế đang chọn");
+		lblNewLabel_1_3_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_1_3_1_1.setBounds(86, 388, 159, 31);
+		panel_ChuThich.add(lblNewLabel_1_3_1_1);
+		
+		ImageIcon containerIcon_Ghe0;
+		containerIcon_Ghe0 = new ImageIcon(getClass().getResource("/img/Ghe_0.png"));
+		Image scaledContainerIcon_Ghe0 = containerIcon_Ghe0.getImage().getScaledInstance(26, 42, Image.SCALE_SMOOTH);
+		// JLabel cho hình ảnh
+		JLabel containerIconLabel_Ghe0 = new JLabel(new ImageIcon(scaledContainerIcon_Ghe0));
+		containerIconLabel_Ghe0.setBounds(24, 452, 26, 42); // Đặt kích thước cho hình ảnh
+		panel_ChuThich.add(containerIconLabel_Ghe0);
+		
+		JLabel lblNewLabel_1_3_1_2 = new JLabel("Ghế đã đặt");
+		lblNewLabel_1_3_1_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_1_3_1_2.setBounds(86, 457, 159, 31);
+		panel_ChuThich.add(lblNewLabel_1_3_1_2);
+		
 		// Thêm MouseListener vào contentPane
 		this.addMouseListener(new MouseAdapter() {
 			@Override
