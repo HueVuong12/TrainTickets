@@ -138,7 +138,31 @@ public class ChuyenTau_DAO {
         
         return chuyenTau; 
     } 
-    
+    public ArrayList<ChuyenTau> getChuyenTau_Ga(String maTau) { 
+        Connection con = ConnectDB.getInstance().getConnection(); 
+        PreparedStatement stmt = null; 
+        ChuyenTau chuyenTau = null;
+        try {       
+            String sql = "SELECT * FROM ChuyenTau_Ga WHERE maTau = ?"; 
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, maTau);
+            ResultSet rs = stmt.executeQuery(); 
+            while (rs.next()) {
+                String gaDi = rs.getString("maGa");
+                LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
+                LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
+                LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
+                LocalTime gioDen = rs.getTime("gioDen").toLocalTime();
+                Ga ga = new Ga(gaDi);
+                chuyenTau = new ChuyenTau(maTau, ga,null,null, ngayDi,gioDi,ngayDen,gioDen ,null);
+                dsChuyenTau.add(chuyenTau);
+            } 
+        } catch (SQLException e) { 
+            e.printStackTrace();     
+        } 
+        
+        return dsChuyenTau; 
+    }
     public ArrayList<ChuyenTau> getChuyenTauTheoThoiGian(String ngayBatDau, String ngayKetThuc) { 
         Connection con = ConnectDB.getInstance().getConnection(); 
         PreparedStatement stmt = null; 

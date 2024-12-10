@@ -543,7 +543,9 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 							datatoTable();
 							updateComboBoxTimTheoMaNV();
 						} catch (Exception e1) {
-							JOptionPane.showMessageDialog(this, "Lỗi khi thêm nhân viên vào cơ sở dữ liệu: " + e1.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+							// Log lỗi chi tiết
+						    e1.printStackTrace(); // In ra thông báo lỗi để kiểm tra trong console
+						    JOptionPane.showMessageDialog(this, "Lỗi khi thêm nhân viên vào cơ sở dữ liệu: " + e1.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
@@ -652,73 +654,89 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 			JOptionPane.showMessageDialog(this, "Họ tên không được để trống");
 			return false;
 		}
-		if (!cb_dangLam.isSelected() && !cb_nghiLam.isSelected()) {
-			JOptionPane.showMessageDialog(this, "Giới tính không được rỗng");
+		if(!cb_nam.isSelected() && !cb_nu.isSelected()) {
+			JOptionPane.showMessageDialog(this, "Chọn giới tính");
+			return false;
+		}
+		if(dateChooser_NgaySinh.getDate() == null) {
+			JOptionPane.showMessageDialog(this, "Nhập ngày sinh");
 			return false;
 		}
 		if (textField_CCCD.getText().equals("")) {
 			JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
 			return false;
 		}
-		if (textField_Email.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
-			return false;
-		}
 		if (textField_SDT.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "CCCD không được bỏ trống");
+			JOptionPane.showMessageDialog(this, "SĐT không được bỏ trống");
 			return false;
 		}
-		if(!cb_nam.isSelected() && !cb_nu.isSelected()) {
-			JOptionPane.showMessageDialog(this, "Chọn giới tính");
+		if (textField_Email.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "Email không được bỏ trống");
 			return false;
 		}
-
+		if(comboBox_ChucVu.getSelectedItem() == null) {
+			JOptionPane.showMessageDialog(this, "Chức vụ không được bỏ trống");
+			return false;
+		}
+		if(comboBox_Ca.getSelectedItem()== null) {
+			JOptionPane.showMessageDialog(this, "Ca không được bỏ trống");
+			return false;
+		}
+		if (!cb_dangLam.isSelected() && !cb_nghiLam.isSelected()) {
+			JOptionPane.showMessageDialog(this, "Trạng th không được rỗng");
+			return false;
+		}
 		return true;
 	}
 
 	//Hàm lấy dữ liệu từ JPane thông tin nhân viên
 	public NhanVien revertNV() {
-		String maNV = generateMaNV();
-		String hoTen = textField_HoTen.getText();
-		boolean gioiTinh = cb_nam.isSelected() ? false : (cb_nu.isSelected() ? true : true); // Sử dụng trực tiếp giá trị của checkbox
-		String ca = comboBox_Ca.getSelectedItem().toString();
-		String cccd = textField_CCCD.getText();
+	    String maNV = generateMaNV();
+	    String hoTen = textField_HoTen.getText();
+	    boolean gioiTinh = cb_nam.isSelected() ? false : (cb_nu.isSelected() ? true : true); // Sử dụng trực tiếp giá trị của checkbox
+	    String ca = comboBox_Ca.getSelectedItem().toString();
+	    String cccd = textField_CCCD.getText();
 
-		// Định dạng chuỗi ngày tháng từ giao diện (dd/MM/yyyy)
-		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		// Định dạng chuỗi ngày tháng từ giao diện (dd/MM/yyyy)
-		DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDate ngaySinh = null;
+	    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    LocalDate ngaySinh = null;
 
-		try {
-			// Lấy ngày sinh từ JDateChooser
-			Date date = dateChooser_NgaySinh.getDate(); // Sử dụng getDate() để lấy giá trị ngày
-			if (date != null) {
-				// Chuyển đổi từ Date sang LocalDate
-				ngaySinh = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			} else {
-				throw new IllegalArgumentException("Ngày sinh không được để trống.");
-			}
+	    try {
+	        // Lấy ngày sinh từ JDateChooser
+	        Date date = dateChooser_NgaySinh.getDate(); // Sử dụng getDate() để lấy giá trị ngày
+	        if (date != null) {
+	            // Chuyển đổi từ Date sang LocalDate
+	            ngaySinh = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	        } else {
+	            throw new IllegalArgumentException("Ngày sinh không được để trống.");
+	        }
 
-			// Chuyển đổi LocalDate sang chuỗi định dạng SQL (yyyy-MM-dd)
-			String ngaySinhSQL = ngaySinh.format(outputFormatter);
-			// In ra kết quả
-			System.out.println("Ngày sinh SQL dạng chuỗi: " + ngaySinhSQL);
-		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Lỗi xảy ra khi chuyển đổi ngày sinh. Vui lòng thử lại.", "Lỗi",
-					JOptionPane.ERROR_MESSAGE);
-			return null;
-		}
+	        // Chuyển đổi LocalDate sang chuỗi định dạng SQL (yyyy-MM-dd)
+	        String ngaySinhSQL = ngaySinh.format(outputFormatter);
+	        // In ra kết quả
+	        System.out.println("Ngày sinh SQL dạng chuỗi: " + ngaySinhSQL);
 
-		String email = textField_Email.getText();
-		String sdt = textField_SDT.getText();
-		boolean trangThai = cb_dangLam.isSelected() ? true : (cb_nghiLam.isSelected() ? false : false);
-		int chucVu =  comboBox_ChucVu.getSelectedIndex() == 0 ? 1 : 2;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Lỗi xảy ra khi chuyển đổi ngày sinh. Vui lòng thử lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+	        return null;
+	    }
 
-		NhanVien nv = new NhanVien(maNV, hoTen, ngaySinh, gioiTinh, new Ca(ca), cccd, email, sdt, trangThai, chucVu);
-		return nv;
+	    String email = textField_Email.getText();
+	    String sdt = textField_SDT.getText();
+	    boolean trangThai = cb_dangLam.isSelected() ? true : (cb_nghiLam.isSelected() ? false : false);
+	    int chucVu = comboBox_ChucVu.getSelectedIndex() == 0 ? 1 : 2;
+
+	    try {
+	        // Tạo đối tượng NhanVien và kiểm tra các điều kiện trong entity
+	        NhanVien nv = new NhanVien(maNV, hoTen, ngaySinh, gioiTinh, new Ca(ca), cccd, email, sdt, trangThai, chucVu);
+	        return nv;
+	    } catch (IllegalArgumentException e) {
+	        // Bắt lỗi từ entity (ví dụ lỗi độ tuổi không hợp lệ)
+	        JOptionPane.showMessageDialog(this,e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+	        return null;
+	    }
 	}
+
 
 	//Hàm sửa thông tin nhân viên
 	public void update() {

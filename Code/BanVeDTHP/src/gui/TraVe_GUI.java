@@ -52,9 +52,9 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	private JPanel panel_3;
 	private JLabel lblTienKhachDua;
 	private JLabel lblNewLabel_3;
-	private JButton btn33;
-	private JButton btn35;
-	private JButton btn44;
+	private JButton btnGoiY1;
+	private JButton btnGoiY2;
+	private JButton btnGoiY3;
 	private JPanel panel_4;
 	private JLabel lblNewLabel_1;
 	private JButton btn500;
@@ -86,6 +86,7 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	private JTextField textField_tienTra;
 	public float phiHoan;
 	private JCheckBox cbXuatHoaDon;
+	float[] goiY = new float[3];
 	/**
 	 * Create the panel.
 	 */
@@ -193,20 +194,20 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 		lblNewLabel_3.setBounds(10, 70, 123, 24);
 		panel_3.add(lblNewLabel_3);
 
-		btn33 = new JButton("33.000");
-		btn33.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn33.setBounds(10, 105, 142, 35);
-		panel_3.add(btn33);
+		btnGoiY1 = new JButton("33.000");
+		btnGoiY1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnGoiY1.setBounds(10, 105, 142, 35);
+		panel_3.add(btnGoiY1);
 
-		btn35 = new JButton("35.000");
-		btn35.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn35.setBounds(202, 105, 130, 35);
-		panel_3.add(btn35);
+		btnGoiY2 = new JButton("35.000");
+		btnGoiY2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnGoiY2.setBounds(202, 105, 130, 35);
+		panel_3.add(btnGoiY2);
 
-		btn44 = new JButton("40.000");
-		btn44.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn44.setBounds(394, 105, 137, 35);
-		panel_3.add(btn44);
+		btnGoiY3 = new JButton("40.000");
+		btnGoiY3.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnGoiY3.setBounds(394, 105, 137, 35);
+		panel_3.add(btnGoiY3);
 
 		btnXoa = new JButton("Nhập lại");
 		btnXoa.setBounds(446, 10, 85, 30);
@@ -267,23 +268,6 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 		btn1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn1.setBounds(310, 110, 107, 30);
 		panel_4.add(btn1);
-
-		//Sự kiện nút
-		btn1.addActionListener(this);
-		btn2.addActionListener(this);
-		btn5.addActionListener(this);
-		btn10.addActionListener(this);
-		btn20.addActionListener(this);
-		btn50.addActionListener(this);
-		btn100.addActionListener(this);
-		btn200.addActionListener(this);
-		btn500.addActionListener(this);
-
-		btn33.addActionListener(this);
-		btn35.addActionListener(this);
-		btn44.addActionListener(this);
-
-		btnXoa.addActionListener(this);
 
 		panel_5 = new JPanel();
 		panel_5.setBounds(25, 411, 415, 150);
@@ -350,7 +334,22 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 					}
 					if(cbXuatHoaDon.isSelected()) {
 						String pdfPath = "HoaDon/" +hd.getMaHoaDon() +"_HoaDonHoanTien" + ".pdf";
-						hd.xuatHoaDonHoanTien(pdfPath);
+						hd.xuatHoaDonHoanTien(pdfPath); 
+						JOptionPane.showMessageDialog(null, "Đã trả vé và xuất hóa đơn thành công!", "Thông báo",  JOptionPane.INFORMATION_MESSAGE, 
+				                new ImageIcon(getClass().getResource("/img/299110_check_sign_icon.png")));
+					    QuanLyHoaDon_GUI qlhd = new QuanLyHoaDon_GUI(trangChu);
+						trangChu.content.removeAll();
+						trangChu.content.add(qlhd);
+						trangChu.content.revalidate();
+						trangChu.content.repaint();
+					}if(!cbXuatHoaDon.isSelected()) {
+						JOptionPane.showMessageDialog(null, "Đã trả vé thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE, 
+				                new ImageIcon(getClass().getResource("/img/299110_check_sign_icon.png")));				
+						QuanLyHoaDon_GUI qlhd = new QuanLyHoaDon_GUI(trangChu);
+						trangChu.content.removeAll();
+						trangChu.content.add(qlhd);
+						trangChu.content.revalidate();
+						trangChu.content.repaint();
 					}
 				}else {
 					JOptionPane.showMessageDialog(null,
@@ -360,10 +359,31 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 			
 			}
 		});
+		//Sự kiện nút
+		btn1.addActionListener(this);
+		btn2.addActionListener(this);
+		btn5.addActionListener(this);
+		btn10.addActionListener(this);
+		btn20.addActionListener(this);
+		btn50.addActionListener(this);
+		btn100.addActionListener(this);
+		btn200.addActionListener(this);
+		btn500.addActionListener(this);
+
+		btnGoiY1.addActionListener(this);
+		btnGoiY2.addActionListener(this);
+		btnGoiY3.addActionListener(this);
+
+		btnXoa.addActionListener(this);
 		cbXuatHoaDon.addActionListener(this);
 		//Load dữ liệu vào bảng
 		datatoTable_CTHD(qlhd);
 		datatoTable_Ve(qlhd);
+		//Tiền gợi ý
+		tienGoiY(tienTraLai, goiY);
+		btnGoiY1.setText((long) goiY[0]+"");
+		btnGoiY2.setText((long) goiY[1]+"");
+		btnGoiY3.setText((long) goiY[2]+"");
 	}
 
 	public void datatoTable_CTHD(QuanLyHoaDon_GUI qlhd) {
@@ -399,8 +419,6 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 	public void datatoTable_Ve(QuanLyHoaDon_GUI qlhd) {
 	    dsVe.reset();
 	    dsCTHD.reset();
-	    phiHoan = 0;
-	    tienTraLai = 0;
 
 	    ArrayList<Ve> list = dsVe.getDsVeTheoMaChiTiet(qlhd.hoaDonTraVe.getChiTiet().getMaChiTiet());
 	    if (list == null || list.isEmpty()) {
@@ -452,9 +470,9 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 			if (o.equals(btn100)) soTienThem = 100000;
 			if (o.equals(btn200)) soTienThem = 200000;
 			if (o.equals(btn500)) soTienThem = 500000;
-			if (o.equals(btn33)) soTienThem = 33000;
-			if (o.equals(btn35)) soTienThem = 35000;
-			if (o.equals(btn44)) soTienThem = 44000;
+			if (o.equals(btnGoiY1)) soTienThem = goiY[0];
+			if (o.equals(btnGoiY2)) soTienThem = goiY[1];
+			if (o.equals(btnGoiY3)) soTienThem = goiY[2];
 
 			// Kiểm tra nếu text hiện tại là "0 đ" thì đặt `tienKhachDua` thành `soTienThem`
 			if (textField_TienKhachDua.getText().equalsIgnoreCase("0 đ")) {
@@ -465,6 +483,22 @@ public class TraVe_GUI extends JPanel implements ActionListener{
 				textField_TienKhachDua.setText(dinhDangTienTe(tienKhachDua));
 			}
 		}
-
 	}
+	 // Hàm tính toán số tiền gợi ý
+    public static void tienGoiY(float tienCanDua, float[] goiY) {
+    	// Gợi ý 1: Số tiền tròn lớn hơn hoặc bằng số tiền cần đưa
+    	goiY[0] = (float) (Math.ceil(tienCanDua / 1000) * 1000);
+
+    	// Gợi ý 2: Số tiền tròn lớn hơn tiếp theo, như 50.000 hoặc bội số của nó
+    	goiY[1] = (float) (Math.ceil(tienCanDua / 50000) * 50000);
+
+    	// Gợi ý 3: Một số tiền tròn phổ biến hơn, ví dụ 200.000 hoặc 500.000, tùy ngữ cảnh
+    	if (goiY[1] <= 200000) {
+    		goiY[2] = 200000;
+    	} else if (goiY[1] <= 500000) {
+    		goiY[2] = 500000;
+    	} else {
+    		goiY[2] = (float) (Math.ceil(tienCanDua / 100000) * 100000);
+    	}
+    }
 }
