@@ -397,16 +397,16 @@ VALUES
 -- Thêm toa ghế mềm
 INSERT INTO Toa (maToa, loaiToa, maTau)
 VALUES 
-('TA002_01', 'Ghế mềm', 'TA002'),
-('TA002_02', 'Ghế mềm', 'TA002'),
-('TA002_03', 'Ghế mềm', 'TA002');
+('TA002_01', N'Ghế mềm', 'TA002'),
+('TA002_02', N'Ghế mềm', 'TA002'),
+('TA002_03', N'Ghế mềm', 'TA002');
 
 -- Thêm toa giường nằm
 INSERT INTO Toa (maToa, loaiToa, maTau)
 VALUES 
-('TA002_04', 'Giường nằm', 'TA002'),
-('TA002_05', 'Giường nằm', 'TA002'),
-('TA002_06', 'Giường nằm', 'TA002');
+('TA002_04', N'Giường nằm', 'TA002'),
+('TA002_05', N'Giường nằm', 'TA002'),
+('TA002_06', N'Giường nằm', 'TA002');
 
 -- Thêm các ghế trong các toa
 -- Toa ghế mềm (64 ghế/toa)
@@ -1024,7 +1024,6 @@ VALUES
 ('TA014_05', N'VIP', 'TA014');
 
 -- Thêm ghế cho các toa trong chuyến tàu TA014
-DECLARE @i INT;
 SET @i = 1;
 WHILE @i <= 32 BEGIN
     INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA014_01', 1); -- Giường nằm
