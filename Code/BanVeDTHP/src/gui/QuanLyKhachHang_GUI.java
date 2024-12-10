@@ -209,32 +209,6 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		panelThongTinKhachHang.add(txtCCCD);
 
 		btnThem = new RoundedButton("Thêm", 15);
-		btnThem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (validData()) {
-					KhachHang kh = revertKH();
-
-					if (kh != null) {
-						KhachHang existingKH = dskh.getKhachHangTheoMaKH(kh.getMaKH());
-						if (existingKH != null) {
-							JOptionPane.showMessageDialog(null, "Khách hàng đã tồn tại trong cơ sở dữ liệu.", "Lỗi",
-									JOptionPane.ERROR_MESSAGE);
-						} else {
-							try {
-								dskh.create(kh);
-								tableModel.setRowCount(0);
-								datatoTable();
-							} catch (Exception e1) {
-								JOptionPane.showMessageDialog(null,
-										"Lỗi khi thêm khách hàng vào cơ sở dữ liệu: " + e1.getMessage(), "Lỗi",
-										JOptionPane.ERROR_MESSAGE);
-							}
-						}
-					}
-					deleteField();
-				}
-			}
-		});
 		btnThem.setForeground(Color.WHITE);
 		btnThem.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnThem.setBackground(new Color(51, 102, 153));
