@@ -1,8 +1,10 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
@@ -31,6 +33,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.RowFilter.Entry;
+import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
@@ -39,6 +42,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -66,8 +70,6 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 	private RoundedTextField txt_TenKH;
 	private RoundedTextField txt_GaDi;
 	private RoundedTextField txt_GaDen;
-	private RoundedTextField txt_Hang;
-	private RoundedTextField txt_KhuyenMai;
 	private RoundedTextField txt_MaToa;
 	private RoundedTextField txt_MaGhe;
 	private RoundedTextField txt_MaVe;
@@ -77,7 +79,6 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 	//	private RoundedTextField txt_TrangThai;
 	private JComboBox<String> comboBox_Hang;
 	private JComboBox<String> comboBox_KhuyenMai;
-	private JComboBox<String> comboBox_TrangThai;
 	private JTable table;
 	private RoundedButton btn_DoiVe;
 	private RoundedButton btn_Tim;
@@ -90,7 +91,6 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 	private JDateChooser dateChooser_NgayDi;
 	private KhachHang_DAO dsKh = new KhachHang_DAO();
 	private Ga_DAO dsGa = new Ga_DAO();
-	private boolean isTableEventActive = false;
 	private JButton btnXuatVe;
 	public Ve veDoi;
 	private RoundedButton btn_LamMoi;
@@ -324,6 +324,9 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		panel_3.add(scrollPane);
 
 		table = new JTable();
+		table.setColumnSelectionAllowed(true);
+		table.setCellSelectionEnabled(true);
+		table.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		model = new DefaultTableModel(
 				new Object[][] {
 				},
@@ -334,6 +337,41 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		sorter = new TableRowSorter<>(model);
 		table.setRowSorter(sorter);
 		table.setModel(model);
+		
+		table.getColumnModel().getColumn(0).setPreferredWidth(30); // Cột "STT"
+		table.getColumnModel().getColumn(1).setPreferredWidth(100); // Cột "Tên khách hàng"
+		table.getColumnModel().getColumn(2).setPreferredWidth(70); // Cột "Ga đi"
+		table.getColumnModel().getColumn(3).setPreferredWidth(70); // Cột "Ga đến"
+		table.getColumnModel().getColumn(4).setPreferredWidth(90); // Cột "Hạng"
+		table.getColumnModel().getColumn(5).setPreferredWidth(100); // Cột "Khuyến mãi"
+		table.getColumnModel().getColumn(6).setPreferredWidth(60); // Cột "Toa"
+		table.getColumnModel().getColumn(7).setPreferredWidth(30); // Cột "Ghế"
+		table.getColumnModel().getColumn(8).setPreferredWidth(100); // Cột "Mã vé"
+		table.getColumnModel().getColumn(9).setPreferredWidth(80); // Cột "Mã Chuyến tàu"
+		table.getColumnModel().getColumn(10).setPreferredWidth(70); // Cột "Ngày đi"
+		table.getColumnModel().getColumn(11).setPreferredWidth(40); // Cột "Giờ đi"
+		table.getColumnModel().getColumn(12).setPreferredWidth(100); // Cột "Trạng thái"
+		table.getColumnModel().getColumn(13).setPreferredWidth(110); // Cột "Chi tiết"
+		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); // Căn giữa
+		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer); // Áp dụng cho cột "STT"
+		table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(10).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(11).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(12).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(13).setCellRenderer(centerRenderer);
+		
+		table.setRowHeight(20);
+		
 		scrollPane.setViewportView(table);
 		table.setRowHeight(25); // Set chiều cao hàng
 
