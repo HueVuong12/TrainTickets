@@ -77,7 +77,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	private int nextNumber;
 	private JComboBox<String> comboBox_PhanQuyen;
 	private RoundedButton btnXoa;
-
+	NhanVien tempNhanVien = new NhanVien(""); // Đối tượng tạm thời
 	/**
 	 * Create the frame.
 	 */
@@ -438,7 +438,12 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		}
 
 		if (o.equals(btnSua)) {
-			update();
+			try {
+		        tempNhanVien.setMaNV(textField_MaNV.getText().trim());
+		        update();
+		    } catch (IllegalArgumentException e1) {
+		        JOptionPane.showMessageDialog(this, e1.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+		    }
 		}
 		if(o.equals(btnXoa)) {
 			int row= table_TK.getSelectedRow();
@@ -487,7 +492,11 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 			JOptionPane.showMessageDialog(this, "Mã nhân viên không được bỏ trống");
 			return false;
 		}
-
+		try {
+	        tempNhanVien.setMaNV(textField_MaNV.getText().trim());
+	    } catch (IllegalArgumentException e1) {
+	        JOptionPane.showMessageDialog(this, e1.getMessage(), "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+	    }
 		return true;
 	}
 	//Hàm tạo mã tài khoản tự động
