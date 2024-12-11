@@ -777,7 +777,7 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 	}
 	
 	private boolean isValidTxt() {
-		String regexTenKH="^[A-Z][a-z\\p{L}]*([ ]+[A-Z][a-z\\p{L}]*)*$";
+		String regexTenKH="^[A-ZÀ-Ỵ][a-zà-ỹ\\p{L}]*([ ]+[A-ZÀ-Ỵ][a-zà-ỹ\\p{L}]*)*$";
 		String regexEmail = "^[a-zA-Z0-9.]+@gmail\\.com$";
 		String regexSdt = "^(03|05|07|08|09)\\d{8}$";
 		String regexCccd = "^0[0-9]{2}[0-3]\\d{2}\\d{6}$";
