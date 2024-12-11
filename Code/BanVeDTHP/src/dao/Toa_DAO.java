@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 import connectDB.ConnectDB;
 import entity.ChuyenTau;
-import entity.Ga;
 import entity.Ghe;
 import entity.Toa;
 
@@ -24,7 +23,8 @@ public class Toa_DAO {
     // Phương thức đọc tất cả các toa từ bảng Toa
     public ArrayList<Toa> docTuBang() {
         try {
-            Connection con = ConnectDB.getInstance().getConnection();
+            ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
             String sql = "SELECT * FROM Toa";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
@@ -80,7 +80,8 @@ public class Toa_DAO {
 
     // Phương thức tạo mới một toa trong bảng Toa
     public boolean create(Toa toa) {
-        Connection con = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
         int n = 0;
         try {
@@ -106,7 +107,8 @@ public class Toa_DAO {
 
     // Phương thức cập nhật thông tin của một toa
     public boolean update(Toa toa) {
-        Connection con = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
         int n = 0;
         try {
@@ -131,7 +133,8 @@ public class Toa_DAO {
 
     // Phương thức xóa một toa và danh sách ghế của nó
     public boolean delete(String maToa) {
-        Connection con = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
         int n = 0;
         try {
@@ -152,7 +155,8 @@ public class Toa_DAO {
     public Toa getToaTheoMaToa(String maToa) {
         Toa toa = null;
         try {
-            Connection con = ConnectDB.getInstance().getConnection();
+            ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
             String sql = "SELECT * FROM Toa WHERE maToa = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, maToa);
@@ -178,7 +182,8 @@ public class Toa_DAO {
     
     // Phương thức lấy danh sách toa theo mã chuyến tàu
     public ArrayList<Toa> getDsToaTheoMaTau(String maTauStr) {
-    	Connection con = ConnectDB.getInstance().getConnection();
+    	ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null; 
         ArrayList<Toa> ds = new ArrayList<Toa>();
         try {

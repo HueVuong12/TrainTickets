@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import connectDB.ConnectDB;
@@ -21,7 +20,8 @@ public class Ga_DAO {
     
     public ArrayList<Ga> docTuBang()  { 
         try { 
-            Connection con = ConnectDB.getInstance().getConnection(); 
+            ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection(); 
             String sql = "Select * from Ga"; 
             Statement statement = con.createStatement(); 
             ResultSet rs = statement.executeQuery(sql); 
@@ -41,7 +41,8 @@ public class Ga_DAO {
     }
     
     public boolean create(Ga ga) { 
-        Connection con = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
@@ -62,7 +63,8 @@ public class Ga_DAO {
     } 
     
     public boolean update(Ga ga) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
@@ -81,7 +83,8 @@ public class Ga_DAO {
     } 
            
     public boolean delete(String maGa) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
@@ -96,7 +99,8 @@ public class Ga_DAO {
     }
     
     public Ga getGaTheoMaGa(String maGa) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         Ga ga = null;
         try {       
@@ -118,7 +122,8 @@ public class Ga_DAO {
         return ga; 
     }
     public Ga getGaTheoDiaChi(String diaChi) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         Ga ga = null;
         try {       
@@ -140,7 +145,8 @@ public class Ga_DAO {
         return ga; 
     }
     public Ga getGaTheoTenGa(String tenGa) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         Ga ga = null;
         try {       
@@ -163,7 +169,8 @@ public class Ga_DAO {
     }
     
     public ArrayList<Ga> getDsTramDung(String maChuyenTau) {
-    	Connection con = ConnectDB.getInstance().getConnection(); 
+    	ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         ArrayList<Ga> ds = new ArrayList<Ga>();
         try {       

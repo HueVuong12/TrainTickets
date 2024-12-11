@@ -1,10 +1,8 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
@@ -24,15 +22,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import javax.swing.RowFilter;
-import javax.swing.RowFilter.Entry;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -44,14 +39,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import com.itextpdf.layout.element.List;
 import com.toedter.calendar.JDateChooser;
 
-import components.ComboBoxRenderer;
 import components.ConTent_JPanel;
 import components.RoundedButton;
 import components.RoundedTextField;
@@ -61,12 +53,14 @@ import dao.Ga_DAO;
 import dao.KhachHang_DAO;
 import entity.ChiTietHoaDon;
 import entity.Ga;
-import entity.HoaDon;
 import entity.KhachHang;
-import entity.NhanVien;
 
 public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private RoundedTextField txt_TenKH;
 	private RoundedTextField txt_GaDi;
 	private RoundedTextField txt_GaDen;
@@ -428,10 +422,10 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 				int row = table.getSelectedRow();
 				if(row != -1) {
 					veDoi = dsVe.getVeTheoMaVe(table.getValueAt(row, 8).toString());
-//					if (!veDoi.doiVe() || !veDoi.isTrangThai()) {
-//						JOptionPane.showMessageDialog(null, "Vé quá hạn đổi hoặc không còn khả dụng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-//						return;
-//					}
+					if (veDoi.isTrangThai()) {
+						JOptionPane.showMessageDialog(null, "Vé quá hạn đổi hoặc không còn khả dụng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
 					DoiVe_GUI doiVe = new DoiVe_GUI(QuanLyVe_Gui.this,trangChu);
 					trangChu.content.removeAll();
 					trangChu.content.add(doiVe);
@@ -463,7 +457,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		btn_LamMoi.setBounds(260, 5, 82, 23);
 		jp_HeaderTTV.add(btn_LamMoi);
 
-		btnXuatVe = new RoundedButton("Xuất thử", 10);
+		btnXuatVe = new RoundedButton("Xuất vé", 10);
 		btnXuatVe.setForeground(Color.WHITE);
 		btnXuatVe.setFont(new Font("Tahoma", Font.BOLD, 15));
 		btnXuatVe.setBackground(new Color(51, 102, 153));
@@ -647,9 +641,13 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 			int row = table.getSelectedRow();
 			//			HoaDon hoaDon = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
 			Ve ve = dsVe.getVeTheoMaVe(table.getValueAt(row, 8).toString());
+			if (ve.isTrangThai()) {
+				JOptionPane.showMessageDialog(null, "Vé quá hạn đổi hoặc không còn khả dụng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			String pdfPath = "Ve/" +ve.getMaVe() + ".pdf";
 			ve.xuatVe(pdfPath);
-
+			
 			// Kiểm tra xem Desktop có được hỗ trợ không
 			if (Desktop.isDesktopSupported()) {
 				Desktop desktop = Desktop.getDesktop();
@@ -731,6 +729,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		group.clearSelection();
 	}
 	// Lớp FilterListener để lắng nghe các thay đổi trong các ô tìm kiếm
+	@SuppressWarnings("unused")
 	private class FilterListener implements DocumentListener{
 		@Override
 		public void insertUpdate(DocumentEvent e) {

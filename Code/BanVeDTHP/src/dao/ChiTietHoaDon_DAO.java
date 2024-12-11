@@ -21,7 +21,8 @@ public class ChiTietHoaDon_DAO {
 	}
 	public ArrayList<ChiTietHoaDon> docTuBang()  { 
 	    try { 
-	    	Connection con = ConnectDB.getInstance().getConnection(); 
+	    	ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection(); 
 	    	String sql = "Select * from ChiTietHoaDon"; 
 	    	Statement statement = con.createStatement(); 
 	    	// Thực thi câu lệnh SQL trả về đối tượng ResultSet. 
@@ -47,7 +48,8 @@ public class ChiTietHoaDon_DAO {
 	}
 	
 	public boolean create(ChiTietHoaDon cthd) {
-        Connection con = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
         int n = 0;
         try {
@@ -64,7 +66,8 @@ public class ChiTietHoaDon_DAO {
     }
 	
 	public ChiTietHoaDon getCTHDTheoMaChiTiet(String maChiTiet) { 
-		Connection con = ConnectDB.getInstance().getConnection(); 
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
 		PreparedStatement stmt =null; 
 		ChiTietHoaDon cthd = null;
 		try {       
@@ -93,7 +96,8 @@ public class ChiTietHoaDon_DAO {
 	
 	// Phương thức cập nhật thông tin số lượng của chi tiết
 	public boolean updateSoLuongVe(ChiTietHoaDon chiTiet) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {

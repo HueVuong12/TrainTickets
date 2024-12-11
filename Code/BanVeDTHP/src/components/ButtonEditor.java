@@ -2,11 +2,8 @@ package components;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Map;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -15,7 +12,6 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-import entity.KhachHang;
 import entity.Ve;
 import gui.BanVeNhapThongTin_Gui;
 import gui.BanVe_GUI;

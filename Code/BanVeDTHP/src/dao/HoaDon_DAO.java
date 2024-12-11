@@ -1,6 +1,5 @@
 package dao;
 
-import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +23,8 @@ public class HoaDon_DAO {
 
 	public ArrayList<HoaDon> docTuBang() {
 		try {
-			Connection con = ConnectDB.getInstance().getConnection();
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
 			String sql = "Select * from HoaDon";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
@@ -51,7 +51,8 @@ public class HoaDon_DAO {
 	}
 
 	public boolean create(HoaDon HoaDon) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
@@ -71,7 +72,8 @@ public class HoaDon_DAO {
 	}
 
 	public boolean update(HoaDon HoaDon) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
@@ -92,7 +94,8 @@ public class HoaDon_DAO {
 	}
 
 	public boolean delete(String maHoaDon) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
@@ -107,7 +110,8 @@ public class HoaDon_DAO {
 	}
 
 	public HoaDon getHoaDonTheoMaHoaDon(String maHoaDon) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		HoaDon hoaDon = null;
 		try {
@@ -136,7 +140,8 @@ public class HoaDon_DAO {
 		return hoaDon;
 	}
 	public ArrayList<HoaDon> getHoaDonTheoMaNV(String maNV){
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		HoaDon hoaDon = null;
 		try {
@@ -165,7 +170,8 @@ public class HoaDon_DAO {
 		return dsHoaDon;
 	}
 	public ArrayList<HoaDon> getHoaDonTheoNgayLapHD(String ngayBatDau, String ngayKetThuc){
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		HoaDon hoaDon = null;
 		try {

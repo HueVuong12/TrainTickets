@@ -14,7 +14,12 @@ public class ScrollBarUI extends BasicScrollBarUI {
     @Override
     protected JButton createDecreaseButton(int orientation) {
         return new JButton() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public Dimension getPreferredSize() {
                 return new Dimension(0, 0); // Loại bỏ nút giảm
             }
@@ -24,7 +29,12 @@ public class ScrollBarUI extends BasicScrollBarUI {
     @Override
     protected JButton createIncreaseButton(int orientation) {
         return new JButton() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public Dimension getPreferredSize() {
                 return new Dimension(0, 0); // Loại bỏ nút tăng
             }

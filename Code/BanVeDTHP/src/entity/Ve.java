@@ -21,17 +21,10 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 
-import dao.ChiTietHoaDon_DAO;
-import dao.ChuyenTau_DAO;
-import dao.Ga_DAO;
-import dao.Ghe_DAO;
 import dao.KhachHang_DAO;
-import dao.Toa_DAO;
-import dao.Ve_DAO;
 
 public class Ve {
 	private String maVe;
@@ -461,7 +454,7 @@ public class Ve {
 			tableKH.addCell(new Cell(1,3).add(new Paragraph(hang).setFont(fontRegular))
 				.setBorder(Border.NO_BORDER));
 			tableKH.addCell(
-					new Cell().add(new Paragraph("Đối tượng khuyến mãi/Promotion object: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+					new Cell().add(new Paragraph("Đối tượng/Object: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(new Cell(1,3).add(new Paragraph(khuyenMai).setFont(fontRegular))
 				.setBorder(Border.NO_BORDER));
 			

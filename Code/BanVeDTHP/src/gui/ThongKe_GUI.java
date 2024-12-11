@@ -531,7 +531,13 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				
 				SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				// Kiểm tra ngày bắt đầu và ngày kết thúc
+		        if (dateChooser_TKDT_batDau.getDate() == null || dateChooser_TKDT_ketThuc.getDate() == null) {
+		            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày bắt đầu và ngày kết thúc!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
 				String formattedNgayBatDau = sqlDateFormat.format(dateChooser_TKDT_batDau.getDate());
 				String formattedNgayKetThuc = sqlDateFormat.format(dateChooser_TKDT_ketThuc.getDate());
 				NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());
@@ -806,6 +812,10 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				if (dateChooser_TKDT_batDau.getDate() == null || dateChooser_TKDT_ketThuc.getDate() == null) {
+		            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày bắt đầu và ngày kết thúc!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
 				String formattedNgayBatDau = sqlDateFormat.format(dateChooser_TKCT_batDau.getDate());
 				String formattedNgayKetThuc = sqlDateFormat.format(dateChooser_TKCT_ketThuc.getDate());
 				NhanVien nv = dsNV.getNhanVienTheoTenNV(trangChu.lbl_ThongTinNV.getText());

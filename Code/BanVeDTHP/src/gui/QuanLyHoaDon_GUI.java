@@ -576,7 +576,8 @@ public class QuanLyHoaDon_GUI extends JPanel implements ActionListener {
 		}
 	}
 	
-	private void focusTxtField(JTextField txtField, String placeholder) {
+	@SuppressWarnings("unused")
+	private void focusTxtField(final JTextField txtField, final String placeholder) {
 	    // Đặt màu chữ mờ khi chưa có focus
 	    txtField.setForeground(SystemColor.textInactiveText);
 	    txtField.setText(placeholder); // Đặt chữ mặc định cho trường văn bản

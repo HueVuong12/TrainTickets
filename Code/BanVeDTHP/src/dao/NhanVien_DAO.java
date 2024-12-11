@@ -1,7 +1,6 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +22,8 @@ public class NhanVien_DAO {
     
     public ArrayList<NhanVien> docTuBang()  { 
         try { 
-            Connection con = ConnectDB.getInstance().getConnection(); 
+            ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection(); 
             String sql = "Select * from NhanVien"; 
             Statement statement = con.createStatement(); 
             ResultSet rs = statement.executeQuery(sql); 
@@ -52,7 +52,8 @@ public class NhanVien_DAO {
     }
         
     public boolean create(NhanVien nv) { 
-        Connection con = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
@@ -77,7 +78,8 @@ public class NhanVien_DAO {
     } 
     
     public boolean update(NhanVien nv) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
@@ -102,7 +104,8 @@ public class NhanVien_DAO {
     } 
            
     public boolean delete(String maNV) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
@@ -117,7 +120,8 @@ public class NhanVien_DAO {
     }
     
     public NhanVien getNhanVienTheoMaNV(String maNV) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         NhanVien nhanVien = null; // Khởi tạo biến để lưu đối tượng NhanVien
         try {       
@@ -148,7 +152,8 @@ public class NhanVien_DAO {
         return nhanVien; // Trả về đối tượng NhanVien, hoặc null nếu không tìm thấy
     }
     public NhanVien getNhanVienTheoTenNV(String tenNV) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         NhanVien nhanVien = null; // Khởi tạo biến để lưu đối tượng NhanVien
         try {       

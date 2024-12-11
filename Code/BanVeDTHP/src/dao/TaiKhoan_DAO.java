@@ -21,7 +21,8 @@ public class TaiKhoan_DAO {
 
 	public ArrayList<TaiKhoan> docTuBang() {
 		try {
-			Connection con = ConnectDB.getInstance().getConnection();
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
 			String sql = "SELECT * FROM TaiKhoan";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
@@ -45,7 +46,8 @@ public class TaiKhoan_DAO {
 	}
 
 	public boolean create(TaiKhoan tk) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
@@ -64,7 +66,8 @@ public class TaiKhoan_DAO {
 	}
 
 	public boolean update(TaiKhoan tk) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
@@ -99,7 +102,8 @@ public class TaiKhoan_DAO {
 		return n > 0;
 	}
 	public boolean delete(String maTaiKhoan) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
@@ -116,7 +120,8 @@ public class TaiKhoan_DAO {
 	public TaiKhoan getTaiKhoanTheoMaTK(String maTaiKhoan) {
 		TaiKhoan taiKhoan = null;
 
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 
 		try {
@@ -144,7 +149,8 @@ public class TaiKhoan_DAO {
 	public TaiKhoan getTaiKhoanTheoMaNV(String maNV) {
 		TaiKhoan taiKhoan = null;
 
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 
 		try {
@@ -172,7 +178,8 @@ public class TaiKhoan_DAO {
 
 	public ArrayList<TaiKhoan> getListQL() {
 		try {
-			Connection con = ConnectDB.getInstance().getConnection(); // Lấy kết nối CSDL
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection(); // Lấy kết nối CSDL
 			String sql = "SELECT * FROM TaiKhoan WHERE phanQuyen = ?";
 			PreparedStatement stmt = con.prepareStatement(sql); // Khởi tạo PreparedStatement với câu truy vấn
 			stmt.setInt(1, 1); // Thiết lập giá trị cho tham số phanQuyen
@@ -199,7 +206,8 @@ public class TaiKhoan_DAO {
 
 	public ArrayList<TaiKhoan> getLisNV() {
 		try {
-			Connection con = ConnectDB.getInstance().getConnection(); // Lấy kết nối CSDL
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection(); // Lấy kết nối CSDL
 			String sql = "SELECT * FROM TaiKhoan WHERE phanQuyen = ?";
 			PreparedStatement stmt = con.prepareStatement(sql); // Khởi tạo PreparedStatement với câu truy vấn
 			stmt.setInt(1, 2); // Thiết lập giá trị cho tham số phanQuyen

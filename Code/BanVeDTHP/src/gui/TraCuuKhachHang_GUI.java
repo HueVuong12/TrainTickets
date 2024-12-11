@@ -3,18 +3,16 @@ package gui;
 import java.awt.Color;
 import java.awt.SystemColor;
 
-import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.border.LineBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+//import javax.swing.event.TableModelEvent;
+//import javax.swing.event.TableModelListener;
 import javax.swing.JScrollPane;
 import java.awt.Image;
 import javax.swing.table.DefaultTableModel;
@@ -25,22 +23,13 @@ import components.ConTent_JPanel;
 import components.RoundedButton;
 import components.RoundedTextField;
 import dao.KhachHang_DAO;
-import dao.NhanVien_DAO;
 import entity.KhachHang;
-import entity.NhanVien;
-import entity.TaiKhoan;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.awt.event.ActionEvent;
 
 public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
@@ -189,13 +178,13 @@ public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
 		scrollPane.setBounds(357, 10, 1053, 540);
 		panel.add(scrollPane);
 
-		model.addTableModelListener(new TableModelListener() {
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				int row = e.getFirstRow();
-				int column = e.getColumn();
-			}
-		});
+//		model.addTableModelListener(new TableModelListener() {
+//			@Override
+//			public void tableChanged(TableModelEvent e) {
+//				int row = e.getFirstRow();
+//				int column = e.getColumn();
+//			}
+//		});
 
 //		btn_Tim = new JButton("Tìm");
 		btn_Tim = new RoundedButton("Tìm", 15);

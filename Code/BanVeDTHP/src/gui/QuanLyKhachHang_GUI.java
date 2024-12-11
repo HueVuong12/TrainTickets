@@ -21,7 +21,6 @@ import components.RoundedButton;
 import components.RoundedTextField;
 import dao.KhachHang_DAO;
 import entity.KhachHang;
-import entity.NhanVien;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
@@ -38,19 +37,32 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private RoundedTextField txtMaKH;
+
 	private RoundedTextField txtCCCD;
+
 	private RoundedTextField txtSDT;
+
 	private RoundedTextField txtEmail;
+
 	private RoundedTextField txtTenKH;
+
 	private RoundedButton btnTim;
+
 	private RoundedButton btnSua;
+
 	private RoundedButton btnThem;
+
 	// khai báo DAO
 	private KhachHang_DAO dskh = new KhachHang_DAO();
+
 	private TableRowSorter<TableModel> sorter;
+
 	private RoundedTextField txtTimTen;
+
 	private RoundedTextField txtTimMa;
+
 	private RoundedTextField txtTimSDT;
+
 	KhachHang tempKhachHang = new KhachHang("");
 	/**
 	 * Create the panel.
@@ -297,9 +309,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 			}
 		}
 		if (o.equals(btnSua)) {
-			if(validData()) {
-				update();
-			}
+			update();
 		}
 		if (o.equals(btnTim)) {
 			if (txtTimMa.getText() != null) {

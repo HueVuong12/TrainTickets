@@ -237,7 +237,12 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		
 		// Tạo DefaultTableCellRenderer và thiết lập font in đậm cho cột thứ nhất
 		DefaultTableCellRenderer boldRenderer = new DefaultTableCellRenderer() {
-		    @Override
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
 		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		        c.setFont(c.getFont().deriveFont(Font.BOLD)); // Thiết lập font in đậm
@@ -649,7 +654,12 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		
 		// Tạo DefaultTableCellRenderer và thiết lập font in đậm cho cột thứ nhất
 		DefaultTableCellRenderer boldRenderer = new DefaultTableCellRenderer() {
-		    @Override
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
 		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		        c.setFont(c.getFont().deriveFont(Font.BOLD)); // Thiết lập font in đậm
@@ -948,7 +958,12 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 	
 	// Renderer tùy chỉnh để gộp hai cột đầu tiên (STT & Mã vé)
     static class CombinedColumnRenderer extends DefaultTableCellRenderer {
-        @Override
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             // Lấy giá trị từ cột 0 và cột 1 (STT & Mã vé)
             String stt = (String) table.getModel().getValueAt(row, 0);

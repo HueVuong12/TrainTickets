@@ -26,7 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,7 +34,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -71,7 +69,6 @@ public class DoiVe_GUI extends JPanel {
 	private JLabel lblMaToa;
 	private JTextField txt_GaDi;
 	private JTextField txt_GaDen;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JPanel jp_ThongTinChuyenTau;
 	private JPanel jp_TinhTrangToa;
 	private JPanel jp_TinhTrangGhe;

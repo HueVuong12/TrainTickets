@@ -2,12 +2,10 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.SystemColor;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
@@ -60,7 +58,6 @@ public class QuenMatKhau_GUI extends JFrame {
 	private Color defaultColor = new Color(0, 153, 255); // Màu mặc định
 	
 	private Color hoverReTurn = new Color(225,225,225);
-	private JButton btnHuy;
 	private TaiKhoan_DAO dsTK = new TaiKhoan_DAO();
 	private JLabel lblQuayLai;
 	/**
@@ -506,8 +503,8 @@ public class QuenMatKhau_GUI extends JFrame {
 //		getRootPane().setDefaultButton(btnHuy);
 
 		//Icon Quay lại
-		ImageIcon goBackIcon = new ImageIcon(getClass().getResource("/img/9054423_bx_arrow_back_icon.png"));
-		Image scaledGoBack = goBackIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
+//		ImageIcon goBackIcon = new ImageIcon(getClass().getResource("/img/9054423_bx_arrow_back_icon.png"));
+//		Image scaledGoBack = goBackIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 		
 
 		// Liên kết liên hệ với quản lý

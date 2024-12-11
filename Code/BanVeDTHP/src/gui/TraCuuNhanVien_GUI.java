@@ -11,7 +11,6 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
@@ -27,13 +26,9 @@ import javax.swing.event.TableModelListener;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-
 import com.toedter.calendar.JDateChooser;
-
-import components.ComboBoxRenderer;
 import components.RoundedButton;
 import components.RoundedTextField;
 import dao.NhanVien_DAO;
@@ -268,6 +263,7 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		datatoTable();
 		
 	}
+	@SuppressWarnings("unused")
 	private void focusTxtField(JTextField txtField, String str) {
 		txtField.addFocusListener(new FocusAdapter() {
 			@Override

@@ -25,14 +25,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import javax.swing.RowFilter.Entry;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -466,6 +462,7 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		comboBox_TimTheoMaNV.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				@SuppressWarnings("unchecked")
 				JComboBox<String> cb = (JComboBox<String>) e.getSource();
 				String selectedObj = cb.getSelectedItem() != null ? cb.getSelectedItem().toString() : null;
 				NhanVien nv = dsnv.getNhanVienTheoMaNV(selectedObj);
@@ -591,10 +588,7 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 			deleteField();
 		}
 		if(o.equals(btnSua)) {
-			if(validData()) {
-				update();
-			}
-			
+			update();
 		}
 	}
 	@Override

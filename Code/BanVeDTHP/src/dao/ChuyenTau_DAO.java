@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -26,7 +25,8 @@ public class ChuyenTau_DAO {
     
     public ArrayList<ChuyenTau> docTuBang()  { 
         try { 
-            Connection con = ConnectDB.getInstance().getConnection(); 
+            ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection(); 
             String sql = "Select * from ChuyenTau"; 
             Statement statement = con.createStatement(); 
             ResultSet rs = statement.executeQuery(sql); 
@@ -52,7 +52,8 @@ public class ChuyenTau_DAO {
     }
         
     public boolean create(ChuyenTau chuyenTau) { 
-        Connection con = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
@@ -73,7 +74,8 @@ public class ChuyenTau_DAO {
     } 
     
     public boolean update(ChuyenTau chuyenTau) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
@@ -94,7 +96,8 @@ public class ChuyenTau_DAO {
     } 
            
     public boolean delete(String maTau) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         int n = 0; 
         try { 
@@ -109,7 +112,8 @@ public class ChuyenTau_DAO {
     }
 
     public ChuyenTau getChuyenTauTheoMaTau(String maTau) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         ChuyenTau chuyenTau = null;
         try {       
@@ -139,7 +143,8 @@ public class ChuyenTau_DAO {
         return chuyenTau; 
     } 
     public ArrayList<ChuyenTau> getChuyenTau_Ga(String maTau) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         ChuyenTau chuyenTau = null;
         try {       
@@ -164,7 +169,8 @@ public class ChuyenTau_DAO {
         return dsChuyenTau; 
     }
     public ArrayList<ChuyenTau> getChuyenTauTheoThoiGian(String ngayBatDau, String ngayKetThuc) { 
-        Connection con = ConnectDB.getInstance().getConnection(); 
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         ChuyenTau chuyenTau = null;
         try {       
@@ -196,7 +202,8 @@ public class ChuyenTau_DAO {
     }
     
     public ArrayList<ChuyenTau> getChuyenTauTheoGaVaNgayDi(String gaDi, String gaDen, String ngayDi){
-    	Connection con = ConnectDB.getInstance().getConnection(); 
+    	ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
         PreparedStatement stmt = null; 
         ChuyenTau chuyenTau = null;
         try {       
