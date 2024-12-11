@@ -61,7 +61,9 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 	private JDateChooser dateChooser_NgaySinh;
 	private JButton btnTim;
 	public TraCuuNhanVien_GUI(TrangChu_GUI trangChu) {
+		
 		setBackground(new Color(255, 255, 255));
+		setBounds(0, 170, 1460, 570);
 		setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -75,7 +77,7 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		panel.add(lb_MaNV);
 		
 		txt_MaNV = new RoundedTextField(15);
-		txt_MaNV.setForeground(SystemColor.activeCaptionBorder);
+		txt_MaNV.setForeground(Color.BLACK);
 		txt_MaNV.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txt_MaNV.setBounds(22, 108, 239, 27);
 		panel.add(txt_MaNV);
@@ -87,7 +89,7 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		panel.add(lb_HoTen);
 		
 		txt_HoTen = new RoundedTextField(15);
-		txt_HoTen.setForeground(SystemColor.activeCaptionBorder);
+		txt_HoTen.setForeground(Color.BLACK);
 		txt_HoTen.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txt_HoTen.setColumns(10);
 		txt_HoTen.setBounds(22, 170, 239, 27);
@@ -121,7 +123,7 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		panel.add(lb_SDT);
 		
 		txt_SDT = new RoundedTextField(15);
-		txt_SDT.setForeground(SystemColor.activeCaptionBorder);
+		txt_SDT.setForeground(Color.BLACK);
 		txt_SDT.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txt_SDT.setColumns(10);
 		txt_SDT.setBounds(22, 293, 237, 27);
@@ -133,7 +135,7 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		panel.add(lb_Email);
 		
 		txt_Email = new RoundedTextField(15);
-		txt_Email.setForeground(SystemColor.activeCaptionBorder);
+		txt_Email.setForeground(Color.BLACK);
 		txt_Email.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txt_Email.setColumns(10);
 		txt_Email.setBounds(22, 354, 237, 27);
