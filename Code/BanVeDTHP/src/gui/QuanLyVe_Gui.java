@@ -428,10 +428,10 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 				int row = table.getSelectedRow();
 				if(row != -1) {
 					veDoi = dsVe.getVeTheoMaVe(table.getValueAt(row, 8).toString());
-//					if (!veDoi.doiVe() || !veDoi.isTrangThai()) {
-//						JOptionPane.showMessageDialog(null, "Vé quá hạn đổi hoặc không còn khả dụng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-//						return;
-//					}
+					if (veDoi.doiVe() || veDoi.isTrangThai()) {
+						JOptionPane.showMessageDialog(null, "Vé quá hạn đổi hoặc không còn khả dụng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
 					DoiVe_GUI doiVe = new DoiVe_GUI(QuanLyVe_Gui.this,trangChu);
 					trangChu.content.removeAll();
 					trangChu.content.add(doiVe);
@@ -463,7 +463,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		btn_LamMoi.setBounds(260, 5, 82, 23);
 		jp_HeaderTTV.add(btn_LamMoi);
 
-		btnXuatVe = new RoundedButton("Xuất thử", 10);
+		btnXuatVe = new RoundedButton("Xuất vé", 10);
 		btnXuatVe.setForeground(Color.WHITE);
 		btnXuatVe.setFont(new Font("Tahoma", Font.BOLD, 15));
 		btnXuatVe.setBackground(new Color(51, 102, 153));
@@ -649,7 +649,10 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 			Ve ve = dsVe.getVeTheoMaVe(table.getValueAt(row, 8).toString());
 			String pdfPath = "Ve/" +ve.getMaVe() + ".pdf";
 			ve.xuatVe(pdfPath);
-
+			if (veDoi.doiVe() || veDoi.isTrangThai()) {
+				JOptionPane.showMessageDialog(null, "Vé quá hạn đổi hoặc không còn khả dụng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			// Kiểm tra xem Desktop có được hỗ trợ không
 			if (Desktop.isDesktopSupported()) {
 				Desktop desktop = Desktop.getDesktop();
