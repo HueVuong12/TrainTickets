@@ -641,12 +641,13 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 			int row = table.getSelectedRow();
 			//			HoaDon hoaDon = hoaDon_DAO.getHoaDonTheoMaHoaDon(table.getValueAt(row, 1).toString());
 			Ve ve = dsVe.getVeTheoMaVe(table.getValueAt(row, 8).toString());
-			String pdfPath = "Ve/" +ve.getMaVe() + ".pdf";
-			ve.xuatVe(pdfPath);
-			if (veDoi.doiVe() || veDoi.isTrangThai()) {
+			if (ve.isTrangThai()) {
 				JOptionPane.showMessageDialog(null, "Vé quá hạn đổi hoặc không còn khả dụng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
+			String pdfPath = "Ve/" +ve.getMaVe() + ".pdf";
+			ve.xuatVe(pdfPath);
+			
 			// Kiểm tra xem Desktop có được hỗ trợ không
 			if (Desktop.isDesktopSupported()) {
 				Desktop desktop = Desktop.getDesktop();

@@ -454,7 +454,7 @@ public class Ve {
 			tableKH.addCell(new Cell(1,3).add(new Paragraph(hang).setFont(fontRegular))
 				.setBorder(Border.NO_BORDER));
 			tableKH.addCell(
-					new Cell().add(new Paragraph("Đối tượng khuyến mãi/Promotion object: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+					new Cell().add(new Paragraph("Đối tượng/Object: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(new Cell(1,3).add(new Paragraph(khuyenMai).setFont(fontRegular))
 				.setBorder(Border.NO_BORDER));
 			
