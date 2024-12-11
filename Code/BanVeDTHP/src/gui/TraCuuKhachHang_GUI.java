@@ -102,28 +102,28 @@ public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
 		panelThongTinKhachHang.setLayout(null);
 
 		txtMaKH = new RoundedTextField(15);
-		txtMaKH.setForeground(SystemColor.activeCaptionBorder);
+		txtMaKH.setForeground(Color.BLACK);
 		txtMaKH.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtMaKH.setBounds(35, 86, 274, 30);
 		panelThongTinKhachHang.add(txtMaKH);
 		txtMaKH.setColumns(10);
 
 		txtTen = new RoundedTextField(15);
-		txtTen.setForeground(SystemColor.activeCaptionBorder);
+		txtTen.setForeground(Color.BLACK);
 		txtTen.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtTen.setColumns(10);
 		txtTen.setBounds(35, 165, 274, 30);
 		panelThongTinKhachHang.add(txtTen);
 
 		txtEmail = new RoundedTextField(15);
-		txtEmail.setForeground(SystemColor.activeCaptionBorder);
+		txtEmail.setForeground(Color.BLACK);
 		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtEmail.setColumns(10);
 		txtEmail.setBounds(35, 234, 274, 30);
 		panelThongTinKhachHang.add(txtEmail);
 
 		txtSDT = new RoundedTextField(15);
-		txtSDT.setForeground(SystemColor.activeCaptionBorder);
+		txtSDT.setForeground(Color.BLACK);
 		txtSDT.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtSDT.setColumns(10);
 		txtSDT.setBounds(35, 313, 274, 36);
@@ -143,7 +143,7 @@ public class TraCuuKhachHang_GUI extends JPanel implements ActionListener {
 		panel_2.add(lb_Tim);
 
 		txtCCCD = new RoundedTextField(15);
-		txtCCCD.setForeground(SystemColor.activeCaptionBorder);
+		txtCCCD.setForeground(Color.BLACK);
 		txtCCCD.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtCCCD.setColumns(10);
 		txtCCCD.setBounds(35, 392, 274, 36);
