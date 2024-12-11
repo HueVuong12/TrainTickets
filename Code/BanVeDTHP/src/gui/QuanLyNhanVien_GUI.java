@@ -45,6 +45,7 @@ import javax.swing.table.TableRowSorter;
 import components.ComboBoxRenderer;
 import components.ConTent_JPanel;
 import components.RoundedButton;
+import components.RoundedTextField;
 
 import javax.swing.JRadioButton;
 
@@ -172,28 +173,28 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 		jp_thongTinNV.add(jp_contentThongTin);
 		jp_contentThongTin.setLayout(null);
 
-		textField_MaNV = new JTextField();
+		textField_MaNV = new RoundedTextField(10);
 		textField_MaNV.setBounds(129, 18, 188, 25);
 		textField_MaNV.setEditable(false);
 		jp_contentThongTin.add(textField_MaNV);
 		textField_MaNV.setColumns(10);
 
-		textField_HoTen = new JTextField();
+		textField_HoTen = new RoundedTextField(10);
 		textField_HoTen.setColumns(10);
 		textField_HoTen.setBounds(129, 66, 188, 25);
 		jp_contentThongTin.add(textField_HoTen);
 
-		textField_CCCD = new JTextField();
+		textField_CCCD = new RoundedTextField(10);
 		textField_CCCD.setColumns(10);
 		textField_CCCD.setBounds(129, 194, 188, 25);
 		jp_contentThongTin.add(textField_CCCD);
 
-		textField_SDT = new JTextField();
+		textField_SDT = new RoundedTextField(10);
 		textField_SDT.setColumns(10);
 		textField_SDT.setBounds(129, 244, 188, 25);
 		jp_contentThongTin.add(textField_SDT);
 
-		textField_Email = new JTextField();
+		textField_Email = new RoundedTextField(10);
 		textField_Email.setColumns(10);
 		textField_Email.setBounds(129, 290, 188, 25);
 		jp_contentThongTin.add(textField_Email);
