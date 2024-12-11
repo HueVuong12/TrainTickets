@@ -324,8 +324,6 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		panel_3.add(scrollPane);
 
 		table = new JTable();
-		table.setColumnSelectionAllowed(true);
-		table.setCellSelectionEnabled(true);
 		table.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		model = new DefaultTableModel(
 				new Object[][] {
