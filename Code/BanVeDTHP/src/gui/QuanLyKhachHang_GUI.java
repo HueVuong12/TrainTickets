@@ -21,7 +21,6 @@ import components.RoundedButton;
 import components.RoundedTextField;
 import dao.KhachHang_DAO;
 import entity.KhachHang;
-import entity.NhanVien;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;

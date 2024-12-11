@@ -20,7 +20,8 @@ public class KhachHang_DAO {
 	
 	public ArrayList<KhachHang> docTuBang()  { 
 	    try { 
-	    	Connection con = ConnectDB.getInstance().getConnection(); 
+	    	ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection(); 
 	    	String sql = "Select * from KhachHang"; 
 	    	Statement statement = con.createStatement(); 
 	    	// Thực thi câu lệnh SQL trả về đối tượng ResultSet. 
@@ -45,7 +46,8 @@ public class KhachHang_DAO {
 	}
 
 	public boolean create(KhachHang p) { 
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null; 
 		int n = 0; 
 		try { 
@@ -66,7 +68,8 @@ public class KhachHang_DAO {
 	} 
 	//U: Update 
 	public boolean update(KhachHang p) { 
-		Connection con = ConnectDB.getInstance().getConnection(); 
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection(); 
 		PreparedStatement stmt = null; 
 		int n = 0; 
 		try { 

@@ -21,7 +21,8 @@ public class Ghe_DAO {
     // Phương thức đọc tất cả các ghế từ bảng Ghe
     public ArrayList<Ghe> docTuBang() {
         try {
-            Connection con = ConnectDB.getInstance().getConnection();
+            ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
             String sql = "SELECT * FROM Ghe";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
@@ -45,7 +46,8 @@ public class Ghe_DAO {
 
     // Phương thức tạo mới một ghế trong bảng Ghe
     public boolean create(Ghe ghe) {
-        Connection con = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
         int n = 0;
         try {
@@ -63,7 +65,8 @@ public class Ghe_DAO {
 
     // Phương thức cập nhật thông tin của một ghế
     public boolean update(Ghe ghe) {
-        Connection con = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
         int n = 0;
         try {
@@ -81,7 +84,8 @@ public class Ghe_DAO {
 
     // Phương thức xóa một ghế dựa trên số ghế và mã toa
     public boolean delete(int soGhe, String maToaStr) {
-        Connection con = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
         int n = 0;
         try {
@@ -97,7 +101,8 @@ public class Ghe_DAO {
     }
     
 	public boolean deleteByMaToa(String maToa) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
         int n = 0;
         try {
@@ -116,7 +121,8 @@ public class Ghe_DAO {
     public ArrayList<Ghe> getDsGheTheoMaToa(String maToaStr) {
         ArrayList<Ghe> dsGheTheoToa = new ArrayList<Ghe>();
         try {
-            Connection con = ConnectDB.getInstance().getConnection();
+            ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
             String sql = "SELECT * FROM Ghe WHERE maToa = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, maToaStr);
@@ -143,7 +149,8 @@ public class Ghe_DAO {
         ArrayList<Ghe> dsGheTheoToa = new ArrayList<Ghe>();
         Ghe ghe = null;
         try {
-            Connection con = ConnectDB.getInstance().getConnection();
+            ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
             String sql = "SELECT * FROM Ghe WHERE (maToa = ? AND soGhe = ?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, maToaStr);

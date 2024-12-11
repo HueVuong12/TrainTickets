@@ -1,10 +1,8 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
@@ -24,15 +22,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import javax.swing.RowFilter;
-import javax.swing.RowFilter.Entry;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -44,14 +39,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import com.itextpdf.layout.element.List;
 import com.toedter.calendar.JDateChooser;
 
-import components.ComboBoxRenderer;
 import components.ConTent_JPanel;
 import components.RoundedButton;
 import components.RoundedTextField;
@@ -61,12 +53,14 @@ import dao.Ga_DAO;
 import dao.KhachHang_DAO;
 import entity.ChiTietHoaDon;
 import entity.Ga;
-import entity.HoaDon;
 import entity.KhachHang;
-import entity.NhanVien;
 
 public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private RoundedTextField txt_TenKH;
 	private RoundedTextField txt_GaDi;
 	private RoundedTextField txt_GaDen;
@@ -734,6 +728,7 @@ public class QuanLyVe_Gui extends JPanel implements ActionListener,MouseListener
 		group.clearSelection();
 	}
 	// Lớp FilterListener để lắng nghe các thay đổi trong các ô tìm kiếm
+	@SuppressWarnings("unused")
 	private class FilterListener implements DocumentListener{
 		@Override
 		public void insertUpdate(DocumentEvent e) {

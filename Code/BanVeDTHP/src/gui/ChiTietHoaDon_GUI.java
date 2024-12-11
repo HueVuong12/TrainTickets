@@ -45,6 +45,10 @@ import entity.Ve;
 import javax.swing.JButton;
 
 public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField txtMaChiTiet;
 	private JTextField txtMaHoaDon;
 	private JTextField txtTu;
@@ -57,8 +61,6 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 	private Ve_DAO dsVe = new Ve_DAO();
 	private DefaultTableModel model_DSV;
 	private JPanel panel;
-	private JLabel lblMuiTen;
-	private JLabel lblNewLabel_1;
 	private JPanel panel_1;
 	private JPanel panel_2;
 	private JLabel lblTimKiem;
@@ -76,7 +78,6 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 	private JPanel panel_1_1_1;
 	private JPanel panel_2_1_1;
 	private JLabel lblGia_1;
-	private JLabel lblNewLabel_3;
 	private JPanel panel_3_1_1;
 	private JComboBox<String> comboBoxSL;
 	private JScrollPane scrollPane_CTHD;

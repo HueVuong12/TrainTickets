@@ -267,8 +267,6 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 				JComboBox<String> cb = (JComboBox<String>) e.getSource();
 				String selectedObj = cb.getSelectedItem() != null ? cb.getSelectedItem().toString() : null;
 
-				System.out.println("Selected Object: " + selectedObj); // Log giá trị của selectedObj
-
 				if (selectedObj != null) {
 					TaiKhoan tk = dstk.getTaiKhoanTheoMaTK(selectedObj);
 					if (tk != null) {
@@ -524,11 +522,6 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	    
 	    // Mã hóa mật khẩu bằng BCrypt
 	    String matKhauMaHoa = BCrypt.hashpw(matKhau, BCrypt.gensalt());
-		//	    if (matKhauMaHoa.length() > 50) {
-		//	        matKhauMaHoa = matKhauMaHoa.substring(0, 50); // Cắt chuỗi xuống 50 ký tự
-		//	    }
-
-	    System.out.println(matKhauMaHoa);
 	    
 	    // Xác định chức vụ từ comboBox
 	    int chucVu = comboBox_PhanQuyen.getSelectedIndex() == 0 ? 1 : 2;

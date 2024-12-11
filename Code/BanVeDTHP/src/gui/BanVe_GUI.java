@@ -115,8 +115,6 @@ public class BanVe_GUI extends JPanel {
 		setBounds(0, 170, 1460, 570);
 		setLayout(null);
 
-		System.out.println("Them ve thanh cong");
-
 		jp_title = new JPanel();
 		jp_title.setLayout(null);
 		jp_title.setBackground(new Color(51, 102, 153));

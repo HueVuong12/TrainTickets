@@ -40,7 +40,6 @@ public class DangNhap_GUI extends JFrame {
 	public TaiKhoan taiKhoanLogined;
 
 	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-	private JButton btnQuenMatKhau;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {

@@ -6,7 +6,12 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 public class ComboBoxRenderer extends JComboBox<String> implements TableCellRenderer {
-	    public ComboBoxRenderer(JComboBox<String> comboBox) {
+	    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+		public ComboBoxRenderer(JComboBox<String> comboBox) {
 	        super();
 	        for (int i = 0; i < comboBox.getItemCount(); i++) {
 	            this.addItem(comboBox.getItemAt(i));

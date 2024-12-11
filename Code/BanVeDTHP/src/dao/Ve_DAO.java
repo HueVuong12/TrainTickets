@@ -1,11 +1,9 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -31,7 +29,8 @@ public class Ve_DAO {
 	// Phương thức đọc tất cả các vé từ bảng Ve
 	public ArrayList<Ve> docTuBang() {
 		try {
-			Connection con = ConnectDB.getInstance().getConnection();
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
 			String sql = "SELECT * FROM Ve";
 			PreparedStatement stmt = con.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
@@ -75,7 +74,8 @@ public class Ve_DAO {
 
 	// Phương thức tạo mới một vé trong bảng Ve
 	public boolean create(Ve ve) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
@@ -105,7 +105,8 @@ public class Ve_DAO {
 
 	// Phương thức cập nhật thông tin của một vé
 	public boolean update(Ve ve) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
@@ -136,7 +137,8 @@ public class Ve_DAO {
 
 	// Phương thức xóa một vé
 	public boolean delete(String maVe) {
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
@@ -153,7 +155,8 @@ public class Ve_DAO {
 	public Ve getVeTheoMaVe(String maVe) {
 		Ve ve = null;
 		try {
-			Connection con = ConnectDB.getInstance().getConnection();
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
 			String sql = "SELECT * FROM Ve WHERE maVe = ?";
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setString(1, maVe);
@@ -198,7 +201,8 @@ public class Ve_DAO {
 	public ArrayList<Ve> getDsVeTheoMaChiTiet(String maChiTiet) {
 		ArrayList<Ve> ds = new ArrayList<Ve>();
 		try {
-			Connection con = ConnectDB.getInstance().getConnection();
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
 			String sql = "SELECT * FROM Ve WHERE chiTiet = ?";
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setString(1, maChiTiet);
@@ -219,7 +223,6 @@ public class Ve_DAO {
 				String hang = rs.getString("hang");
 				String khuyenMai = rs.getString("khuyenMai");
 				boolean trangThai = rs.getBoolean("trangThai");
-				String maChiTiet1 = rs.getString("chiTiet");
 
 				// Sử dụng constructor copy để tạo đối tượng
 				ChuyenTau tau = new ChuyenTau(maTau);
@@ -234,7 +237,6 @@ public class Ve_DAO {
 				Ve ve = new Ve(maVe1, tau, toa, ghe, khachHang, ngayDi, gioDi,ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai,
 						chiTiet);
 				ds.add(ve);
-				System.out.println("Danh sách vé lấy được cho " + maChiTiet + ": " + ds.size());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -259,7 +261,8 @@ public class Ve_DAO {
 	private int getLastVeNumber(LocalDate currentDate) {
 	    int lastNumber = 0;
 	    try {
-	        Connection con = ConnectDB.getInstance().getConnection();
+	        ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
 	        String sql = "SELECT TOP 1 maVe FROM Ve WHERE maVe LIKE 'VE%' AND CAST(SUBSTRING(maVe, 3, 6) AS DATE) = ? ORDER BY maVe DESC"; 
 	        // Lọc theo ngày trong mã vé (phần ngày, tháng, năm trong mã vé)
 	        PreparedStatement stmt = con.prepareStatement(sql);
@@ -280,7 +283,8 @@ public class Ve_DAO {
 	public int getLastVeNumber(String datePart) {
 	    int lastNumber = 0;
 	    try {
-	        Connection con = ConnectDB.getInstance().getConnection();
+	        ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
 	        String sql = "SELECT TOP 1 maVe FROM Ve WHERE maVe LIKE 'VE" + datePart + "%' ORDER BY maVe DESC"; // Lọc theo ngày
 	        PreparedStatement stmt = con.prepareStatement(sql);
 	        ResultSet rs = stmt.executeQuery();
@@ -299,7 +303,8 @@ public class Ve_DAO {
 	public ArrayList<Ve> getVetheoKhuyenMai(String km){
 		ArrayList<Ve> ds = new ArrayList<Ve>();
 		try {
-			Connection con = ConnectDB.getInstance().getConnection();
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
 			String sql = "SELECT * FROM Ve WHERE khuyenMai = ?";
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setString(1, km);
@@ -347,7 +352,8 @@ public class Ve_DAO {
 	public ArrayList<String> getKhuyenMai(){
 		ArrayList<String> list = new ArrayList<String>();
 		try {
-			Connection con = ConnectDB.getInstance().getConnection();
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
 			String sql = "Select khuyenMai From Ve";
 			PreparedStatement stmt = con.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
@@ -365,7 +371,8 @@ public class Ve_DAO {
 	// Phương thức đọc tất cả các vé từ bảng Ve
 		public ArrayList<Ve> docTuBangTheoNgayLap() {
 			try {
-				Connection con = ConnectDB.getInstance().getConnection();
+				ConnectDB.getInstance();
+				Connection con = ConnectDB.getConnection();
 				String sql = "SELECT v.* FROM Ve v JOIN ChiTietHoaDon cthd ON v.chiTiet = cthd.maChiTiet JOIN HoaDon hd ON cthd.hoaDon = hd.maHoaDon ORDER BY hd.ngayLapHoaDon DESC";
 				PreparedStatement stmt = con.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();
@@ -400,7 +407,6 @@ public class Ve_DAO {
 					Ve ve = new Ve(maVe, tau, toa, ghe, khachHang, ngayDi, gioDi,ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai,
 							chiTiet);
 					dsVe.add(ve);
-					System.out.println(ve);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();

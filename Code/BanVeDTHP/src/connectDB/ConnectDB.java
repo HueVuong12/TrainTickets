@@ -35,7 +35,6 @@ public class ConnectDB {
 	
 	public static Connection getConnection() { 
 		if (con == null) connect();
-		System.out.print(new Date(0).toString() + ":" + " GetConnection\n");
 		return con; 
 	}
 
