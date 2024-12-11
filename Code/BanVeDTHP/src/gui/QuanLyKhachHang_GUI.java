@@ -309,7 +309,9 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 			}
 		}
 		if (o.equals(btnSua)) {
-			update();
+			if(validData()) {
+				update();
+			}
 		}
 		if (o.equals(btnTim)) {
 			if (txtTimMa.getText() != null) {

@@ -588,7 +588,9 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 			deleteField();
 		}
 		if(o.equals(btnSua)) {
-			update();
+			if(validData()) {
+				update();
+			}
 		}
 	}
 	@Override
