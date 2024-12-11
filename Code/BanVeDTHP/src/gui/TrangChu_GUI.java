@@ -386,13 +386,16 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    		ImageIcon userIcon1 = new ImageIcon(getClass().getResource("/img/user.png"));
 	    	    Image scaledUser1 = userIcon1.getImage().getScaledInstance(73 ,56, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    	    userIconLabel1 = new JLabel(new ImageIcon(scaledUser1));
-	    	    userIconLabel1.setBounds(54, 84, 73, 56);
+	    	    userIconLabel1.setBounds(70, 84, 73, 56);
 	    		contentPane1.add(userIconLabel1);
 	    		
 	    		lb_TenNV = new JLabel("");
 	    		lb_TenNV.setText(nhanVien_DAO.getNhanVienTheoMaNV((taiKhoan_DAO.getTaiKhoanTheoMaTK(dangNhap.getTaiKhoanLogined().getMaTaiKhoan())).getNhanVien().getMaNV()).getTenNV());
 	    		lb_TenNV.setFont(new Font("Tahoma", Font.PLAIN, 15));
-	    		lb_TenNV.setBounds(51, 172, 105, 25);
+	    		lb_TenNV.setBounds(10, 172, 200, 25);
+	    		// Căn chỉnh text trong JLabel ở giữa
+	    		lb_TenNV.setHorizontalAlignment(SwingConstants.CENTER);
+	    		lb_TenNV.setVerticalAlignment(SwingConstants.CENTER);
 	    		contentPane1.add(lb_TenNV);
 	    		
 	    		JLabel lblNewLabel_2 = new JLabel("Mã nhân viên:");
