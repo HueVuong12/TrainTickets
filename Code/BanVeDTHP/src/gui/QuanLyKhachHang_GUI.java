@@ -129,6 +129,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		panel_1.add(btnTim);
 
 		txtTimMa = new RoundedTextField(15);
+		txtTimMa.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtTimMa.setColumns(10);
 		txtTimMa.setBounds(215, 49, 250, 30);
 		panelTimKiem.add(txtTimMa);
@@ -144,6 +145,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		panelTimKiem.add(lblNewLabel_5_1);
 
 		txtTimTen = new RoundedTextField(15);
+		txtTimTen.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtTimTen.setColumns(10);
 		txtTimTen.setBounds(647, 49, 250, 30);
 		panelTimKiem.add(txtTimTen);
@@ -154,6 +156,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		panelTimKiem.add(lblNewLabel_5_2);
 
 		txtTimSDT = new RoundedTextField(15);
+		txtTimSDT.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtTimSDT.setColumns(10);
 		txtTimSDT.setBounds(1089, 49, 250, 30);
 		panelTimKiem.add(txtTimSDT);
@@ -170,7 +173,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		panelThongTinKhachHang.add(lblNewLabel);
 
 		txtTenKH = new RoundedTextField(15);
-		txtTenKH.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtTenKH.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtTenKH.setColumns(10);
 		txtTenKH.setBounds(35, 143, 250, 27);
 		panelThongTinKhachHang.add(txtTenKH);
@@ -191,19 +194,19 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 		panelThongTinKhachHang.add(lblNewLabel_3);
 
 		txtEmail = new RoundedTextField(15);
-		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtEmail.setColumns(10);
 		txtEmail.setBounds(35, 204, 250, 30);
 		panelThongTinKhachHang.add(txtEmail);
 
 		txtSDT = new RoundedTextField(15);
-		txtSDT.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtSDT.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtSDT.setColumns(10);
 		txtSDT.setBounds(35, 268, 250, 30);
 		panelThongTinKhachHang.add(txtSDT);
 
 		txtCCCD = new RoundedTextField(15);
-		txtCCCD.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtCCCD.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtCCCD.setColumns(10);
 		txtCCCD.setBounds(35, 321, 250, 30);
 		panelThongTinKhachHang.add(txtCCCD);
@@ -238,7 +241,7 @@ public class QuanLyKhachHang_GUI extends JPanel implements ActionListener, Mouse
 
 		txtMaKH = new RoundedTextField(15);
 		txtMaKH.setEditable(false);
-		txtMaKH.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtMaKH.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtMaKH.setColumns(10);
 		txtMaKH.setBounds(35, 73, 250, 30);
 		panelThongTinKhachHang.add(txtMaKH);
