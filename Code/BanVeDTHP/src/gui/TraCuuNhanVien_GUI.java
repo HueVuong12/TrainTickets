@@ -78,21 +78,21 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		
 		txt_MaNV = new RoundedTextField(15);
 		txt_MaNV.setForeground(Color.BLACK);
-		txt_MaNV.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		txt_MaNV.setBounds(22, 108, 239, 27);
+		txt_MaNV.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txt_MaNV.setBounds(23, 108, 239, 30);
 		panel.add(txt_MaNV);
 		txt_MaNV.setColumns(10);
 		
 		JLabel lb_HoTen = new JLabel("Họ tên:");
 		lb_HoTen.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lb_HoTen.setBounds(22, 146, 111, 27);
+		lb_HoTen.setBounds(22, 146, 111, 25);
 		panel.add(lb_HoTen);
 		
 		txt_HoTen = new RoundedTextField(15);
 		txt_HoTen.setForeground(Color.BLACK);
-		txt_HoTen.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txt_HoTen.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txt_HoTen.setColumns(10);
-		txt_HoTen.setBounds(22, 170, 239, 27);
+		txt_HoTen.setBounds(23, 170, 239, 30);
 		panel.add(txt_HoTen);
 		
 		JLabel lb_GioiTinh = new JLabel("Giới tính:");
@@ -103,7 +103,7 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		cb_nam = new JRadioButton("Nam");
 		cb_nam.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		cb_nam.setToolTipText("");
-		cb_nam.setBounds(22, 232, 52, 21);
+		cb_nam.setBounds(23, 232, 52, 21);
 		panel.add(cb_nam);
 
 		cb_nu = new JRadioButton("Nữ");
@@ -119,26 +119,26 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		
 		JLabel lb_SDT = new JLabel("Số điện thoại:");
 		lb_SDT.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lb_SDT.setBounds(22, 269, 111, 27);
+		lb_SDT.setBounds(22, 265, 111, 27);
 		panel.add(lb_SDT);
 		
 		txt_SDT = new RoundedTextField(15);
 		txt_SDT.setForeground(Color.BLACK);
-		txt_SDT.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txt_SDT.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txt_SDT.setColumns(10);
-		txt_SDT.setBounds(22, 293, 237, 27);
+		txt_SDT.setBounds(23, 293, 237, 30);
 		panel.add(txt_SDT);
 		
 		JLabel lb_Email = new JLabel("Email:");
 		lb_Email.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lb_Email.setBounds(22, 330, 88, 27);
+		lb_Email.setBounds(22, 330, 88, 25);
 		panel.add(lb_Email);
 		
 		txt_Email = new RoundedTextField(15);
 		txt_Email.setForeground(Color.BLACK);
-		txt_Email.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txt_Email.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txt_Email.setColumns(10);
-		txt_Email.setBounds(22, 354, 237, 27);
+		txt_Email.setBounds(23, 354, 237, 30);
 		panel.add(txt_Email);
 		
 		JLabel lb_ChucVu = new JLabel("Chức vụ");
@@ -147,7 +147,10 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		panel.add(lb_ChucVu);
 		
 		comboBox_ChucVu = new JComboBox<String>();
-		comboBox_ChucVu.setBounds(22, 420, 237, 27);
+		comboBox_ChucVu.setBackground(Color.WHITE);
+		comboBox_ChucVu.setForeground(Color.BLACK);
+		comboBox_ChucVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		comboBox_ChucVu.setBounds(23, 420, 237, 30);
 		comboBox_ChucVu.addItem("Quản lý");
 		comboBox_ChucVu.addItem("Nhân viên");
 		panel.add(comboBox_ChucVu);
@@ -159,7 +162,10 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		
 		// Tạo JComboBox Ca trong JPanel thông tin nhân viên
 		comboBox_Ca = new JComboBox<>();
-		comboBox_Ca.setBounds(22, 477, 237, 27);
+		comboBox_Ca.setBackground(Color.WHITE);
+		comboBox_Ca.setForeground(Color.BLACK);
+		comboBox_Ca.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		comboBox_Ca.setBounds(23, 477, 237, 30);
 		comboBox_Ca.addItem("CA01");
 		comboBox_Ca.addItem("CA02");
 		comboBox_Ca.addItem("CA03");
@@ -191,7 +197,7 @@ public class TraCuuNhanVien_GUI extends JPanel implements ActionListener{
 		lblThongTinNhanVien.setBackground(new Color(51, 102, 153));
 		lblThongTinNhanVien.setHorizontalAlignment(SwingConstants.CENTER);
 		lblThongTinNhanVien.setForeground(new Color(255, 255, 255));
-		lblThongTinNhanVien.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblThongTinNhanVien.setFont(new Font("Tahoma", Font.BOLD, 18));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(304, 10, 1126, 557);
