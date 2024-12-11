@@ -155,6 +155,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 
 
 		textField_MaDN = new RoundedTextField(10);
+		textField_MaDN.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		textField_MaDN.setText("Mã tài khoản");
 		//		textField_MaDN = new JTextField();
 		textField_MaDN.setEditable(false);
@@ -164,6 +165,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		focusTxtField(textField_MaDN, "Mã tài khoản");
 
 		textField_MaNV = new RoundedTextField(10);
+		textField_MaNV.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		textField_MaNV.setText("Mã nhân viên");
 		textField_MaNV.setColumns(10);
 		textField_MaNV.setBounds(20, 299, 291, 30);
@@ -218,6 +220,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		btn_Tim.setBackground(new Color(51, 102, 153));
 
 		comboBox_PhanQuyen = new JComboBox<>();
+		comboBox_PhanQuyen.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		comboBox_PhanQuyen.setBounds(20, 219, 291, 31);
 		comboBox_PhanQuyen.addItem("Quản lý");
 		comboBox_PhanQuyen.addItem("Nhân viên");
@@ -226,6 +229,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		jp_contentThongTin.add(btn_Tim);
 
 		passwordField = new JPasswordField();
+		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		passwordField.setBounds(20, 136, 291, 30);
 		jp_contentThongTin.add(passwordField);
 
@@ -252,6 +256,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 
 		// Tạo JComboBox Hiển thị mã nhân viên 
 		comboBox_TimTheoMaTK = new JComboBox<String>();
+		comboBox_TimTheoMaTK.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		comboBox_TimTheoMaTK.setBounds(372, 40, 170, 28);
 		add(comboBox_TimTheoMaTK);
 		// Tạo JComboBox Hiển thị mã nhân viên 
