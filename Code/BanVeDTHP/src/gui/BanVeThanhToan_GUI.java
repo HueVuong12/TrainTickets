@@ -834,8 +834,12 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 					JOptionPane.showMessageDialog(null, "Số tiền trả lại không được âm!", "Thông báo", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+				// Cập nhật trạng thái ghế
+			    Ghe gheCu = doiVe_GUI.veCu.getSoGhe();
+			    gheCu.setTrangThai(true);
+			    ghe_DAO.update(gheCu);
+				doiVe_GUI.veCu.setTrangThai(true);
 				
-				doiVe_GUI.veCu.setTrangThai(false);
 				ChiTietHoaDon chiTietVeCu = chiTietHoaDon_DAO.getCTHDTheoMaChiTiet(doiVe_GUI.veCu.getChiTiet().getMaChiTiet());
 				ve_DAO.update(doiVe_GUI.veCu);
 				if (chiTietVeCu.getSoLuong() == 1) {
