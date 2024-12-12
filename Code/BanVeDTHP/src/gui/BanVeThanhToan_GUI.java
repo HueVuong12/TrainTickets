@@ -393,6 +393,21 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 					return;
 				}
 				
+				// Tạo khách hàng
+				Boolean khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.khachHangMua);
+				if (!khachHangExist) {
+					khachHang_DAO.create(banVeNhapThongTin_GUI.khachHangMua);
+				}
+				khachHang_DAO.reset();
+				dsKH = khachHang_DAO.docTuBang();
+				for (int key: banVeNhapThongTin_GUI.map.keySet()) {
+					khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.map.get(key));
+					if (!khachHangExist) {
+						banVeNhapThongTin_GUI.map.get(key).setMaKH(generateMaKH());
+						khachHang_DAO.create(banVeNhapThongTin_GUI.map.get(key));
+					}
+				}
+				
 				// Tạo hóa đơn
 				hoaDon_DAO.reset();
 				ArrayList<HoaDon> dsHD = hoaDon_DAO.docTuBang();
@@ -410,20 +425,6 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 				ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(maCT, hoaDon, soLuong, banVe_GUI.dsVeDatTam, 0.1f);
 				chiTietHoaDon_DAO.create(chiTietHoaDon);
 				
-				// Tạo khách hàng
-				Boolean khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.khachHangMua);
-				if (!khachHangExist) {
-					khachHang_DAO.create(banVeNhapThongTin_GUI.khachHangMua);
-				}
-				khachHang_DAO.reset();
-				dsKH = khachHang_DAO.docTuBang();
-				for (int key: banVeNhapThongTin_GUI.map.keySet()) {
-					khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.map.get(key));
-					if (!khachHangExist) {
-						banVeNhapThongTin_GUI.map.get(key).setMaKH(generateMaKH());
-						khachHang_DAO.create(banVeNhapThongTin_GUI.map.get(key));
-					}
-				}
 				
 				// Tạo danh sách vé
 				String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyy")); // Ngày lập vé
@@ -843,6 +844,21 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 					chiTietHoaDon_DAO.updateSoLuongVe(chiTietVeCu);
 				}
 				
+				// Tạo khách hàng
+				Boolean khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.khachHangMua);
+				if (!khachHangExist) {
+					khachHang_DAO.create(banVeNhapThongTin_GUI.khachHangMua);
+				}
+				khachHang_DAO.reset();
+				dsKH = khachHang_DAO.docTuBang();
+				for (int key: banVeNhapThongTin_GUI.map.keySet()) {
+					khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.map.get(key));
+					if (!khachHangExist) {
+						banVeNhapThongTin_GUI.map.get(key).setMaKH(generateMaKH());
+						khachHang_DAO.create(banVeNhapThongTin_GUI.map.get(key));
+					}
+				}
+				
 				// Tạo hóa đơn
 				hoaDon_DAO.reset();
 				ArrayList<HoaDon> dsHD = hoaDon_DAO.docTuBang();
@@ -860,20 +876,6 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 				ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(maCT, hoaDon, soLuong, doiVe_GUI.dsVeDatTam, 0.1f);
 				chiTietHoaDon_DAO.create(chiTietHoaDon);
 				
-				// Tạo khách hàng
-				Boolean khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.khachHangMua);
-				if (!khachHangExist) {
-					khachHang_DAO.create(banVeNhapThongTin_GUI.khachHangMua);
-				}
-				khachHang_DAO.reset();
-				dsKH = khachHang_DAO.docTuBang();
-				for (int key: banVeNhapThongTin_GUI.map.keySet()) {
-					khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.map.get(key));
-					if (!khachHangExist) {
-						banVeNhapThongTin_GUI.map.get(key).setMaKH(generateMaKH());
-						khachHang_DAO.create(banVeNhapThongTin_GUI.map.get(key));
-					}
-				}
 				
 				// Tạo danh sách vé
 				String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyy")); // Ngày lập vé

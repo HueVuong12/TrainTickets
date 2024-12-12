@@ -115,6 +115,8 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Ngăn đóng cửa sổ trực tiếp
 		setBounds(100, 100, 1480, 810);
 		setLocationRelativeTo(null);
+		setTitle("Quản lý nhà ga ĐTHP");
+		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
