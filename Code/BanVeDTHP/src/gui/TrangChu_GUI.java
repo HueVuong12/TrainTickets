@@ -50,6 +50,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -199,18 +200,21 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    title.add(titleLabel);
 	    
 	    // Thiết lập font cho titleLabel
-        try {
-            // Tải font "Italianno"
-            Font italiannoFont = Font.createFont(Font.TRUETYPE_FONT, new File("font/Italianno-Regular.tff")).deriveFont(100f); // Kích thước font 48
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(italiannoFont); // Đăng ký font
-            
-//            titleLabel.setFont(italiannoFont); // Áp dụng font
-            // Áp dụng font, bóng, và viền
-            applyTextEffectWithBorder(titleLabel, italiannoFont, Color.WHITE, Color.GRAY, Color.BLACK);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+	    try {
+	        InputStream fontStream = getClass().getResourceAsStream("/font/Italianno-Regular.tff");
+	        if (fontStream != null) {
+	            Font italiannoFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(100f);
+	            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	            ge.registerFont(italiannoFont);
+	            
+	            // Áp dụng font, bóng, và viền
+	            applyTextEffectWithBorder(titleLabel, italiannoFont, Color.WHITE, Color.GRAY, Color.BLACK);
+	        } else {
+	            System.err.println("Không tìm thấy font: /font/Italianno-Regular.tff");
+	        }
+	    } catch (FontFormatException | IOException e) {
+	        e.printStackTrace();
+	    }
 	    
 		//Menu Chính
 		jp_menu = new JPanel();
