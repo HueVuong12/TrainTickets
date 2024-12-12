@@ -399,12 +399,16 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 					khachHang_DAO.create(banVeNhapThongTin_GUI.khachHangMua);
 				}
 				khachHang_DAO.reset();
+				dsKH.removeAll(dsKH);
 				dsKH = khachHang_DAO.docTuBang();
 				for (int key: banVeNhapThongTin_GUI.map.keySet()) {
-					khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.map.get(key));
+					KhachHang khachHangMoi = banVeNhapThongTin_GUI.map.get(key);
+					khachHangExist = (dsKH.contains(khachHangMoi) || khachHangMoi.getSdt().equals(banVeNhapThongTin_GUI.khachHangMua.getSdt()));
 					if (!khachHangExist) {
 						banVeNhapThongTin_GUI.map.get(key).setMaKH(generateMaKH());
 						khachHang_DAO.create(banVeNhapThongTin_GUI.map.get(key));
+					} else {
+						banVeNhapThongTin_GUI.map.get(key).setMaKH(banVeNhapThongTin_GUI.khachHangMua.getMaKH());
 					}
 				}
 				
