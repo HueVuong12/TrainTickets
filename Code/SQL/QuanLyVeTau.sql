@@ -1207,6 +1207,53 @@ WHILE @i <= 20 BEGIN
     SET @i = @i + 1;
 END;
 
+-- Thêm chuyến tàu TA018
+INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
+VALUES ('TA018', 'GA173', 'GA001', '2024-12-26', '06:00:00', '2024-12-27', '19:00:00');
+
+-- Thêm các ga dừng
+INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
+VALUES 
+('TA018', 'GA153', '2024-12-26', '08:30:00', '2024-12-26', '09:30:00'),
+('TA018', 'GA099', '2024-12-26', '11:00:00', '2024-12-26', '21:50:00'),  
+('TA018', 'GA035', '2024-12-26', '14:00:00', '2024-12-27', '11:20:00');  
+
+-- Thêm các toa
+INSERT INTO Toa (maToa, loaiToa, maTau)
+VALUES 
+('TA018_01', N'Giường nằm', 'TA018'),
+('TA018_02', N'Giường nằm', 'TA018'),
+('TA018_03', N'Ghế mềm', 'TA018'),
+('TA018_04', N'Ghế mềm', 'TA018'),
+('TA018_05', N'VIP', 'TA018');
+
+-- Ghế mềm (32 ghế mỗi toa)
+-- Thêm ghế cho TA001
+SET @i = 1;
+WHILE @i <= 32
+BEGIN
+    INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA018_01', 1);
+    INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA018_02', 1);
+    SET @i = @i + 1;
+END;
+
+-- Ghế mềm (64 ghế mỗi toa)
+SET @i = 1;
+WHILE @i <= 64
+BEGIN
+    INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA018_03', 1);
+    INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA018_04', 1);
+    SET @i = @i + 1;
+END;
+
+-- VIP (20 ghế mỗi toa)
+SET @i = 1;
+WHILE @i <= 20
+BEGIN
+    INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA018_05', 1);
+    SET @i = @i + 1;
+END;
+
 -- Thêm 5 khách hàng
 INSERT INTO KhachHang (maKH, tenKH, email, sdt, cccd) VALUES
 ('KH0001', N'Nguyễn Văn A', 'abc@gmail.com', '0912345678', '049204013502'),
@@ -1241,3 +1288,141 @@ INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen
 ('VE1111240004', 'TA003', 'TA003_01', 1, 'KH0001', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn tuổi', 0, 'CT111124NV00400001'),
 ('VE1111240005', 'TA003', 'TA003_01', 2, 'KH0002', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Sinh viên', 0, 'CT111124NV00400001'),
 ('VE1111240006', 'TA003', 'TA003_01', 3, 'KH0003', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 0, 'CT111124NV00400001');
+
+
+-- Thêm 10 khách hàng
+INSERT INTO KhachHang (maKH, tenKH, email, sdt, cccd) VALUES
+('KH0006', N'Hoàng Văn F', 'hoangf@gmail.com', '0912345683', '049204013507'),
+('KH0007', N'Bùi Thị G', 'buig@gmail.com', '0912345684', '049204013508'),
+('KH0008', N'Ngô Văn H', 'ngoh@gmail.com', '0912345685', '049204013509'),
+('KH0009', N'Trịnh Thị I', 'trinhi@gmail.com', '0912345686', '049204013510'),
+('KH0010', N'Lý Văn J', 'lyj@gmail.com', '0912345687', '049204013511'),
+('KH0011', N'Vũ Thị K', 'vuk@gmail.com', '0912345688', '049204013512'),
+('KH0012', N'Doãn Văn L', 'doanl@gmail.com', '0912345689', '049204013513'),
+('KH0013', N'Tô Thị M', 'tom@gmail.com', '0912345690', '049204013514'),
+('KH0014', N'Đặng Văn N', 'dangn@gmail.com', '0912345691', '049204013515'),
+('KH0015', N'Hồ Thị O', 'ho@gmail.com', '0912345692', '049204013516');
+
+-- Thêm hóa đơn cho từng khách hàng
+INSERT INTO HoaDon (maHoaDon, ngayLapHoaDon, nhanVien, khachHang, daHoanVe, daHoanTien) VALUES
+('121224NV00100001', '2024-12-12', 'NV001', 'KH0006', 0, 0),
+('121224NV00100002', '2024-12-12', 'NV001', 'KH0007', 0, 0),
+('121224NV00100003', '2024-12-12', 'NV001', 'KH0008', 0, 0),
+('121224NV00100004', '2024-12-12', 'NV001', 'KH0009', 0, 0),
+('121224NV00100005', '2024-12-12', 'NV001', 'KH0010', 0, 0),
+('121224NV00100006', '2024-12-12', 'NV001', 'KH0011', 0, 0),
+('121224NV00100007', '2024-12-12', 'NV001', 'KH0012', 0, 0),
+('121224NV00100008', '2024-12-12', 'NV001', 'KH0013', 0, 0),
+('121224NV00100009', '2024-12-12', 'NV001', 'KH0014', 0, 0),
+('121224NV00100010', '2024-12-12', 'NV001', 'KH0015', 0, 0);
+
+-- Thêm chi tiết hóa đơn
+INSERT INTO ChiTietHoaDon (maChiTiet, hoaDon, soLuong, thue) VALUES
+('CT121224NV00100001', '121224NV00100001', 1, 0.1),
+('CT121224NV00100002', '121224NV00100002', 1, 0.1),
+('CT121224NV00100003', '121224NV00100003', 1, 0.1),
+('CT121224NV00100004', '121224NV00100004', 1, 0.1),
+('CT121224NV00100005', '121224NV00100005', 1, 0.1),
+('CT121224NV00100006', '121224NV00100006', 1, 0.1),
+('CT121224NV00100007', '121224NV00100007', 1, 0.1),
+('CT121224NV00100008', '121224NV00100008', 1, 0.1),
+('CT121224NV00100009', '121224NV00100009', 1, 0.1),
+('CT121224NV00100010', '121224NV00100010', 1, 0.1);
+
+-- Thêm vé cho từng chi tiết hóa đơn
+INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES
+('VE1212240007', 'TA001', 'TA001_01', 1, 'KH0006', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100001'),
+('VE1212240008', 'TA001', 'TA001_01', 2, 'KH0007', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100002'),
+('VE1212240009', 'TA001', 'TA001_01', 3, 'KH0008', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100003'),
+('VE1212240010', 'TA001', 'TA001_01', 4, 'KH0009', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100004'),
+('VE1212240011', 'TA001', 'TA001_01', 5, 'KH0010', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100005'),
+('VE1212240012', 'TA001', 'TA001_01', 6, 'KH0011', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100006'),
+('VE1212240013', 'TA001', 'TA001_01', 7, 'KH0012', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100007'),
+('VE1212240014', 'TA001', 'TA001_01', 8, 'KH0013', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100008'),
+('VE1212240015', 'TA001', 'TA001_01', 9, 'KH0014', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100009'),
+('VE1212240016', 'TA001', 'TA001_01', 10, 'KH0015', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100010');
+
+-- Cập nhật trạng thái ghế của 10 ghế
+UPDATE Ghe
+SET trangThai = 0
+WHERE maToa = 'TA001_01' AND soGhe IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+
+-- Thêm 5 khách hàng mới
+INSERT INTO KhachHang (maKH, tenKH, email, sdt, cccd) VALUES
+('KH0016', N'Nguyễn Văn P', 'nguyenp@gmail.com', '0912345693', '049204013517'),
+('KH0017', N'Lê Thị Q', 'leq@gmail.com', '0912345694', '049204013518'),
+('KH0018', N'Phạm Văn R', 'phamr@gmail.com', '0912345695', '049204013519'),
+('KH0019', N'Trần Thị S', 'trans@gmail.com', '0912345696', '049204013520'),
+('KH0020', N'Võ Văn T', 'vot@gmail.com', '0912345697', '049204013521');
+-- Thêm hóa đơn cho 5 khách hàng
+INSERT INTO HoaDon (maHoaDon, ngayLapHoaDon, nhanVien, khachHang, daHoanVe, daHoanTien) VALUES
+('121224NV00200012', '2024-12-12', 'NV002', 'KH0016', 0, 0),
+('121224NV00200013', '2024-12-12', 'NV002', 'KH0017', 0, 0),
+('121224NV00200014', '2024-12-12', 'NV002', 'KH0018', 0, 0),
+('121224NV00200015', '2024-12-12', 'NV002', 'KH0019', 0, 0),
+('121224NV00200016', '2024-12-12', 'NV002', 'KH0020', 0, 0);
+-- Thêm chi tiết hóa đơn và vé
+INSERT INTO ChiTietHoaDon (maChiTiet, hoaDon, soLuong, thue) VALUES
+('CT121224NV00200012', '121224NV00200012', 2, 0.1), -- KH0016, 2 vé
+('CT121224NV00200013', '121224NV00200013', 2, 0.1), -- KH0017, 2 vé
+('CT121224NV00200014', '121224NV00200014', 1, 0.1), -- KH0018, 1 vé
+('CT121224NV00200015', '121224NV00200015', 1, 0.1), -- KH0019, 1 vé
+('CT121224NV00200016', '121224NV00200016', 2, 0.1); -- KH0020, 2 vé
+
+INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES
+-- KH0016: 2 vé
+('VE1212240018', 'TA003', 'TA003_01', 1, 'KH0016', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200012'),
+('VE1212240019', 'TA003', 'TA003_01', 2, 'KH0016', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200012'),
+
+-- KH0017: 2 vé
+('VE1212240020', 'TA003', 'TA003_01', 3, 'KH0017', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200013'),
+('VE1212240021', 'TA003', 'TA003_01', 4, 'KH0017', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200013'),
+
+-- KH0018: 1 vé
+('VE1212240022', 'TA003', 'TA003_01', 5, 'KH0018', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200014'),
+
+-- KH0019: 1 vé
+('VE1212240023', 'TA003', 'TA003_01', 6, 'KH0019', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200015'),
+
+-- KH0020: 2 vé
+('VE1212240024', 'TA003', 'TA003_01', 7, 'KH0020', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200016'),
+('VE1212240025', 'TA003', 'TA003_01', 8, 'KH0020', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200016');
+
+-- Cập nhật trạng thái ghế đã đặt
+UPDATE Ghe
+SET trangThai = 0
+WHERE maToa = 'TA003_01' AND soGhe IN (1, 2, 3, 4, 5, 6, 7, 8);
+
+
+
+--Trả vé--
+-- Cập nhật trạng thái vé VE1212240024
+UPDATE Ve
+SET trangThai = 1
+WHERE maVe = 'VE1212240024';
+
+-- Cập nhật trạng thái vé VE1212240025
+UPDATE Ve
+SET trangThai = 1
+WHERE maVe = 'VE1212240025';
+
+-- Cập nhật trạng thái ghế cho vé VE1212240024 (Ghế số 7 trong toa TA003_01)
+UPDATE Ghe
+SET trangThai = 0
+WHERE maToa = 'TA003_01' AND soGhe = 7;
+
+-- Cập nhật trạng thái ghế cho vé VE1212240025 (Ghế số 8 trong toa TA003_01)
+UPDATE Ghe
+SET trangThai = 0
+WHERE maToa = 'TA003_01' AND soGhe = 8;
+
+-- Cập nhật trạng thái daHoanTien và daHoanVe của hóa đơn liên quan đến vé VE1212240024
+UPDATE HoaDon
+SET daHoanTien = 1, daHoanVe = 1
+WHERE maHoaDon = '121224NV00200016';
+
+-- Cập nhật trạng thái daHoanTien và daHoanVe của hóa đơn liên quan đến vé VE1212240025
+UPDATE HoaDon
+SET daHoanTien = 1, daHoanVe = 1
+WHERE maHoaDon = '121224NV00200016';

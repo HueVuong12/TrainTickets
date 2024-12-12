@@ -597,7 +597,7 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		
 		JLabel lb_TKH = new JLabel(banVeNhapThongTin_GUI.khachHangMua.getTenKH());
 		lb_TKH.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lb_TKH.setBounds(554, 78, 125, 24);
+		lb_TKH.setBounds(554, 78, 200, 24);
 		panel.add(lb_TKH);
 		
 		JScrollPane scrollPane = new JScrollPane();
