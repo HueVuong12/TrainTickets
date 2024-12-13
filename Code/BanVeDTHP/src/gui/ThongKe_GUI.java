@@ -948,6 +948,7 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 				for (Ve ve : listVe) {
 					slvb++;
 					String khuyenMai = ve.getKhuyenMai();
+//					cộng vào khuyến mãi
 					doanhThuTheoKhuyenMai.put(khuyenMai,
 							doanhThuTheoKhuyenMai.getOrDefault(khuyenMai, 0f) + ve.tinhGiaVe());
 					doanhThu +=ve.tinhGiaVe();

@@ -217,7 +217,7 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		// Tab khách hàng sử dụng vé
 		jp_KHSDV = new JPanel();
 		jp_KHSDV.setBackground(SystemColor.textHighlightText);
-		tabbedPane.addTab("Khách hàng sửa dụng vé", null, jp_KHSDV, null);
+		tabbedPane.addTab("Khách hàng sử dụng vé", null, jp_KHSDV, null);
 		jp_KHSDV.setLayout(null);
 		
 		JPanel jp_content_KHSDV = new JPanel();
@@ -566,7 +566,7 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		// Tab khách hàng sử dụng vé
 		jp_KHSDV = new JPanel();
 		jp_KHSDV.setBackground(SystemColor.textHighlightText);
-		tabbedPane.addTab("Khách hàng sửa dụng vé", null, jp_KHSDV, null);
+		tabbedPane.addTab("Khách hàng sử dụng vé", null, jp_KHSDV, null);
 		jp_KHSDV.setLayout(null);
 		
 		JPanel jp_content_KHSDV = new JPanel();
