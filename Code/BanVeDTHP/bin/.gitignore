@@ -1,5 +1,2 @@
-/components/
-/connectDB/
-/dao/
-/entity/
 /gui/
+/connectDB/

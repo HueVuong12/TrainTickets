@@ -674,6 +674,8 @@ public class ThongKe_GUI extends JPanel implements ActionListener{
 		jp_ketQuaTheoCa.setLayout(null);
 		
 		btn_XuatFile_TheoCa = new RoundedButton("Xuất File", 15);
+		btn_XuatFile_TheoCa.setForeground(new Color(255, 255, 255));
+		btn_XuatFile_TheoCa.setBackground(new Color(51, 102, 153));
 		btn_XuatFile_TheoCa.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_XuatFile_TheoCa.setBounds(1205, 10, 96, 33);
 		jp_ketQuaTheoCa.add(btn_XuatFile_TheoCa);
