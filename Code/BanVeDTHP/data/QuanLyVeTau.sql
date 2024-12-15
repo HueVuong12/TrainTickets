@@ -146,24 +146,27 @@ CREATE TABLE TaiKhoan (
 
 -- Thêm ca vào bảng Ca
 INSERT INTO Ca (maCa, tenCa, thoiGianBatDau, thoiGianKetThuc) VALUES
-('CA00', N'Ca Quản Lý', '00:00:00', '23:59:59'),
 ('CA01', N'Ca 1', '06:00:00', '13:59:00'),
 ('CA02', N'Ca 2', '14:00:00', '21:59:00'),
 ('CA03', N'Ca 3', '22:00:00', '05:59:00');
 
 -- Thêm 4 nhân viên vào bảng NhanVien
 INSERT INTO NhanVien (maNV, tenNV, ngaySinh, gioiTinh, ca, cccd, email, sdt, trangThai, chucVu) VALUES
-('NV001', N'Lê Tấn Phong', '2004-03-30', 0, 'CA00', '049204013502', 'letanphong400@gmail.com', '0919128639', 1, 1),
+('NV001', N'Lê Tấn Phong', '2004-03-30', 0, 'CA01', '049204013502', 'letanphong400@gmail.com', '0919128639', 1, 1),
 ('NV002', N'Vương Ngọc Huệ', '2003-08-12', 1, 'CA01', '049203000000', 'ngochue12@gmail.com', '0334548218', 1, 2),
 ('NV003', N'Nguyễn Danh Minh Toàn', '2004-12-14', 0, 'CA02', '079204033973', 'toannguyen041214@gmail.com', '0765593697', 1, 2),
-('NV004', N'Trần Quốc Đảm', '2004-12-23', 0, 'CA03', '052204011638', 'damtran2k4@gmail.com', '0366271754', 1, 2);
+('NV004', N'Trần Quốc Đảm', '2004-12-23', 0, 'CA03', '052204011638', 'damtran2k4@gmail.com', '0366271754', 1, 2),
+('NV005', N'Nguyễn Văn A', '2004-12-23', 0, 'CA02', '052204011639', 'nguyenvana2k4@gmail.com', '0366271755', 1, 1),
+('NV006', N'Lê Tấn B', '2004-04-30', 0, 'CA03', '049204013504', 'letanb@gmail.com', '0919128638', 1, 1);
 
 -- Thêm tài khoản vào bảng TaiKhoan
 INSERT INTO TaiKhoan (maTaiKhoan, matKhau, phanQuyen, nhanVien) VALUES
 ('TKQL001','$2a$10$TRm5dVhaJWRHb79qS8HsseY6IJMi9h7v1QkRnLrJv11rgJPe/a3Ha',1,'NV001'),
 ('TKNV001', '$2a$10$vgzYlKNkHWLrktVahbnrge5.Zj41Dn00JGrFnJwNF5i.6Nw/0ZgAG', 2, 'NV002'),
 ('TKNV002', '$2a$10$srI9GG.XfevMMh/fMzoHkeJe9Je74LBntHxb39pKfbACdcNahuzMC', 2, 'NV003'),
-('TKNV003', '$2a$10$.WeVGlVgcmyuAHU7X4PAGuJeDG9Ayh8hcHzX0inxIFWHGjzmi56vK', 2, 'NV004');
+('TKNV003', '$2a$10$.WeVGlVgcmyuAHU7X4PAGuJeDG9Ayh8hcHzX0inxIFWHGjzmi56vK', 2, 'NV004'),
+('TKQL002','$2a$10$G/GC.cg8UjDPo6OqUpt/Tes75yUVK39sxO6Q0qfPOM0COwDCy2vRO',1,'NV005'),
+('TKQL003','$2a$10$sbr8QaU7j9ivkv2rX3X6IuXUJ6HPWa/SI7JmYA.kcF9uwYZZEMtv2',1,'NV006');
 
 -- Thêm các nhà ga vào bảng Ga
 INSERT INTO Ga (maGa, tenGa, diaChi, chiSoKm, trangThai) VALUES
@@ -1261,35 +1264,6 @@ INSERT INTO KhachHang (maKH, tenKH, email, sdt, cccd) VALUES
 ('KH0003', N'Phạm Văn C', 'ghi@gmail.com', '0912345680', '049204013504'),
 ('KH0004', N'Nguyễn Thị D', 'jkl@gmail.com', '0912345681', '049204013505'),
 ('KH0005', N'Lê Văn E', 'mno@gmail.com', '0912345682', '049204013506');
-
--- Thêm 3 hóa đơn
-INSERT INTO HoaDon (maHoaDon, ngayLapHoaDon, nhanVien, khachHang, daHoanVe, daHoanTien) VALUES
-('260924NV00200001', '2024-09-26', 'NV002', 'KH0001', 0, 0),
-('260924NV00300002', '2024-09-26', 'NV003', 'KH0003', 0, 1),
-('111124NV00400001', '2024-11-11', 'NV004', 'KH0002', 1, 1);
-
--- Thêm 3 chi tiết hóa đơn vào bảng ChiTietHoaDon
-INSERT INTO ChiTietHoaDon (maChiTiet, hoaDon, soLuong, thue) VALUES
-('CT220924NV00200001', '220924NV00200001', 2, 0.1),
-('CT220924NV00300002', '260924NV00300002', 1, 0.1),
-('CT111124NV00400001', '111124NV00400001', 3, 0.1);
-
--- Thêm vé cho chi tiết hóa đơn 1
-INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES 
-('VE2609240001', 'TA001', 'TA001_01', 1, 'KH0001', '2024-11-21', '08:00:00', '2024-11-21', '16:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 0, 'CT220924NV00200001');
-
--- Thêm vé cho chi tiết hóa đơn 2
-INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES 
-('VE2609240002', 'TA002', 'TA002_01', 1, 'KH0001', '2024-11-21', '09:00:00', '2024-11-21', '17:00:00', 'GA001', 'GA035', N'Giường nằm', N'Trẻ em dưới 6 tuổi', 0, 'CT220924NV00300002'),
-('VE2609240003', 'TA002', 'TA002_01', 2, 'KH0002', '2024-11-21', '09:00:00', '2024-11-21', '17:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 0, 'CT220924NV00300002');
-
--- Thêm vé cho chi tiết hóa đơn 3
-INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES 
-('VE1111240004', 'TA003', 'TA003_01', 1, 'KH0001', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn tuổi', 0, 'CT111124NV00400001'),
-('VE1111240005', 'TA003', 'TA003_01', 2, 'KH0002', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Sinh viên', 0, 'CT111124NV00400001'),
-('VE1111240006', 'TA003', 'TA003_01', 3, 'KH0003', '2024-11-21', '10:00:00', '2024-11-21', '18:00:00', 'GA001', 'GA035', N'Giường nằm', N'Người lớn', 0, 'CT111124NV00400001');
-
-
 -- Thêm 10 khách hàng
 INSERT INTO KhachHang (maKH, tenKH, email, sdt, cccd) VALUES
 ('KH0006', N'Hoàng Văn F', 'hoangf@gmail.com', '0912345683', '049204013507'),
